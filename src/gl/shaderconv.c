@@ -527,7 +527,11 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   while (strstr(Tmp, "#extension") && strstr(Tmp, "#extension")>GetLine(Tmp, headline-2)) {
     char* ext = strstr(Tmp, "#extension");
     size_t l = (uintptr_t)strstr(ext, "\n")-(uintptr_t)ext + sizeof("\n");
+#ifndef _MSC_VER
     char e[l];
+#else
+    char* e = _alloca(l);
+#endif
     memset(e, 0, l);
     strncpy(e, ext, l-1);
     Tmp = InplaceReplaceSimple(Tmp, &tmpsize, e, "");
