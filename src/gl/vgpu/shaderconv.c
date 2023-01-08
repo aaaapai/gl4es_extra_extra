@@ -318,7 +318,7 @@ char * ReplaceFragmentOut(char * source, int *sourceLength){
 void GetNextWord(char *source, int startPoint, int * startWord, int * endWord){
     // Step 1: Find the real start point
     int start = 0;
-    while(!start){
+    while(1){
         if(isValidFunctionName(source[startPoint] ) || isDigit(source[startPoint])){
             start = startPoint;
             break;
@@ -328,7 +328,7 @@ void GetNextWord(char *source, int startPoint, int * startWord, int * endWord){
 
     // Step 2: Find the end of a word
     int end = 0;
-    while (!end){
+    while (1){
         if(!isValidFunctionName(source[startPoint] ) && !isDigit(source[startPoint])){
             end = startPoint;
             break;
