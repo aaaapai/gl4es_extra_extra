@@ -1252,10 +1252,10 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
 
   if (versionHeader > 1) {
     const char* GLESBackport = "#define texture2D texture\n#define attribute in\n#define varying out\n";
-    Tmp = InplaceInsert(GetLine(Tmp, 1), GLESBackport, Tmp, &tmpsize);
+    Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, 1), GLESBackport, Tmp, &tmpsize);
   }else {
       const char* GLESForwardPort = "#define texture texture2D\n #define textureProj texture2DProj\n #define mod(a,b) (int(a) - int(b) * int(a/b))\n";
-      Tmp = InplaceInsert(GetLine(Tmp, 1), GLESForwardPort, Tmp, &tmpsize);
+      Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, 1), GLESForwardPort, Tmp, &tmpsize);
   }
   
   // finish

@@ -54,7 +54,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
     int sourceLength = strlen(source) + 1;
 
     // For now, skip stuff
-    if(FindString(source, "#version 100")){
+    if(gl4es_find_string(source, "#version 100")){
         if(globals4es.vgpu_force_conv || globals4es.vgpu_backport){
             if (shader_source->type == GL_VERTEX_SHADER){
                 source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
@@ -66,9 +66,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
 
             // Well, we don't have gl_VertexID on OPENGL 1
             source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0");
-            source = InplaceReplaceSimple(source, &sourceLength, "ivec", "vec");
-            source = InplaceReplaceSimple(source, &sourceLength, "bvec", "vec");
-            source = InplaceReplaceSimple(source, &sourceLength, "flat ", "");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
 
             source = BackportConstArrays(source, &sourceLength);
             int insertPoint = FindPositionAfterVersion(source);
@@ -101,7 +101,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
 
     // Avoid keyword clash with gl4es #define blocks
     //printf("REPLACING KEYWORDS");
-    source = InplaceReplaceSimple(source, &sourceLength, "#define texture2D texture\n", "");
+    source = gl4es_inplace_replace_simple(source, &sourceLength, "#define texture2D texture\n", "");
     source = ReplaceVariableName(source, &sourceLength, "sample", "vgpu_Sample");
     source = ReplaceVariableName(source, &sourceLength, "texture", "vgpu_texture");
 
@@ -111,7 +111,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
 
     //printf("REMOVING \" CHARS ");
     // " not really supported here
-    source = InplaceReplaceSimple(source, &sourceLength, "\"", "");
+    source = gl4es_inplace_replace_simple(source, &sourceLength, "\"", "");
 
     // For now let's hope no extensions are used
     // TODO deal with extensions but properly
@@ -139,9 +139,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
     source = WrapIvecFunctions(source, &sourceLength);
 
     //printf("REMOVING DUBIOUS DEFINES");
-    source = InplaceReplaceSimple(source, &sourceLength, "#define texture texture2D\n", "");
-    source = InplaceReplaceSimple(source, &sourceLength, "#define attribute in\n", "");
-    source = InplaceReplaceSimple(source, &sourceLength, "#define varying out\n", "");
+    source = gl4es_inplace_replace_simple(source, &sourceLength, "#define texture texture2D\n", "");
+    source = gl4es_inplace_replace_simple(source, &sourceLength, "#define attribute in\n", "");
+    source = gl4es_inplace_replace_simple(source, &sourceLength, "#define varying out\n", "");
 
     if (shader_source->type == GL_VERTEX_SHADER){
         source = ReplaceVariableName(source, &sourceLength, "attribute", "in");
@@ -355,7 +355,7 @@ char * InsertExtensions(char *source, int *sourceLength){
 char * InsertExtension(char * source, int * sourceLength, const int insertPoint, const char * extension){
     // First, insert the model, then the extension
     source = InplaceInsertByIndex(source, sourceLength, insertPoint, "#ifdef __EXT__ \n#extension __EXT__ : enable\n#endif\n");
-    source = InplaceReplaceSimple(source, sourceLength, "__EXT__", extension);
+    source = gl4es_inplace_replace_simple(source, sourceLength, "__EXT__", extension);
     return source;
 }
 
@@ -448,8 +448,8 @@ char * ReplaceModOperator(char * source, int * sourceLength){
         char * replacementString = malloc(strlen(modelString) + 1);
         strcpy(replacementString, modelString);
         int replacementSize = strlen(replacementString);
-        replacementString = InplaceReplace(replacementString, &replacementSize, "x", leftOperand);
-        replacementString = InplaceReplace(replacementString, &replacementSize, "y", rightOperand);
+        replacementString = gl4es_inplace_replace(replacementString, &replacementSize, "x", leftOperand);
+        replacementString = gl4es_inplace_replace(replacementString, &replacementSize, "y", rightOperand);
 
         // Insert the new string
         source = InplaceReplaceByIndex(source, sourceLength, startIndex, endIndex, replacementString);
@@ -481,14 +481,14 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
     source = WrapFunction(source, sourceLength, "uint", "float", "\n ");
 
     // TODO Yes I could just do the same as above but I'm lazy at times
-    source = InplaceReplaceSimple(source, sourceLength, "ivec", "vec");
-    source = InplaceReplaceSimple(source, sourceLength, "uvec", "vec");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "ivec", "vec");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "uvec", "vec");
 
-    source = InplaceReplaceSimple(source, sourceLength, "isampleBuffer", "sampleBuffer");
-    source = InplaceReplaceSimple(source, sourceLength, "usampleBuffer", "sampleBuffer");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "isampleBuffer", "sampleBuffer");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "usampleBuffer", "sampleBuffer");
 
-    source = InplaceReplaceSimple(source, sourceLength, "isampler", "sampler");
-    source = InplaceReplaceSimple(source, sourceLength, "usampler", "sampler");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "isampler", "sampler");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "usampler", "sampler");
 
 
     // Step 3 is slower.
@@ -534,8 +534,8 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
     }
 
     // TODO Hacks for special built in values and typecasts ?
-    source = InplaceReplaceSimple(source, sourceLength, "gl_VertexID", "float(gl_VertexID)");
-    source = InplaceReplaceSimple(source, sourceLength, "gl_InstanceID", "float(gl_InstanceID)");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "gl_VertexID", "float(gl_VertexID)");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "gl_InstanceID", "float(gl_InstanceID)");
 
     return source;
 }
@@ -570,12 +570,12 @@ char * ForceIntegerArrayAccess(char* source, int * sourceLength){
     }
 
     // Step 2, replace the array accesses with a forced typecast version
-    source = InplaceReplaceSimple(source, sourceLength, "]", ")]");
-    source = InplaceReplaceSimple(source, sourceLength, "[", "[int(");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "]", ")]");
+    source = gl4es_inplace_replace_simple(source, sourceLength, "[", "[int(");
 
     // Step 3, restore all marked empty []
-    source = InplaceReplaceSimple(source, sourceLength, markerStart, "[");
-    source = InplaceReplaceSimple(source, sourceLength, markerEnd, "]");
+    source = gl4es_inplace_replace_simple(source, sourceLength, markerStart, "[");
+    source = gl4es_inplace_replace_simple(source, sourceLength, markerEnd, "]");
 
     return source;
 }
@@ -797,7 +797,7 @@ char * ReplaceGLFragData(char * source, int * sourceLength){
         int insertPoint = FindPositionAfterDirectives(source);
 
         // And place them into the shader
-        source = InplaceReplaceSimple(source, sourceLength, &needle[0], &replacement[0]);
+        source = gl4es_inplace_replace_simple(source, sourceLength, &needle[0], &replacement[0]);
         source = InplaceInsertByIndex(source, sourceLength, insertPoint + 1, &replacementLine[0]);
     }
     return source;
@@ -810,7 +810,7 @@ char * ReplaceGLFragData(char * source, int * sourceLength){
  */
 char * ReplaceGLFragColor(char * source, int * sourceLength){
     if(strstr(source, "gl_FragColor")){
-        source = InplaceReplaceSimple(source, sourceLength, "gl_FragColor", "vgpu_FragColor");
+        source = gl4es_inplace_replace_simple(source, sourceLength, "gl_FragColor", "vgpu_FragColor");
         int insertPoint = FindPositionAfterDirectives(source);
         source = InplaceInsertByIndex(source, sourceLength, insertPoint + 1, "out mediump vec4 vgpu_FragColor;\n");
     }
@@ -865,7 +865,7 @@ char * ReplaceVariableName(char * source, int * sourceLength, char * initialName
             replacement[0] = charBefore[i];
             replacement[strlen(newName)+1] = charAfter[j];
 
-            source = InplaceReplaceSimple(source, sourceLength, toReplace, replacement);
+            source = gl4es_inplace_replace_simple(source, sourceLength, toReplace, replacement);
         }
     }
 
@@ -956,7 +956,7 @@ char * RemoveConstInsideBlocks(char* source, int * sourceLength){
  * @return The index position after the #version line, start of the shader if not found
  */
 int FindPositionAfterDirectives(char * source){
-    const char * position = FindString(source, "#version");
+    const char * position = gl4es_find_string(source, "#version");
     if (position == NULL) return 0;
     for(int i=7; 1; ++i){
         if(position[i] == '\n'){
@@ -967,7 +967,7 @@ int FindPositionAfterDirectives(char * source){
 }
 
 int FindPositionAfterVersion(char * source){
-    const char * position = FindString(source, "#version");
+    const char * position = gl4es_find_string(source, "#version");
     if (position == NULL) return 0;
     for(int i=7; 1; ++i){
         if(position[i] == '\n'){
@@ -1194,11 +1194,11 @@ char * insertIntAtFunctionCall(char * source, int * sourceSize, const char * fun
  */
 int GetShaderVersion(const char * source){
     // Oh yeah, I won't care much about this function
-    if(FindString(source, "#version 320 es")){return 320;}
-    if(FindString(source, "#version 310 es")){return 310;}
-    if(FindString(source, "#version 300 es")){return 300;}
-    if(FindString(source, "#version 150")){return 150;}
-    if(FindString(source, "#version 130")){return 130;}
-    if(FindString(source, "#version 120")){return 120;}
+    if(gl4es_find_string(source, "#version 320 es")){return 320;}
+    if(gl4es_find_string(source, "#version 310 es")){return 310;}
+    if(gl4es_find_string(source, "#version 300 es")){return 300;}
+    if(gl4es_find_string(source, "#version 150")){return 150;}
+    if(gl4es_find_string(source, "#version 130")){return 130;}
+    if(gl4es_find_string(source, "#version 120")){return 120;}
     return 100;
 }

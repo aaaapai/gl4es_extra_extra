@@ -6,7 +6,7 @@ extern const char* AllSeparators;
 int isDigit(char value);
 int isValidFunctionName(char value);
 
-char* InplaceReplace(char* pBuffer, int* size, const char* S, const char* D);
+
 char * InplaceReplaceByIndex(char* pBuffer, int* size, int startIndex, int endIndex, const char* replacement);
 char * InplaceInsertByIndex(char * source, int *sourceLength, int insertPoint, const char *insertedString);
 
