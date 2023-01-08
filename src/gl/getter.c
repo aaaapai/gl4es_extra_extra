@@ -249,9 +249,11 @@ const GLubyte* APIENTRY_GL4ES gl4es_glGetString(GLenum name) {
             BuildExtensionsList();
             return glstate->extensions;
 		case GL_VENDOR:
-			return (GLubyte *)"ptitSeb";
-		case GL_RENDERER:
-			return (GLubyte *)"GL4ES wrapper";
+        case GL_RENDERER:
+            {
+                LOAD_GLES(glGetString);
+                return (GLubyte *)gles_glGetString(name);
+            }
 		case GL_SHADING_LANGUAGE_VERSION:
             if(globals4es.gl==21)
             return (GLubyte *)"1.20 via gl4es";
