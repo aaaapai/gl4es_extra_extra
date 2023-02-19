@@ -338,7 +338,7 @@ At last, the value "1" will be changed to "15", to log everything.
 ##### LIBGL_VGPU_DUMP
 Log to the console all shaders before and after passing through the VGPU shader conversion pipeline
 * 0 : Default, don't log anything
-* 1 : Log every shader going though the pipeline
+* 1 : Log every shader going through the pipeline
 
 ##### LIBGL_VGPU_FORCE
 Force the vgpu shader conversion pipeline to convert every shader.
@@ -357,6 +357,12 @@ Many drivers map lowp to the same precision as mediump
 Whether the shader gets forcefully backported to the #version 100
 * 0 : Default, don't attempt to forcefully backport the shader
 * 1 : Try to forcefully backport the shader. The resulting shader might bug but it compiles.
+
+
+##### LIBGL_BUFFER_FORCE_BIND
+Whether buffers are rebound each time they are needed.
+* 0 : Default, only bind the first time. Faster but will cause crashes if the bind is lost.
+* 1 : Force rebinding the buffer before using it. Fixes buffer binding lost on Adreno GPUs
 
 ##### LIBGL_NOPSA
 Disable the use of the Precompiled Shader Archive
