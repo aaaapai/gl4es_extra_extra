@@ -766,6 +766,7 @@ void realize_active() {
 
 void realize_1texture(GLenum target, int wantedTMU, gltexture_t* tex, glsampler_t* sampler)
 {
+    int TMU = (wantedTMU==-1)?glstate->gleshard->active:wantedTMU;
     DBG(printf("realize_1texture(%s, %d, %p[%u], %p)\n", PrintEnum(target), TMU, tex, tex->glname, sampler);)
     LOAD_GLES(glActiveTexture);
     LOAD_GLES(glTexParameteri);
@@ -773,7 +774,7 @@ void realize_1texture(GLenum target, int wantedTMU, gltexture_t* tex, glsampler_
     // check sampler stuff
     if(!sampler) sampler = &tex->sampler;
     GLuint oldtex = 0;
-    int TMU = (wantedTMU==-1)?glstate->gleshard->active:wantedTMU;
+
     GLenum param;
     param = get_texture_min_filter(tex, sampler);
     if(tex->actual.min_filter!=param) {
