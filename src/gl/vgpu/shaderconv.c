@@ -1118,17 +1118,28 @@ int GetClosingTokenPositionTokenOverride(const char * source, int initialTokenPo
  * @param source The source string
  * @param initialPosition The starting position to look from
  * @param token The token you want to find
- * @param acceptedChars All chars we can go over without tripping. Empty means all chars are allowed.
+ * @param acceptedChars If started with a backslash, all chars you will trip on.
+ * Otherwise, all chars we can go over without tripping. Empty means all chars are allowed.
  * @return
  */
 int GetNextTokenPosition(const char * source, int initialPosition, const char token, const char * acceptedChars){
+    int inverseTripping = strlen(acceptedChars) > 0 && acceptedChars[0] == '\\';
+
     for(int i=initialPosition+1; i< strlen(source); ++i){
         // Tripping check
         if(strlen(acceptedChars) > 0){
+            int acceptedCharFound = 0;
             for(int j=0; j< strlen(acceptedChars); ++j){
-                if (source[i] == acceptedChars[j]) break; // No tripping, continue
+                if (source[i] == acceptedChars[j]) {
+                    if(inverseTripping)  // Tripped, break out.
+                        return initialPosition;
+                    // Else, we're good, no need to do more checks
+                    acceptedCharFound = 1;
+                    break;
+                }
             }
-            return initialPosition; // Tripped, meaning the token is not found
+            if(!inverseTripping && !acceptedCharFound)
+                return initialPosition; // Tripped, meaning the accepted token is not found
         }
 
         if (source[i] == token){
