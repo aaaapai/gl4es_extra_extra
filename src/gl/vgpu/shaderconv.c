@@ -161,6 +161,8 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
     //printf("FUCKING UP PRECISION");
     source = ReplacePrecisionQualifiers(source, &sourceLength, shader_source->type == GL_VERTEX_SHADER);
 
+    source = RemoveUniformProperty(source);
+
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
     }
@@ -905,6 +907,34 @@ char * ReplaceFunctionName(char * source, int * sourceLength, char * initialName
         source = InplaceReplaceByIndex(source, sourceLength, currentPosition + newPosition, currentPosition + newPosition + strlen(initialName) - 1, finalName);
         currentPosition += newPosition;
     }
+    return source;
+}
+
+/**
+ * Remove all "uniform" keywords from uniform variables with a default initializer.
+ * The default "uniform" initializer is not part of the GLSL ES specification.
+ * @param source The shader as a string
+ * @param sourceLength The allocated length of the shader
+ * @return The shader as a string, maybe in a different memory position. Probably not here though.
+ */
+char * RemoveUniformProperty(char * source){
+    unsigned long currentPosition = 0;
+    while(1){
+        unsigned long newPosition = strstrPos(source + currentPosition, "uniform ");
+        if(newPosition == 0)  // No more uniform vars
+            break;
+
+        // Now, get to the end of declaration/initialization
+        int endPosition = GetNextTokenPosition(source + currentPosition + newPosition, 0, ';', "\\=");
+        if (endPosition == 0) {
+            // It tripped at the =, meaning there is an init phase, remove the uniform tag
+            for(int i = 0; i<8; ++i){
+                source[currentPosition + newPosition + i] = ' ';
+            }
+        }
+        currentPosition += newPosition + strlen("uniform");
+    }
+
     return source;
 }
 

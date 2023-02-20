@@ -39,6 +39,7 @@ int GetShaderVersion(const char * source);
 char * ReplaceFragmentOut(char * source, int *sourceLength);
 char * BackportConstArrays(char *source, int * sourceLength);
 char * ExtractString(char * source, int startString, int endString);
+char * RemoveUniformProperty(char * source);
 
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
