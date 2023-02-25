@@ -248,15 +248,19 @@ char * BackportConstArrays(char *source, int * sourceLength){
 
         // Now, we have to turn every array access to a function call
         // TODO change the start position to be more accurate to the end of the function !
-        for(int k = strstrPos(source + endArray, variableName) + endArray; k < strlen(source); ){
+        int searchOffset = endArray;
+        while (1){
+            int k = strstrPos(source + searchOffset, variableName) + searchOffset;
+            if(k == searchOffset) break; // No more instances of the variable are found
+
+            // Find [] to replace it with ()
             int startAccess = GetNextTokenPosition(source, k, '[', "");
             int endAccess = GetClosingTokenPosition(source, startAccess);
             source = InplaceReplaceByIndex(source, sourceLength, endAccess, endAccess, ")");
             source = InplaceReplaceByIndex(source, sourceLength, startAccess, startAccess, "(");
 
-            int nextPos = strstrPos(source + k, variableName) + k;
-            if(nextPos == k) break;
-            k = nextPos;
+            // Jump ahead of the variable to search further
+            searchOffset = k + 10;
         }
 
         free(variableName);
@@ -1183,7 +1187,7 @@ int GetNextTokenPosition(const char * source, int initialPosition, const char to
 /**
  * @param haystack
  * @param needle
- * @return The position of the first occurence of the needle in the haystack
+ * @return The position of the first occurrence of the needle in the haystack
  */
 unsigned long strstrPos(const char * haystack, const char * needle){
     char * substr = strstr(haystack, needle);
