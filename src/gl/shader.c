@@ -178,7 +178,7 @@ void APIENTRY_GL4ES gl4es_glShaderSource(GLuint shader, GLsizei count, const GLc
         if(glstate->glsl->es2 && !strncmp(glshader->source, "#version 100", 12))
             glshader->converted = strdup(glshader->source);
         else{
-            glshader->converted = ConvertShaderConditionally(glshader);
+            glshader->converted = ConvertShaderConditionally(glshader, 0);
         }
 
         // send source to GLES2 hardware if any
@@ -231,12 +231,14 @@ void redoShader(GLuint shader, shaderconv_need_t *need) {
     CHECK_SHADER(void, shader)
     if(!glshader->converted)
         return;
+
+    // No need to test anymore, since vgpu will handle a different pass type.
     // test, if no changes, no need to reconvert & recompile...
-    if (memcmp(&glshader->need, need, sizeof(shaderconv_need_t))==0)
-        return;
+    //if (memcmp(&glshader->need, need, sizeof(shaderconv_need_t))==0)
+        //return;
     free(glshader->converted);
     memcpy(&glshader->need, need, sizeof(shaderconv_need_t));
-    glshader->converted = ConvertShaderConditionally(glshader);
+    glshader->converted = ConvertShaderConditionally(glshader, 1);
     // send source to GLES2 hardware if any
     gles_glShaderSource(shader, 1, (const GLchar * const*)((glshader->converted)?(&glshader->converted):(&glshader->source)), NULL);
     // recompile...

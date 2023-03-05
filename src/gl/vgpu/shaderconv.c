@@ -15,26 +15,24 @@ int NO_OPERATOR_VALUE = 9999;
 
 /**
  * Makes more and more destructive conversions to make the shader compile
+ * @param  The shader as a string
+ * @param second_pass Whether gl4es is attempting to solve a linking issue
  * @return The shader as a string
  */
-char * ConvertShaderConditionally(struct shader_s * shader_source){
+char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass){
     int shaderCompileStatus = 0;
 
-    // First, vanilla gl4es, no forward port
-    shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0,&shader_source->need, 0);
-    if(!globals4es.vgpu_force_conv)  // Skip the test, consider it uncompiled
-        shaderCompileStatus = testGenericShader(shader_source);
+    // First, simple backward port, destructive only if asked to do so
+    shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
+    shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
 
-    // Then, attempt back porting if desired of constrained to do so
-    if(!shaderCompileStatus && globals4es.vgpu_backport) {
-        shader_source->converted = ConvertShaderVgpu(shader_source);
+    if(!globals4es.vgpu_force_conv || second_pass)  // Skip the test, consider it uncompiled
         shaderCompileStatus = testGenericShader(shader_source);
-    }
 
     // At last resort, use forward porting
     if(!shaderCompileStatus && hardext.glsl300es){
         shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
-        shader_source->converted = ConvertShaderVgpu(shader_source);
+        shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
     }
 
     return shader_source->converted;
@@ -42,8 +40,10 @@ char * ConvertShaderConditionally(struct shader_s * shader_source){
 
 
 /** Convert the shader through multiple steps
- * @param source The start of the shader as a string*/
-char * ConvertShaderVgpu(struct shader_s * shader_source){
+ * @param source The start of the shader as a string
+ * @param second_pass Whether gl4es tries to solve a linking error
+ */
+char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
 
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader source:\n%s\n", shader_source->converted);
@@ -54,26 +54,31 @@ char * ConvertShaderVgpu(struct shader_s * shader_source){
     int sourceLength = strlen(source) + 1;
     // For now, skip stuff
     if(gl4es_find_string(source, "#version 100")){
-        if(globals4es.vgpu_force_conv || globals4es.vgpu_backport){
-            if (shader_source->type == GL_VERTEX_SHADER){
-                source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
-                source = ReplaceVariableName(source, &sourceLength, "out", "varying");
-            }else{
-                source = ReplaceVariableName(source, &sourceLength, "in", "varying");
-                source = ReplaceFragmentOut(source, &sourceLength);
-            }
+        // Do a "light pass": A pass where little to no destructive operations are made
+        if (shader_source->type == GL_VERTEX_SHADER){
+            source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
+            source = ReplaceVariableName(source, &sourceLength, "out", "varying");
+        }else{
+            source = ReplaceVariableName(source, &sourceLength, "in", "varying");
+            source = ReplaceFragmentOut(source, &sourceLength);
+        }
+
+        source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
+        source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
+
+        source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
+
+        source = ReplaceModOperator(source, &sourceLength);
+
+        // If forced, do a heavy pass additionally
+        if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
 
             // Well, we don't have gl_VertexID on OPENGL 1
             source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0");
-            source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
-            source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
-            source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
 
             source = BackportConstArrays(source, &sourceLength);
             int insertPoint = FindPositionAfterVersion(source);
             source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
-
-            source = ReplaceModOperator(source, &sourceLength);
 
             if (globals4es.vgpu_dump){
                 printf("New VGPU Shader conversion:\n%s\n", source);

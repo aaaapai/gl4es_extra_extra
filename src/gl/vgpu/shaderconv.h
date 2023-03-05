@@ -7,7 +7,8 @@
 
 #include "../shader.h"
 
-char * ConvertShaderVgpu(struct shader_s * shader_source);
+char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass);
+char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass);
 
 char * GLSLHeader(char* source);
 char * RemoveConstInsideBlocks(char* source, int * sourceLength);
