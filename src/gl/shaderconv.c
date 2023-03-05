@@ -554,7 +554,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   int threed_texture = (strstr(pBuffer, "sampler3D"))?1:0;
   const char* GLESUse3DTexture = "#extension GL_OES_texture_3D : enable\n";
   if(threed_texture) {
-      Tmp = InplaceInsert(GetLine(Tmp, 1), GLESUse3DTexture, Tmp, &tmpsize); // no fallback possible if device does not support 3D textures
+      Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, 1), GLESUse3DTexture, Tmp, &tmpsize); // no fallback possible if device does not support 3D textures
   }
 
   int derivatives = (strstr(pBuffer, "dFdx(") || strstr(pBuffer, "dFdy(") || strstr(pBuffer, "fwidth("))?1:0;
