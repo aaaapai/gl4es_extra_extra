@@ -531,7 +531,7 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
             for(int j=1; 1; ++j){
                 if(isDigit(source[i-j])) continue;
                 if(isValidFunctionName(source[i-j])) break; // Function or variable name, don't coerce
-                if(source[i-j] == '.' || ((source[i-j] == '+' || source[i-j] == '-') && source[i-j-1] == 'e')) break; // No coercion, float or scientific notation already
+                if(source[i-j] == '.' || ((source[i-j] == '+' || source[i-j] == '-') && (source[i-j-1] == 'e'|| source[i-j-1] == 'E') )) break; // No coercion, float or scientific notation already
                 // Nothing found, should be coerced then
                 shouldBeCoerced = 1;
                 break;
