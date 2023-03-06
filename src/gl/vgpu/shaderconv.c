@@ -540,6 +540,10 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
             if(!shouldBeCoerced) continue;
         }
 
+        // Check if we have the scientific notation
+        if(((source[i-1] == '+' || source[i-1] == '-') && (source[i-2] == 'e'|| source[i-2] == 'E'))) continue;
+
+
         // Now we know there is nothing related to the digit, turn it into a float
         source = InplaceInsertByIndex(source, sourceLength, i+1, ".0");
     }
