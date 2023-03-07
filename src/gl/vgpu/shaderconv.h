@@ -41,6 +41,7 @@ char * ReplaceFragmentOut(char * source, int *sourceLength);
 char * BackportConstArrays(char *source, int * sourceLength);
 char * ExtractString(char * source, int startString, int endString);
 char * RemoveUniformProperty(char * source);
+char* ProcessSwitchCases(char* source, int* length);
 
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
