@@ -66,9 +66,12 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
         source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
         source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
 
-        source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
-
         source = ReplaceModOperator(source, &sourceLength);
+
+        int insertPoint = FindPositionAfterVersion(source);
+        source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
+
+        source = BackportConstArrays(source, &sourceLength);
 
         // If forced, do a heavy pass additionally
         if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
@@ -76,14 +79,11 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
             // Well, we don't have gl_VertexID on OPENGL 1
             source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0");
 
-            source = BackportConstArrays(source, &sourceLength);
-            int insertPoint = FindPositionAfterVersion(source);
-            source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
 
             if (globals4es.vgpu_dump){
                 printf("New VGPU Shader conversion:\n%s\n", source);
             }
-
             return source;
         }
 
