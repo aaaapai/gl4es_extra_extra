@@ -542,7 +542,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   int fragdepth = (strstr(pBuffer, "gl_FragDepth"))?1:0;
   const char* GLESUseFragDepth = "#extension GL_EXT_frag_depth : enable\n";
   const char* GLESFakeFragDepth = "mediump float fakeFragDepth = 0.0;\n";
-  if (fragdepth) {
+  if (fragdepth && !forwardPort) {
     /* If #extension is used, it should be placed before the second line of the header. */
     if(hardext.fragdepth)
       Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, 1), GLESUseFragDepth, Tmp, &tmpsize);
@@ -717,7 +717,10 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
     }
     newptr++;
   }
-  Tmp = gl4es_inplace_replace(Tmp, &tmpsize, "gl_FragDepth", (hardext.fragdepth)?"gl_FragDepthEXT":"fakeFragDepth");
+  if(!forwardPort){
+      Tmp = gl4es_inplace_replace(Tmp, &tmpsize, "gl_FragDepth", (hardext.fragdepth)?"gl_FragDepthEXT":"fakeFragDepth");
+  }
+
   // builtin attribs
   if(isVertex) {
       // check for ftransform function
