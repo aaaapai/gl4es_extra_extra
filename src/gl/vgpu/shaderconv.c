@@ -167,6 +167,8 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
 
     source = RemoveUniformProperty(source);
 
+    source = ForceIntegerLayoutOutput(source, &sourceLength);
+
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
     }
@@ -679,6 +681,35 @@ char * ForceIntegerArrayAccess(char* source, int * sourceLength){
     return source;
 }
 
+
+/**
+ * Turn layout (location=<float>) into layout (location=<int>)
+ * @param source The shader as a string
+ * @param sourceLength The shader allocated length
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * ForceIntegerLayoutOutput(char *source, int *sourceLength) {
+    unsigned long offset = 0;
+    while (1){
+        unsigned long startIndex = strstrPos(source + offset, "location");
+        if(startIndex == 0) break;
+
+        // Find the assignment
+        unsigned long assignmentIndex = GetNextTokenPosition(source + offset, startIndex, '=', "");
+
+        // Find the dot for floating point
+        unsigned long dotIndex = GetNextTokenPosition(source + offset, assignmentIndex, '.', "\\)");
+        if(dotIndex == 0) break;
+
+        unsigned long endIndex = GetNextTokenPosition(source + offset, dotIndex, ')',"");
+        source = InplaceReplaceByIndex(source, sourceLength, dotIndex + offset, endIndex + offset -1, "");
+
+        // Add offset for next iteration
+        offset += endIndex;
+    }
+
+    return source;
+}
 
 /** Small helper to help evaluate whether to continue or not I guess
  * Values over 9900 are not for real operators, more like stop indicators*/

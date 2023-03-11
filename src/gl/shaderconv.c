@@ -494,8 +494,8 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   if(wanthighp && !hardext.highp) wanthighp = 0;
   int versionHeader = 0;
   SHUT_LOGD("version string: %s", versionString);
-  if(versionString && (strcmp(versionString, "120")==0 || strcmp(versionString, "110")==0 || strstr(versionString, "150") != NULL))
-     version120 = forwardPort ? 1 : 0;
+
+  version120 = forwardPort ? 1 : 0;
   if(version120) {
     if(hardext.glsl120) versionHeader = 1;
     else if(hardext.glsl320es) versionHeader = 4;
