@@ -54,32 +54,29 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     int sourceLength = strlen(source) + 1;
     // For now, skip stuff
     if(gl4es_find_string(source, "#version 100")){
-        // Do a "light pass": A pass where little to no destructive operations are made
-        if (shader_source->type == GL_VERTEX_SHADER){
-            source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
-            source = ReplaceVariableName(source, &sourceLength, "out", "varying");
-        }else{
-            source = ReplaceVariableName(source, &sourceLength, "in", "varying");
-            source = ReplaceFragmentOut(source, &sourceLength);
-        }
-
-        source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
-        source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
-
-        source = ReplaceModOperator(source, &sourceLength);
-
-        int insertPoint = FindPositionAfterVersion(source);
-        source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
-
-        source = BackportConstArrays(source, &sourceLength);
 
         // If forced, do a heavy pass additionally
         if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
+            if (shader_source->type == GL_VERTEX_SHADER){
+                source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
+                source = ReplaceVariableName(source, &sourceLength, "out", "varying");
+            }else{
+                source = ReplaceVariableName(source, &sourceLength, "in", "varying");
+                source = ReplaceFragmentOut(source, &sourceLength);
+            }
+
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "bvec", "vec");
+            source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
+
+            source = ReplaceModOperator(source, &sourceLength);
+            source = BackportConstArrays(source, &sourceLength);
+
+            int insertPoint = FindPositionAfterVersion(source);
+            source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
 
             // Well, we don't have gl_VertexID on OPENGL 1
             source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0");
-
-            source = gl4es_inplace_replace_simple(source, &sourceLength, "flat ", "");
 
             if (globals4es.vgpu_dump){
                 printf("New VGPU Shader conversion:\n%s\n", source);
@@ -217,7 +214,7 @@ char* FindAndCorrect(char* source, int* length, int mode) {
          rewind = 1;
       }
       if(mode == MODE_CASE) {
-         if(!isDigit(template_string[0])) { // cant have a number without the first digit, and the standard doesnt permit variable names starting with numbers
+         if(!isDigit(template_string[0])) { // cant have a number without the first digit, and the standard doesn't permit variable names starting with numbers
             char   decltemplate_formatted[VARIABLE_SIZE];
             float  declared_value = 99;
             snprintf(decltemplate_formatted, VARIABLE_SIZE, declaration_template, template_string, "%f");
@@ -250,7 +247,7 @@ char* FindAndCorrect(char* source, int* length, int mode) {
 }
 
 /**
- *Convert switches and cases in the shader to be usable with the current int to float coercion
+ * Convert switches and cases in the shader to be usable with the current int to float coercion
  * @param source The shader as a string
  * @param sourceLength The shader allocated length
  * @return The shader as a string, converted appropriately, maybe in a different memory location
