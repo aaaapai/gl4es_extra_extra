@@ -739,6 +739,8 @@ char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, 
 
     char parenthesesStart = rightOperand ? '(' : ')';
     char parenthesesEnd = rightOperand ? ')' : '(';
+    char bracketStart = rightOperand ? '[' : ']';
+    char bracketEnd = rightOperand ? ']' : '[';
     int stringIndex = operatorIndex;
 
     // Get to the operand
@@ -764,14 +766,14 @@ char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, 
     while (parenthesesLeft > 0 || parserState == 1){
 
         // Look for parentheses
-        if(source[stringIndex] == parenthesesStart){
+        if(source[stringIndex] == parenthesesStart || source[stringIndex] == bracketStart){
             hasFoundParentheses = 1;
             parenthesesLeft += 1;
             stringIndex += parserDirection;
             continue;
         }
 
-        if(source[stringIndex] == parenthesesEnd){
+        if(source[stringIndex] == parenthesesEnd || source[stringIndex] == bracketEnd){
             hasFoundParentheses = 1;
             parenthesesLeft -= 1;
 
@@ -855,7 +857,7 @@ char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, 
 
                 // No operator value, can be almost anything
                 if(source[stringIndex - j] == ' ') continue;
-                // Else we found something. Did we found a high priority operator ?
+                // Else we found something. Did we find a high priority operator ?
                 if(lastOperator <= operatorValue){ // If so, we allow continuing and going out of the loop
                     stringIndex -= j;
                     parserState = 1;
