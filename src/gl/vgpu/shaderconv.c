@@ -714,7 +714,7 @@ char * ForceIntegerLayoutOutput(char *source, int *sourceLength) {
 /** Small helper to help evaluate whether to continue or not I guess
  * Values over 9900 are not for real operators, more like stop indicators*/
 int GetOperatorValue(char operator){
-    if(operator == ',' || operator == ';') return 9998;
+    if(operator == ',' || operator == ';' || operator == '|') return 9998;
     if(operator == '=' || operator == '>' || operator == '<') return 9997;
     if(operator == '+' || operator == '-') return 3;
     if(operator == '*' || operator == '/' || operator == '%') return 2;
