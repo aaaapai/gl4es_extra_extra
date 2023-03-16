@@ -164,6 +164,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = ReplacePrecisionQualifiers(source, &sourceLength, shader_source->type == GL_VERTEX_SHADER);
     
     source = ProcessSwitchCases(source, &sourceLength);
+    source = FixSimpleSwitchCases(source, &sourceLength);
 
     source = RemoveUniformProperty(source);
 
@@ -259,6 +260,33 @@ char* ProcessSwitchCases(char* source, int* length) {
    source = FindAndCorrect(source, length, MODE_SWITCH);
    source = FindAndCorrect(source, length, MODE_CASE);
    return source;
+}
+
+/**
+ * Fix case <const float>: to case <const int>:
+ * @param source The shader as a string
+ * @param sourceLength The length of the allocated shader
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * FixSimpleSwitchCases(char *source, int *sourceLength){
+    unsigned long offset = 0;
+    while (1){
+        // First find the case statement
+        unsigned long startIndex = strstrPos(source + offset, " case ");
+        if(startIndex == 0) break;
+
+        // Reach the floating dot, fail otherwise
+        unsigned long floatingIndex = GetNextTokenPosition(source + offset, startIndex, '.', "\\:");
+        if(floatingIndex == startIndex) break;
+
+        // Replace the .0 part by empty spaces
+        source[offset + floatingIndex] = ' ';
+        source[offset + floatingIndex + 1] = ' ';
+
+        offset += startIndex + 5; // 5 just to get ahead of the case statement
+    }
+
+    return source;
 }
 
 /**

@@ -43,6 +43,7 @@ char * ExtractString(char * source, int startString, int endString);
 char * RemoveUniformProperty(char * source);
 char* ProcessSwitchCases(char* source, int* length);
 char * ForceIntegerLayoutOutput(char * source, int *sourceLength);
+char * FixSimpleSwitchCases(char *source, int *sourceLength);
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
 
