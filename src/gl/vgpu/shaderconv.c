@@ -165,6 +165,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     
     source = ProcessSwitchCases(source, &sourceLength);
     source = FixSimpleSwitchCases(source, &sourceLength);
+    source = WrapSwitchStatements(source, &sourceLength);
 
     source = RemoveUniformProperty(source);
 
@@ -257,9 +258,45 @@ char* FindAndCorrect(char* source, int* length, int mode) {
 */
 
 char* ProcessSwitchCases(char* source, int* length) {
-   source = FindAndCorrect(source, length, MODE_SWITCH);
+   //source = FindAndCorrect(source, length, MODE_SWITCH);
    source = FindAndCorrect(source, length, MODE_CASE);
    return source;
+}
+
+/**
+ * Wraps the content of a switch statement into an integer
+ * @param source The shader as a string
+ * @param sourceLength The allocated length of the shader
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * WrapSwitchStatements(char *source, int *sourceLength){
+    unsigned long offset = 0;
+    while (1){
+        // Find the switch statement
+        unsigned long startIndex = strstrPos(source + offset, "switch");
+        if(startIndex == 0) break;
+
+        // Go to the end of the switch statement
+        startIndex += 5;
+
+        // Get to the start parentheses, then to the end one
+        printf("Switch found, current case: %c", source[startIndex + offset]);
+        unsigned long startParentheses = GetNextTokenPosition(source + offset, startIndex, '(', "\n\t\r ");
+        printf("token maybe found: index, parentheses: %lul %lul", startIndex, startParentheses);
+        if(startParentheses == startIndex) break;
+
+        // Get to the end token
+        unsigned long endParentheses = GetClosingTokenPosition(source, startParentheses);
+        if(endParentheses == startParentheses) break;
+
+        // Insert the token replacements
+        source = InplaceInsertByIndex(source, sourceLength, offset + endParentheses, ")");
+        source = InplaceInsertByIndex(source, sourceLength, offset + startParentheses + 1, "int(");
+
+        offset += endParentheses;
+    }
+
+    return source;
 }
 
 /**
@@ -272,7 +309,7 @@ char * FixSimpleSwitchCases(char *source, int *sourceLength){
     unsigned long offset = 0;
     while (1){
         // First find the case statement
-        unsigned long startIndex = strstrPos(source + offset, " case ");
+        unsigned long startIndex = strstrPos(source + offset, "case ");
         if(startIndex == 0) break;
 
         // Reach the floating dot, fail otherwise
@@ -1314,6 +1351,10 @@ int GetNextTokenPosition(const char * source, int initialPosition, const char to
     int inverseTripping = strlen(acceptedChars) > 0 && acceptedChars[0] == '\\';
 
     for(int i=initialPosition+1; i< strlen(source); ++i){
+        if (source[i] == token){
+            return i;
+        }
+
         // Tripping check
         if(strlen(acceptedChars) > 0){
             int acceptedCharFound = 0;
@@ -1330,9 +1371,7 @@ int GetNextTokenPosition(const char * source, int initialPosition, const char to
                 return initialPosition; // Tripped, meaning the accepted token is not found
         }
 
-        if (source[i] == token){
-            return i;
-        }
+
     }
     return initialPosition;
 }
