@@ -286,7 +286,7 @@ char * WrapSwitchStatements(char *source, int *sourceLength){
         if(startParentheses == startIndex) break;
 
         // Get to the end token
-        unsigned long endParentheses = GetClosingTokenPosition(source, startParentheses);
+        unsigned long endParentheses = GetClosingTokenPosition(source + offset, startParentheses);
         if(endParentheses == startParentheses) break;
 
         // Insert the token replacements
