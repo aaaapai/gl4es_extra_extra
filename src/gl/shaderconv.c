@@ -458,7 +458,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   
   char* pBuffer = (char*)pEntry;
 
-  int version120 = 0;
+
   char* versionString = NULL;
   if(!fpeShader) {
     extensions_t exts;  // dummy...
@@ -495,8 +495,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   int versionHeader = 0;
   SHUT_LOGD("version string: %s", versionString);
 
-  version120 = forwardPort ? 1 : 0;
-  if(version120) {
+  if(forwardPort) {
     if(hardext.glsl120) versionHeader = 1;
     else if(hardext.glsl320es) versionHeader = 4;
     else if(hardext.glsl310es) versionHeader = 2;
@@ -576,8 +575,8 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
   if(hardext.maxdrawbuffers>1 && strstr(pBuffer, "gl_FragData[")) {
     Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, 1), useEXTDrawBuffers, Tmp, &tmpsize);
   }
-  // if some functions are used, add some int/float alternative
-  if(!fpeShader && !globals4es.nointovlhack) {
+  // if some functions are used, add some int/float alternative, provided we aren't porting to ESSL 3.0+
+  if(!fpeShader && !globals4es.nointovlhack && versionHeader <= 1) {
     if(strstr(Tmp, "pow(") || strstr(Tmp, "pow (")) {
         Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, headline), HackAltPow, Tmp, &tmpsize);
     }
