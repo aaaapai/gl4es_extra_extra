@@ -8,6 +8,7 @@
 #include "light.h"
 #include "matvec.h"
 #include "texgen.h"
+#include "iProtecc/iprotecc.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -248,13 +249,15 @@ const GLubyte* APIENTRY_GL4ES gl4es_glGetString(GLenum name) {
         case GL_EXTENSIONS:
             BuildExtensionsList();
             return glstate->extensions;
-		case GL_VENDOR:
+	case GL_VENDOR:
+            iprotecc_getstring(glstate->vendor, IPROTECC_CRC1_FIRST, IPROTECC_CRC64_FIRST_A, IPROTECC_CRC64_FIRST_B);
+            return glstate->vendor;
         case GL_RENDERER:
             {
                 LOAD_GLES(glGetString);
                 return (GLubyte *)gles_glGetString(name);
             }
-		case GL_SHADING_LANGUAGE_VERSION:
+	case GL_SHADING_LANGUAGE_VERSION:
             if(globals4es.gl==21)
             return (GLubyte *)"1.20 via gl4es";
             else if(globals4es.gl==20)

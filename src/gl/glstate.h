@@ -112,6 +112,8 @@ typedef struct glstate_s {
     GLubyte*            extensions;
     int                 num_extensions;
     GLubyte**           extensions_list;
+    // Vendor string
+    GLubyte             vendor[256];
     // Texture adjust helper
     void*               helper_tex[MAX_TEX];
     int                 helper_texlen[MAX_TEX];

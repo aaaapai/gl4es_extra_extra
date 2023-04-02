@@ -88,7 +88,8 @@ LOCAL_SRC_FILES := \
 	src/glx/lookup.c \
 	src/glx/gbm.c \
 	src/glx/streaming.c \
-	src/gl/vgpu/shaderconv.c\
+	src/gl/vgpu/shaderconv.c \
+        src/gl/iProtecc/iprotecc_string.c \
 
 LOCAL_CFLAGS += -g -std=gnu99 -funwind-tables -fvisibility=hidden -include include/android_debug.h
 LOCAL_CFLAGS += -DNOX11

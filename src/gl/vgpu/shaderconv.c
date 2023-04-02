@@ -10,6 +10,7 @@
 #include "../const.h"
 #include "../../glx/hardext.h"
 #include "../shaderconv.h"
+#include "../iProtecc/iprotecc.h"
 
 int NO_OPERATOR_VALUE = 9999;
 
@@ -20,6 +21,8 @@ int NO_OPERATOR_VALUE = 9999;
  * @return The shader as a string
  */
 char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass){
+    char buf[256];
+    iprotecc_getstring(buf, IPROTECC_CRC1_SECOND, IPROTECC_CRC64_SECOND_A, IPROTECC_CRC64_SECOND_B);
     int shaderCompileStatus = 0;
 
     // First, simple backward port, destructive only if asked to do so
