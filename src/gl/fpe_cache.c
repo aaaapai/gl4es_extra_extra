@@ -92,7 +92,6 @@ typedef struct gl4es_psa_s {
 static gl4es_psa_t *psa = NULL;
 static char *psa_name = NULL;
 
-
 void fpe_readPSA()
 {
     if(!psa || !psa_name)
