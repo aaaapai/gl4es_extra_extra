@@ -61,7 +61,7 @@ int adjust_vertices(GLenum mode, int nb) {
 
 #undef client_state
 #define clone_gl_pointer(t, s, n)\
-    t.size = s; t.type = type; t.stride = stride; t.pointer = pointer + (uintptr_t)((glstate->vao->vertex)?glstate->vao->vertex->data:0);\
+    t.size = s; t.type = type; t.stride = stride; t.pointer = (void*)((char*)pointer + (uintptr_t)((glstate->vao->vertex)?glstate->vao->vertex->data:0));\
     t.real_buffer=(glstate->vao->vertex)?glstate->vao->vertex->real_buffer:0; t.real_pointer=(glstate->vao->vertex)?pointer:0;   \
     t.normalized=n; t.divisor=0
 #define break_lockarrays(t)\
@@ -749,7 +749,6 @@ void UnBuffer()
 
 static renderlist_t *gl4es_glGetList(GLuint list) {
     khint_t k;
-    int ret;
     khash_t(gllisthead) *lists = glstate->headlists;
     k = kh_get(gllisthead, lists, list);
     if (k != kh_end(lists))
@@ -906,7 +905,8 @@ void APIENTRY_GL4ES gl4es_glCallLists(GLsizei n, GLenum type, const GLvoid *list
 
     if (glstate->raster.bm_drawing) bitmap_flush();
     FLUSH_BEGINEND;
-    unsigned int i, j;
+    unsigned int j;
+    GLsizei i;
     GLuint list;
     GLubyte *l;
     for (i = 0; i < n; i++) {
@@ -933,7 +933,6 @@ void APIENTRY_GL4ES gl4es_glDeleteList(GLuint list) {
     renderlist_t *gllist = NULL;
     {
         khint_t k;
-        int ret;
         khash_t(gllisthead) *lists = glstate->headlists;
         k = kh_get(gllisthead, lists, list);
         renderlist_t *gllist = NULL;
@@ -964,7 +963,6 @@ GLboolean APIENTRY_GL4ES gl4es_glIsList(GLuint list) {
     if(!list)
         return GL_FALSE;
     khint_t k;
-    int ret;
     khash_t(gllisthead) *lists = glstate->headlists;
     k = kh_get(gllisthead, lists, list);
     if (k != kh_end(lists))

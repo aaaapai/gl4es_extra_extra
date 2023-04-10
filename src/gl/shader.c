@@ -66,7 +66,6 @@ GLuint APIENTRY_GL4ES gl4es_glCreateShader(GLenum shaderType) {
 
 void actualy_deleteshader(GLuint shader) {
     khint_t k;
-    int ret;
     khash_t(shaderlist) *shaders = glstate->glsl->shaders;
     k = kh_get(shaderlist, shaders, shader);
     if (k != kh_end(shaders)) {
@@ -84,7 +83,6 @@ void actualy_deleteshader(GLuint shader) {
 
 void actualy_detachshader(GLuint shader) {
     khint_t k;
-    int ret;
     khash_t(shaderlist) *shaders = glstate->glsl->shaders;
     k = kh_get(shaderlist, shaders, shader);
     if (k != kh_end(shaders)) {
@@ -275,7 +273,6 @@ GLboolean APIENTRY_GL4ES gl4es_glIsShader(GLuint shader) {
     shader_t *glshader = NULL;
     khint_t k;
     {
-        int ret;
         khash_t(shaderlist) *shaders = glstate->glsl->shaders;
         k = kh_get(shaderlist, shaders, shader);
         if (k != kh_end(shaders))
@@ -287,7 +284,6 @@ GLboolean APIENTRY_GL4ES gl4es_glIsShader(GLuint shader) {
 shader_t *getShader(GLuint shader) {
     khint_t k;
     {
-        int ret;
         khash_t(shaderlist) *shaders = glstate->glsl->shaders;
         k = kh_get(shaderlist, shaders, shader);
         if (k != kh_end(shaders))

@@ -49,5 +49,4 @@ void APIENTRY_GL4ES gl4es_glGetLightiv(GLenum light, GLenum pname, GLint * param
 void APIENTRY_GL4ES gl4es_glMaterialfv(GLenum face, GLenum pname, const GLfloat *params) ;
 void APIENTRY_GL4ES gl4es_glMaterialf(GLenum face, GLenum pname, GLfloat param);
 void APIENTRY_GL4ES gl4es_glColorMaterial(GLenum face, GLenum mode);
-
 #endif // _GL4ES_LIGHT_H_
