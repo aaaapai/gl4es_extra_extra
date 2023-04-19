@@ -66,11 +66,12 @@ SET(GL_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/gl/texture_3d.c
     ${CMAKE_CURRENT_SOURCE_DIR}/gl/uniform.c
     ${CMAKE_CURRENT_SOURCE_DIR}/gl/vertexattrib.c
-	${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/gl4eswraps.c
-	${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/gles.c
-	${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/glstub.c
-	${CMAKE_CURRENT_SOURCE_DIR}/gl/math/matheval.c
-        ${CMAKE_CURRENT_SOURCE_DIR}/gl/vgpu/shaderconv.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/gl4eswraps.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/gles.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/wrap/glstub.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/math/matheval.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/vgpu/shaderconv.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/gl/iProtecc/iprotecc_string.c
 )
 
 SET(GL_H
@@ -217,6 +218,12 @@ else()
     endif()
     if(USE_CLOCK)
         target_link_libraries(GL rt)
+    endif()
+    if(${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+        target_link_libraries(GL
+            "-F../../external"
+            "-framework MetalANGLE"
+        )
     endif()
     if(USE_ANDROID_LOG)
         target_link_libraries(GL ${log-lib})

@@ -722,11 +722,14 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
 
   // builtin attribs
   if(isVertex) {
+      // ANGLE already has ftransform, so skip it
+#ifndef __APPLE__
       // check for ftransform function
       if(strstr(Tmp, "ftransform(")) {
         Tmp = gl4es_inplace_insert(gl4es_getline(Tmp, headline), gl4es_ftransformSource, Tmp, &tmpsize);
         // don't increment headline count, as all variying and attributes should be created before
       }
+#endif
       // check for builtin OpenGL attributes...
       int n = sizeof(builtin_attrib)/sizeof(builtin_attrib_t);
       for (int i=0; i<n; i++) {

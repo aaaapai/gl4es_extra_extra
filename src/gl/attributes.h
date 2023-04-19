@@ -2,7 +2,7 @@
 #define _GL4ES_ATTRIBUTES_H_
 
 #ifndef EXPORT
- #if defined(__EMSCRIPTEN__) || defined(__APPLE__)
+ #if defined(__EMSCRIPTEN__)
    #define EXPORT
  #elif defined(STATICLIB)
    #define EXPORT
@@ -53,7 +53,10 @@
 #endif
 
 #ifndef AliasDecl
- #ifdef __GNUC__
+ #ifdef __APPLE__
+  #define AliasDecl(RET,NAME,DEF,OLD) \
+   asm(".global _"#NAME"\n_"#NAME": b _"#OLD);
+ #elif defined(__GNUC__)
   #define AliasDecl(RET,NAME,DEF,OLD) \
    RET APIENTRY_GL4ES NAME DEF __attribute__((alias(_STM(OLD,DEF))))
  #elif defined(_MSC_VER)
@@ -67,10 +70,15 @@
 #endif // AliasDecl
 
 #ifndef AliasExport
- #if !defined(__EMSCRIPTEN__) && !defined(__APPLE__)
-  #ifdef __GNUC__
-   #define _AliasExport_(RET,ENM,DEF,INM,SUF) EXPORT \
+ #if !defined(__EMSCRIPTEN__)
+  #if defined(__GNUC__)
+   #if defined(__APPLE__)
+    #define _AliasExport_(RET,ENM,DEF,INM,SUF) \
+      asm(".global _"#ENM"\n_"#ENM": b _gl4es_"#INM);
+   #else
+    #define _AliasExport_(RET,ENM,DEF,INM,SUF) EXPORT \
       RET APIENTRY_GL4ES ENM DEF __attribute__((alias(_MNG(gl4es_##INM,SUF))))
+   #endif
    #define NonAliasExportDecl(RET,NAME,DEF) EXPORT \
       RET APIENTRY_GL4ES NAME DEF
   #elif defined(_MSC_VER)
