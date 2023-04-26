@@ -338,7 +338,8 @@ At last, the value "1" will be changed to "15", to log everything.
 ##### LIBGL_VGPU_DUMP
 Log to the console all shaders before and after passing through the VGPU shader conversion pipeline
 * 0 : Default, don't log anything
-* 1 : Log every shader going through the pipeline
+* 1 : Log every shader going through the pipeline (start and end of the pipeline)
+* 2 : Log every shader going throuh the pipeline, at every major stage, including start and enc.
 
 ##### LIBGL_VGPU_FORCE
 Force the vgpu shader conversion pipeline to convert every shader.
