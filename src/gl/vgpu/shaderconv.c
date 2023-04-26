@@ -363,9 +363,11 @@ char * FixSimpleSwitchCases(char *source, int *sourceLength){
         unsigned long floatingIndex = GetNextTokenPosition(source + offset, startIndex, '.', "\\:");
         if(floatingIndex == startIndex) break;
 
+        source = InplaceReplaceByIndex(source, sourceLength, offset + floatingIndex, offset + floatingIndex + 1, "");
+
         // Replace the .0 part by empty spaces
-        source[offset + floatingIndex] = ' ';
-        source[offset + floatingIndex + 1] = ' ';
+        //source[offset + floatingIndex] = ' ';
+        //source[offset + floatingIndex + 1] = ' ';
 
         offset += startIndex + 5; // 5 just to get ahead of the case statement
     }
