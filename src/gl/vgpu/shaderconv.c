@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "shaderconv.h"
 #include "../string_utils.h"
 #include "../logs.h"
@@ -189,6 +190,21 @@ static const char* declaration_template = " const float %s = %s ;";
 #define MODE_SWITCH 0
 #define MODE_CASE 1
 
+/**
+ * Check if the input string is a conformant variable name or not
+ * @returns 1 if yes, 0 if no
+ */
+unsigned char CheckVariableName(const char* name) {
+   if(isalpha(name[0]) || name[0] == '_') {
+     size_t cnt = 0;
+     while(1) { // You only crash once
+        cnt++;
+        if(name[cnt] == 0) return 1;
+        if(!isDigit(name[cnt]) && !isalpha(name[cnt]) && name[cnt] != '_') return 0;
+     }
+   }
+   return 0;
+}
 
 /**
  * Convert switches or cases to be usable with the current int to float conversion
@@ -221,7 +237,7 @@ char* FindAndCorrect(char* source, int* length, int mode) {
          rewind = 1;
       }
       if(mode == MODE_CASE) {
-         if(!isDigit(template_string[0])) { // cant have a number without the first digit, and the standard doesn't permit variable names starting with numbers
+         if(CheckVariableName(template_string)) { 
             char   decltemplate_formatted[VARIABLE_SIZE];
             float  declared_value = 99;
             snprintf(decltemplate_formatted, VARIABLE_SIZE, declaration_template, template_string, "%f");
