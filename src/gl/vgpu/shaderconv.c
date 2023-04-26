@@ -43,6 +43,13 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 }
 
 
+/** Just prints the shader at a stage, for heavy dump */
+void VerbosePrint(char * source, char * stage) {
+    if(globals4es.vgpu_dump > 1){
+        printf("Stage - %s :\n%s\n", stage, source);
+    }
+}
+
 /** Convert the shader through multiple steps
  * @param source The start of the shader as a string
  * @param second_pass Whether gl4es tries to solve a linking error
@@ -74,7 +81,10 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
             source = gl4es_inplace_replace_simple(source, &sourceLength, "ivec", "vec");
 
             source = ReplaceModOperator(source, &sourceLength);
+            VerbosePrint(source, "Modulo operator replaced");
+
             source = BackportConstArrays(source, &sourceLength);
+            VerbosePrint(source, "const arrays backported");
 
             int insertPoint = FindPositionAfterVersion(source);
             source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
@@ -115,9 +125,11 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = ReplaceFunctionName(source, &sourceLength, "texture2DLod", "textureLod");
 
 
+
     //printf("REMOVING \" CHARS ");
     // " not really supported here
     source = gl4es_inplace_replace_simple(source, &sourceLength, "\"", "");
+    VerbosePrint(source, "Function renames");
 
     // For now let's hope no extensions are used
     // TODO deal with extensions but properly
@@ -127,22 +139,27 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     // OpenGL natively supports non const global initializers, not OPENGL ES except if we add an extension
     //printf("ADDING EXTENSIONS\n");
     source = InsertExtensions(source, &sourceLength);
+    VerbosePrint(source, "Extensions inserted");
 
     //printf("REPLACING mod OPERATORS");
     // No support for % operator, so we replace it
     source = ReplaceModOperator(source, &sourceLength);
+    VerbosePrint(source, "Modulo operator replaced");
 
     //printf("COERCING INT TO FLOATS");
     // Hey we don't want to deal with implicit type stuff
     source = CoerceIntToFloat(source, &sourceLength);
+    VerbosePrint(source, "Int coerced to float");
 
     //printf("FIXING ARRAY ACCESS");
     // Avoid any weird type trying to be an index for an array
     source = ForceIntegerArrayAccess(source, &sourceLength);
+    VerbosePrint(source, "Array access cast to integers");
 
     //printf("WRAPPING FUNCTION");
     // Since everything is a float, we need to overload WAY TOO MANY functions
     source = WrapIvecFunctions(source, &sourceLength);
+    VerbosePrint(source, "Wrapped ivec function renames");
 
     //printf("REMOVING DUBIOUS DEFINES");
     source = gl4es_inplace_replace_simple(source, &sourceLength, "#define texture texture2D\n", "");
@@ -156,24 +173,35 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
         source = ReplaceVariableName(source, &sourceLength, "varying", "in");
     }
 
+    VerbosePrint(source, "Basic renames - PART 2");
+
     // Draw buffers aren't dealt the same on OPEN GL|ES
     if(shader_source->type == GL_FRAGMENT_SHADER && doesShaderVersionContainsES(source) ){
         //printf("REPLACING FRAG DATA");
         source = ReplaceGLFragData(source, &sourceLength);
         //printf("REPLACING FRAG COLOR");
         source = ReplaceGLFragColor(source, &sourceLength);
+
+        VerbosePrint(source, "GL_FRAG renames");
     }
 
     //printf("FUCKING UP PRECISION");
     source = ReplacePrecisionQualifiers(source, &sourceLength, shader_source->type == GL_VERTEX_SHADER);
     
     source = ProcessSwitchCases(source, &sourceLength);
+    VerbosePrint(source, "Complex case statement replaced");
+
     source = FixSimpleSwitchCases(source, &sourceLength);
+    VerbosePrint(source, "Simple case statement replaced");
+
     source = WrapSwitchStatements(source, &sourceLength);
+    VerbosePrint(source, "Switch statement wrapped");
 
     source = RemoveUniformProperty(source);
+    VerbosePrint(source, "Uniform property removed");
 
     source = ForceIntegerLayoutOutput(source, &sourceLength);
+    VerbosePrint(source, "Layout output corrected back to integers");
 
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
