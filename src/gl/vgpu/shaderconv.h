@@ -15,6 +15,7 @@ char * RemoveConstInsideBlocks(char* source, int * sourceLength);
 char * ForceIntegerArrayAccess(char* source, int * sourceLength);
 char * CoerceIntToFloat(char * source, int * sourceLength);
 char * ReplaceModOperator(char * source, int * sourceLength);
+char * WrapBitShiftOperators(char * source, int *sourceLength);
 char * WrapIvecFunctions(char * source, int * sourceLength);
 char * WrapFunction(char * source, int * sourceLength, char * functionName, char * wrapperFunctionName, char * wrapperFunction);
 int FindPositionAfterDirectives(char * source);
@@ -47,5 +48,6 @@ char * FixSimpleSwitchCases(char *source, int *sourceLength);
 char * WrapSwitchStatements(char *source, int *sourceLength);
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
+char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue);
 
 #endif //UNTITLED_SHADERCONV_H

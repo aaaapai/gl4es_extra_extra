@@ -203,6 +203,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = ForceIntegerLayoutOutput(source, &sourceLength);
     VerbosePrint(source, "Layout output corrected back to integers");
 
+    source = WrapBitShiftOperators(source, &sourceLength);
+    VerbosePrint(source, "Bit shifts wrapped !");
+
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
     }
@@ -675,6 +678,36 @@ char * ReplaceModOperator(char * source, int * sourceLength){
 }
 
 /**
+ * Wrap << and >> operands with int() casts (caused by the float coercion)
+ * @param source The shader as a string
+ * @param sourceLength The allocated shader length
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * WrapBitShiftOperators(char * source, int *sourceLength) {
+    int startIndex, endIndex = 0;
+    int * startPtr = &startIndex, *endPtr = &endIndex;
+
+    for(int i=0;i<*sourceLength-2; ++i){
+        if((source[i] == '<' && source[i+1] == '<') || (source[i] == '>' && source[i+1] == '>')){
+            // A bit shift operator is found
+            char * leftOperand = GetOperandFromOperatorValueOverride(source, i, 0, startPtr, 5);
+            char * rightOperand = GetOperandFromOperatorValueOverride(source,  i+1, 1, endPtr, 5);
+
+            // Remember to insert from end to start in order to not throw away the result of the operation
+            source = InplaceInsertByIndex(source, sourceLength, endIndex + 1, ")");
+            source = InplaceInsertByIndex(source, sourceLength, i+2, "int(");
+
+            source = InplaceInsertByIndex(source, sourceLength, i-1, ")");
+            source = InplaceInsertByIndex(source, sourceLength, startIndex, "int(");
+
+            i = endIndex;
+        }
+    }
+
+    return source;
+}
+
+/**
  * Change all (u)ints to floats.
  * This is a hack to avoid dealing with implicit conversions on common operators
  * @param source The shader as a string
@@ -844,11 +877,15 @@ int GetOperatorValue(char operator){
  * @return newly allocated string with the operand
  */
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit){
+    return GetOperandFromOperatorValueOverride(source, operatorIndex, rightOperand, limit, GetOperatorValue(source[operatorIndex]));
+}
+
+char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue){
     int parserState = 0;
     int parserDirection = rightOperand ? 1 : -1;
     int operandStartIndex = 0, operandEndIndex = 0;
     int parenthesesLeft = 0, hasFoundParentheses = 0;
-    int operatorValue = GetOperatorValue(source[operatorIndex]);
+    int operatorValue = overrideTokenValue;
     int lastOperator = 0; // Used to determine priority for unary operators
 
     char parenthesesStart = rightOperand ? '(' : ')';
