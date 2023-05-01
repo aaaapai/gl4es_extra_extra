@@ -907,6 +907,17 @@ char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, 
     return GetOperandFromOperatorValueOverride(source, operatorIndex, rightOperand, limit, GetOperatorValue(source[operatorIndex]));
 }
 
+/** test whether a keyword in present at the left side if the index */
+int TestKeyword(const char *source, unsigned long index, const char* keyword){
+    unsigned keywordLength = strlen(keyword);
+    for(int i=0; i < keywordLength; ++i){
+        if(source[index - i] != keyword[keywordLength - 1 - i]){
+            return 0;
+        }
+    }
+    return 1;
+}
+
 char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue){
     int parserState = 0;
     int parserDirection = rightOperand ? 1 : -1;
@@ -953,11 +964,7 @@ char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int r
         }
 
         if(source[stringIndex] == parenthesesEnd || source[stringIndex] == bracketEnd || source[stringIndex] == ':' ||
-           (source[stringIndex-4] == 'c'
-            && source[stringIndex-3] == 'a'
-            && source[stringIndex-2] == 's'
-            && source[stringIndex-1] == 'e'
-            && source[stringIndex] == ' ')){
+                TestKeyword(source, stringIndex, "case ") || TestKeyword(source, stringIndex, "return ")){
             hasFoundParentheses = 1;
             parenthesesLeft -= 1;
 
