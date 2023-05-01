@@ -209,6 +209,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = WrapInclusiveOr(source, &sourceLength);
     VerbosePrint(source, "Inclusive Or wrapped");
 
+    source = SimplifyIntTypecasts(source, &sourceLength);
+    VerbosePrint(source, "Simplified typecast !");
+
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
     }
@@ -1400,6 +1403,46 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
     return source;
 }
 
+
+/**
+ * Simplify <int(const float)> to <const int>
+ * @param source The shader as a string
+ * @param sourceLength The length of the shader
+ * @param sour
+ */
+char * SimplifyIntTypecasts(char * source, int * sourceLength) {
+    unsigned long currentPosition = 0;
+    while (1){
+        // Find the start of a typecast
+        unsigned long startPos = strstrPos(source + currentPosition, "int(");
+        printf("Start pos: %lu \n", startPos);
+        if(startPos == 0) return source;
+
+        // Go to the end of said typecast
+        unsigned long endPos = GetNextTokenPosition(source + currentPosition, startPos + 4, ')', "  (\n\t\r01234567890.-");
+        printf("End pos: %lu \n", endPos);
+        if(endPos == startPos + 4) {
+            currentPosition += startPos + 3;
+            continue;
+        }
+
+        // Find the floating dot
+        unsigned long dotPos = GetNextTokenPosition(source + currentPosition, startPos, '.', "\\)");
+        printf("Dot pos: %lu \n", endPos);
+        if(dotPos == startPos) {
+            currentPosition += startPos + 3;
+            continue;
+        }
+
+        // Then replace the cast
+        source = InplaceReplaceByIndex(source, sourceLength, currentPosition + dotPos, currentPosition + endPos, "");
+        source = InplaceReplaceByIndex(source, sourceLength, currentPosition + startPos, currentPosition + startPos + 3, "");
+
+        currentPosition += startPos;
+    }
+    return source;
+}
+
 /**
  * @param openingToken The opening token
  * @return All closing tokens, if available
@@ -1438,7 +1481,7 @@ int GetClosingTokenPositionTokenOverride(const char * source, int initialTokenPo
     // Step 1: Determine the closing token
     char openingToken = initialToken;
     char * closingTokens = GetClosingTokens(openingToken);
-    printf("Closing tokens: %s", closingTokens);
+    printf("Closing tokens: %s \n", closingTokens);
     if (strlen(closingTokens) == 0){
         printf("No closing tokens, somehow \n");
         return initialTokenPosition;
@@ -1477,6 +1520,7 @@ int GetNextTokenPosition(const char * source, int initialPosition, const char to
     int inverseTripping = strlen(acceptedChars) > 0 && acceptedChars[0] == '\\';
 
     for(int i=initialPosition+1; i< strlen(source); ++i){
+        printf("GetTokenPosition: %c \n", source[initialPosition]);
         if (source[i] == token){
             return i;
         }

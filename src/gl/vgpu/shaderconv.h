@@ -47,6 +47,7 @@ char* ProcessSwitchCases(char* source, int* length);
 char * ForceIntegerLayoutOutput(char * source, int *sourceLength);
 char * FixSimpleSwitchCases(char *source, int *sourceLength);
 char * WrapSwitchStatements(char *source, int *sourceLength);
+char * SimplifyIntTypecasts(char * source, int * sourceLength);
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
 char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue);
