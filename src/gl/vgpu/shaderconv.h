@@ -16,6 +16,7 @@ char * ForceIntegerArrayAccess(char* source, int * sourceLength);
 char * CoerceIntToFloat(char * source, int * sourceLength);
 char * ReplaceModOperator(char * source, int * sourceLength);
 char * WrapBitShiftOperators(char * source, int *sourceLength);
+char * WrapInclusiveOr(char * source, int *sourceLength);
 char * WrapIvecFunctions(char * source, int * sourceLength);
 char * WrapFunction(char * source, int * sourceLength, char * functionName, char * wrapperFunctionName, char * wrapperFunction);
 int FindPositionAfterDirectives(char * source);

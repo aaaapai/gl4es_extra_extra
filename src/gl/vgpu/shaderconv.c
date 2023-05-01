@@ -187,7 +187,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
 
     //printf("FUCKING UP PRECISION");
     source = ReplacePrecisionQualifiers(source, &sourceLength, shader_source->type == GL_VERTEX_SHADER);
-    
+
     source = ProcessSwitchCases(source, &sourceLength);
     VerbosePrint(source, "Complex case statement replaced");
 
@@ -205,6 +205,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
 
     source = WrapBitShiftOperators(source, &sourceLength);
     VerbosePrint(source, "Bit shifts wrapped !");
+
+    source = WrapInclusiveOr(source, &sourceLength);
+    VerbosePrint(source, "Inclusive Or wrapped");
 
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
@@ -226,15 +229,15 @@ static const char* declaration_template = " const float %s = %s ;";
  * @returns 1 if yes, 0 if no
  */
 unsigned char CheckVariableName(const char* name) {
-   if(isalpha(name[0]) || name[0] == '_') {
-     size_t cnt = 0;
-     while(1) { // You only crash once
-        cnt++;
-        if(name[cnt] == 0) return 1;
-        if(!isDigit(name[cnt]) && !isalpha(name[cnt]) && name[cnt] != '_') return 0;
-     }
-   }
-   return 0;
+    if(isalpha(name[0]) || name[0] == '_') {
+        size_t cnt = 0;
+        while(1) { // You only crash once
+            cnt++;
+            if(name[cnt] == 0) return 1;
+            if(!isDigit(name[cnt]) && !isalpha(name[cnt]) && name[cnt] != '_') return 0;
+        }
+    }
+    return 0;
 }
 
 /**
@@ -245,59 +248,59 @@ unsigned char CheckVariableName(const char* name) {
  * @return The shader as a string, converted appropriately, maybe in a different memory location
 */
 char* FindAndCorrect(char* source, int* length, int mode) {
-   const char*     template = mode == MODE_SWITCH ? switch_template : mode == MODE_CASE ? case_template : NULL;
-   char*           scan_source = source;
-   char            template_string[VARIABLE_SIZE];
-   size_t          string_offset;
-   size_t          offset = 0;
-   unsigned char   rewind = 0;
-   while(1) {
-      int scan_result = sscanf(scan_source, template, &string_offset, &template_string);
-      if(scan_result == 0) {
-         scan_source++;
-         continue;
-      }else if(scan_result == EOF) {
-         break;
-      }
-      offset = string_offset + (strstr(scan_source, mode == MODE_SWITCH ? "{" : mode == MODE_CASE ? ":" : 0) - scan_source); // find it by hand cause sscanf has trouble with two %n operators
-      string_offset += (scan_source - source); // convert it from relative to scan to relative to base
-      if(mode == MODE_SWITCH && !strstr(template_string, "int(") ) { // already cast to int, skip
-         size_t insert_end_offset = string_offset + strlen(template_string);
-         source = InplaceInsertByIndex(source, length, insert_end_offset, ")");
-         source = InplaceInsertByIndex(source, length, string_offset, "int(");
-         rewind = 1;
-      }
-      if(mode == MODE_CASE) {
-         if(CheckVariableName(template_string)) { 
-            char   decltemplate_formatted[VARIABLE_SIZE];
-            float  declared_value = 99;
-            snprintf(decltemplate_formatted, VARIABLE_SIZE, declaration_template, template_string, "%f");
-            printf("Scanning with template %s\n", decltemplate_formatted);
-            char* scanbase = source;
-            while(1) {
-               int result = sscanf(scanbase, decltemplate_formatted, &declared_value);
-               if(result == 0) {
-                  scanbase++;
-                  continue;
-               }else if(result == EOF) {
-                  printf("Scanned the whole shader and didn't find declaration for %s with template \"%s\"\n", template_string, decltemplate_formatted);
-                  abort();
-               }
-              break;
-            }
-            char   integer[VARIABLE_SIZE];
-            snprintf(integer, VARIABLE_SIZE, "%i", (int)declared_value);
-            size_t replace_end_offset = string_offset + strlen(template_string)-1;
-            source = InplaceReplaceByIndex(source, length, string_offset, replace_end_offset, integer);
+    const char*     template = mode == MODE_SWITCH ? switch_template : mode == MODE_CASE ? case_template : NULL;
+    char*           scan_source = source;
+    char            template_string[VARIABLE_SIZE];
+    size_t          string_offset;
+    size_t          offset = 0;
+    unsigned char   rewind = 0;
+    while(1) {
+        int scan_result = sscanf(scan_source, template, &string_offset, &template_string);
+        if(scan_result == 0) {
+            scan_source++;
+            continue;
+        }else if(scan_result == EOF) {
+            break;
+        }
+        offset = string_offset + (strstr(scan_source, mode == MODE_SWITCH ? "{" : mode == MODE_CASE ? ":" : 0) - scan_source); // find it by hand cause sscanf has trouble with two %n operators
+        string_offset += (scan_source - source); // convert it from relative to scan to relative to base
+        if(mode == MODE_SWITCH && !strstr(template_string, "int(") ) { // already cast to int, skip
+            size_t insert_end_offset = string_offset + strlen(template_string);
+            source = InplaceInsertByIndex(source, length, insert_end_offset, ")");
+            source = InplaceInsertByIndex(source, length, string_offset, "int(");
             rewind = 1;
-         }
-      }
-      if(rewind) {
-         scan_source = source; // since inplace replacement operations are destructive, the scan will be rewound after doing them
-         rewind = 0;
-      }else scan_source += offset;
-   }
-   return source;
+        }
+        if(mode == MODE_CASE) {
+            if(CheckVariableName(template_string)) {
+                char   decltemplate_formatted[VARIABLE_SIZE];
+                float  declared_value = 99;
+                snprintf(decltemplate_formatted, VARIABLE_SIZE, declaration_template, template_string, "%f");
+                printf("Scanning with template %s\n", decltemplate_formatted);
+                char* scanbase = source;
+                while(1) {
+                    int result = sscanf(scanbase, decltemplate_formatted, &declared_value);
+                    if(result == 0) {
+                        scanbase++;
+                        continue;
+                    }else if(result == EOF) {
+                        printf("Scanned the whole shader and didn't find declaration for %s with template \"%s\"\n", template_string, decltemplate_formatted);
+                        abort();
+                    }
+                    break;
+                }
+                char   integer[VARIABLE_SIZE];
+                snprintf(integer, VARIABLE_SIZE, "%i", (int)declared_value);
+                size_t replace_end_offset = string_offset + strlen(template_string)-1;
+                source = InplaceReplaceByIndex(source, length, string_offset, replace_end_offset, integer);
+                rewind = 1;
+            }
+        }
+        if(rewind) {
+            scan_source = source; // since inplace replacement operations are destructive, the scan will be rewound after doing them
+            rewind = 0;
+        }else scan_source += offset;
+    }
+    return source;
 }
 
 /**
@@ -308,9 +311,9 @@ char* FindAndCorrect(char* source, int* length, int mode) {
 */
 
 char* ProcessSwitchCases(char* source, int* length) {
-   //source = FindAndCorrect(source, length, MODE_SWITCH);
-   source = FindAndCorrect(source, length, MODE_CASE);
-   return source;
+    //source = FindAndCorrect(source, length, MODE_SWITCH);
+    source = FindAndCorrect(source, length, MODE_CASE);
+    return source;
 }
 
 /**
@@ -618,7 +621,7 @@ char * WrapIvecFunctions(char * source, int * sourceLength){
                                                                                        "vec4 vgpu_textureOffset(sampler2DArray tex, vec3 P, vec2 offset){return vgpu_textureOffset(tex, P, offset, 0.0);}\n");
 
     source = WrapFunction(source, sourceLength, "shadow2D", "vgpu_shadow2D", "\nvec4 vgpu_shadow2D(sampler2DShadow shadow, vec3 coord){return vec4(texture(shadow, coord), 0.0, 0.0, 0.0);}\n"
-                                                                              "vec4 vgpu_shadow2D(sampler2DShadow shadow, vec3 coord, float bias){return vec4(texture(shadow, coord, bias), 0.0, 0.0, 0.0);}\n");
+                                                                             "vec4 vgpu_shadow2D(sampler2DShadow shadow, vec3 coord, float bias){return vec4(texture(shadow, coord, bias), 0.0, 0.0, 0.0);}\n");
     return source;
 }
 
@@ -692,6 +695,30 @@ char * WrapBitShiftOperators(char * source, int *sourceLength) {
             // A bit shift operator is found
             char * leftOperand = GetOperandFromOperatorValueOverride(source, i, 0, startPtr, 5);
             char * rightOperand = GetOperandFromOperatorValueOverride(source,  i+1, 1, endPtr, 5);
+
+            // Remember to insert from end to start in order to not throw away the result of the operation
+            source = InplaceInsertByIndex(source, sourceLength, endIndex + 1, ")");
+            source = InplaceInsertByIndex(source, sourceLength, i+2, "int(");
+
+            source = InplaceInsertByIndex(source, sourceLength, i-1, ")");
+            source = InplaceInsertByIndex(source, sourceLength, startIndex, "int(");
+
+            i = endIndex;
+        }
+    }
+
+    return source;
+}
+
+char * WrapInclusiveOr(char * source, int *sourceLength) {
+    int startIndex, endIndex = 0;
+    int * startPtr = &startIndex, *endPtr = &endIndex;
+
+    for(int i=0;i<*sourceLength-2; ++i){
+        if(source[i] == '|' && !(source[i+1] == '|' || source[i-1] == '|')){
+            // An inclusive operator is found
+            char * leftOperand = GetOperandFromOperatorValueOverride(source, i, 0, startPtr, 6);
+            char * rightOperand = GetOperandFromOperatorValueOverride(source,  i+1, 1, endPtr, 6);
 
             // Remember to insert from end to start in order to not throw away the result of the operation
             source = InplaceInsertByIndex(source, sourceLength, endIndex + 1, ")");
@@ -916,15 +943,21 @@ char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int r
     // Get to the other side of the operand, the twist is here.
     while (parenthesesLeft > 0 || parserState == 1){
 
-        // Look for parentheses
+        // Look for parentheses or border of case statements
         if(source[stringIndex] == parenthesesStart || source[stringIndex] == bracketStart){
+
             hasFoundParentheses = 1;
             parenthesesLeft += 1;
             stringIndex += parserDirection;
             continue;
         }
 
-        if(source[stringIndex] == parenthesesEnd || source[stringIndex] == bracketEnd){
+        if(source[stringIndex] == parenthesesEnd || source[stringIndex] == bracketEnd || source[stringIndex] == ':' ||
+           (source[stringIndex-4] == 'c'
+            && source[stringIndex-3] == 'a'
+            && source[stringIndex-2] == 's'
+            && source[stringIndex-1] == 'e'
+            && source[stringIndex] == ' ')){
             hasFoundParentheses = 1;
             parenthesesLeft -= 1;
 
@@ -1313,26 +1346,26 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
 
     int insertPoint = FindPositionAfterDirectives(source);
     source = InplaceInsertByIndex(source, sourceLength, insertPoint,
-                                   "\nprecision lowp sampler2D;\n"
-                                   "precision lowp sampler3D;\n"
-                                   "precision lowp sampler2DShadow;\n"
-                                   "precision lowp samplerCubeShadow;\n"
-                                   "precision lowp sampler2DArray;\n"
-                                   "precision lowp sampler2DArrayShadow;\n"
-                                   "precision lowp samplerCube;\n"
-                                   "#ifdef GL_EXT_texture_buffer\n"
-                                   "precision lowp samplerBuffer;\n"
-                                   "precision lowp imageBuffer;\n"
-                                   "#endif\n"
-                                   "#ifdef GL_EXT_texture_cube_map_array\n"
-                                   "precision lowp imageCubeArray;\n"
-                                   "precision lowp samplerCubeArray;\n"
-                                   "precision lowp samplerCubeArrayShadow;\n"
-                                   "#endif\n"
-                                   "#ifdef GL_OES_texture_storage_multisample_2d_array\n"
-                                   "precision lowp sampler2DMS;\n"
-                                   "precision lowp sampler2DMSArray;\n"
-                                   "#endif\n");
+                                  "\nprecision lowp sampler2D;\n"
+                                  "precision lowp sampler3D;\n"
+                                  "precision lowp sampler2DShadow;\n"
+                                  "precision lowp samplerCubeShadow;\n"
+                                  "precision lowp sampler2DArray;\n"
+                                  "precision lowp sampler2DArrayShadow;\n"
+                                  "precision lowp samplerCube;\n"
+                                  "#ifdef GL_EXT_texture_buffer\n"
+                                  "precision lowp samplerBuffer;\n"
+                                  "precision lowp imageBuffer;\n"
+                                  "#endif\n"
+                                  "#ifdef GL_EXT_texture_cube_map_array\n"
+                                  "precision lowp imageCubeArray;\n"
+                                  "precision lowp samplerCubeArray;\n"
+                                  "precision lowp samplerCubeArrayShadow;\n"
+                                  "#endif\n"
+                                  "#ifdef GL_OES_texture_storage_multisample_2d_array\n"
+                                  "precision lowp sampler2DMS;\n"
+                                  "precision lowp sampler2DMSArray;\n"
+                                  "#endif\n");
 
     if(GetShaderVersion(source) > 300){
         source = InplaceInsertByIndex(source, sourceLength,insertPoint,
