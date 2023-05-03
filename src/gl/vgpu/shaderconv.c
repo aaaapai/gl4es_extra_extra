@@ -336,9 +336,7 @@ char * WrapSwitchStatements(char *source, int *sourceLength){
         startIndex += 5;
 
         // Get to the start parentheses, then to the end one
-        printf("Switch found, current case: %c", source[startIndex + offset]);
         unsigned long startParentheses = GetNextTokenPosition(source + offset, startIndex, '(', "\n\t\r ");
-        printf("token maybe found: index, parentheses: %lul %lul", startIndex, startParentheses);
         if(startParentheses == startIndex) break;
 
         // Get to the end token
@@ -1415,12 +1413,10 @@ char * SimplifyIntTypecasts(char * source, int * sourceLength) {
     while (1){
         // Find the start of a typecast
         unsigned long startPos = strstrPos(source + currentPosition, "int(");
-        printf("Start pos: %lu \n", startPos);
         if(startPos == 0) return source;
 
         // Go to the end of said typecast
         unsigned long endPos = GetNextTokenPosition(source + currentPosition, startPos + 4, ')', "  (\n\t\r01234567890.-");
-        printf("End pos: %lu \n", endPos);
         if(endPos == startPos + 4) {
             currentPosition += startPos + 3;
             continue;
@@ -1428,7 +1424,6 @@ char * SimplifyIntTypecasts(char * source, int * sourceLength) {
 
         // Find the floating dot
         unsigned long dotPos = GetNextTokenPosition(source + currentPosition, startPos, '.', "\\)");
-        printf("Dot pos: %lu \n", endPos);
         if(dotPos == startPos) {
             currentPosition += startPos + 3;
             continue;
@@ -1481,7 +1476,7 @@ int GetClosingTokenPositionTokenOverride(const char * source, int initialTokenPo
     // Step 1: Determine the closing token
     char openingToken = initialToken;
     char * closingTokens = GetClosingTokens(openingToken);
-    printf("Closing tokens: %s \n", closingTokens);
+
     if (strlen(closingTokens) == 0){
         printf("No closing tokens, somehow \n");
         return initialTokenPosition;
@@ -1520,7 +1515,6 @@ int GetNextTokenPosition(const char * source, int initialPosition, const char to
     int inverseTripping = strlen(acceptedChars) > 0 && acceptedChars[0] == '\\';
 
     for(int i=initialPosition+1; i< strlen(source); ++i){
-        printf("GetTokenPosition: %c \n", source[initialPosition]);
         if (source[i] == token){
             return i;
         }
