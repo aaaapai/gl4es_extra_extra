@@ -210,8 +210,14 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = WrapBitwiseOrAnd(source, &sourceLength);
     VerbosePrint(source, "Inclusive Or wrapped");
 
-    source = SimplifyIntTypecasts(source, &sourceLength);
-    VerbosePrint(source, "Simplified typecast !");
+    source = SimplifyRedundantParentheses(source, &sourceLength);
+    VerbosePrint(source, "Simplified parentheses");
+
+    source = SimplifyRedundantIntTypecasts(source, &sourceLength);
+    VerbosePrint(source, "Non const typecast simplified");
+
+    source = SimplifyConstIntTypecasts(source, &sourceLength);
+    VerbosePrint(source, "Simplified const typecast typecast !");
 
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
@@ -1443,7 +1449,7 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
  * @param sourceLength The length of the shader
  * @param sour
  */
-char * SimplifyIntTypecasts(char * source, int * sourceLength) {
+char * SimplifyConstIntTypecasts(char * source, int * sourceLength) {
     unsigned long currentPosition = 0;
     while (1){
         // Find the start of a typecast
@@ -1470,6 +1476,66 @@ char * SimplifyIntTypecasts(char * source, int * sourceLength) {
 
         currentPosition += startPos;
     }
+    return source;
+}
+
+/**
+ * Simplify <int(int(float))> to <int(float)>
+ * @param source The shader as a string
+ * @param sourceLength The shader length
+ * @return The shader as a string, probably not in a different memory location
+ */
+char * SimplifyRedundantIntTypecasts(char * source, int * sourceLength) {
+    for(int i=0; i < strlen(source) - 4; ++i){
+        if(source[i] != 'i' || source[i+1] != 'n' || source[i+2] != 't' || source[i+3] != '(') continue;
+        // Get the next parentheses opening
+        const int secondParenthesesIndex = GetNextTokenPosition(source, i+3, '(', " int");
+        if(secondParenthesesIndex == i+3) continue;
+
+        // Get to the second parentheses end
+        const int thirdParenthesesIndex = GetClosingTokenPosition(source, secondParenthesesIndex);
+        if(thirdParenthesesIndex == secondParenthesesIndex) continue;
+
+        // Then the first parentheses end
+        const int fourthParenthesesIndex = GetNextTokenPosition(source, thirdParenthesesIndex, ')', " ");
+        if(fourthParenthesesIndex == thirdParenthesesIndex) continue;
+
+        // Redundant parentheses found, remove them
+        source = InplaceReplaceByIndex(source, sourceLength, fourthParenthesesIndex, fourthParenthesesIndex, "");
+        source = InplaceReplaceByIndex(source, sourceLength, i, i+3, "");
+        i--;
+    }
+
+    return source;
+}
+
+
+/**
+ * Simplify ((<operationHere>)) into (<operationHere>)
+ * @param source The shader as a string
+ * @param sourceLength The length of the shader
+ */
+char * SimplifyRedundantParentheses(char * source, int * sourceLength){
+    for(int i=0; i < strlen(source); ++i){
+        if(source[i] != '(') continue;
+        // Get the next parentheses opening
+        const int secondParenthesesIndex = GetNextTokenPosition(source, i, '(', " ");
+        if(secondParenthesesIndex == i) continue;
+
+        // Get to the second parentheses end
+        const int thirdParenthesesIndex = GetClosingTokenPosition(source, secondParenthesesIndex);
+        if(thirdParenthesesIndex == secondParenthesesIndex) continue;
+
+        // Then the first parentheses end
+        const int fourthParenthesesIndex = GetNextTokenPosition(source, thirdParenthesesIndex, ')', " ");
+        if(fourthParenthesesIndex == thirdParenthesesIndex) continue;
+
+        // Redundant parentheses found, remove them
+        source = InplaceReplaceByIndex(source, sourceLength, fourthParenthesesIndex, fourthParenthesesIndex, "");
+        source = InplaceReplaceByIndex(source, sourceLength, i, i, "");
+        i--;
+    }
+
     return source;
 }
 
