@@ -219,6 +219,9 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = SimplifyConstIntTypecasts(source, &sourceLength);
     VerbosePrint(source, "Simplified const typecast typecast !");
 
+    source = FixReturnTypes(source, &sourceLength);
+    VerbosePrint(source, "Wrapped some function return statement");
+
     if (globals4es.vgpu_dump){
         printf("New VGPU Shader conversion:\n%s\n", source);
     }
@@ -825,6 +828,35 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
     source = gl4es_inplace_replace_simple(source, sourceLength, "gl_VertexID", "float(gl_VertexID)");
     source = gl4es_inplace_replace_simple(source, sourceLength, "gl_InstanceID", "float(gl_InstanceID)");
 
+    return source;
+}
+
+/**
+ * Wrap functions return statement if they have an int typecast
+ * @param source The shader as a string
+ * @param sourceLength The length of the shader
+ */
+char * FixReturnTypes(char * source, int * sourceLength) {
+    unsigned long offset = 0;
+    while (1){
+        // Find a return statement
+        unsigned long startingIndex = strstrPos(source + offset, "return ");
+        if(startingIndex == 0) break;
+
+        // Verify we have an int typecast
+        unsigned long typecastIndex = GetNextTokenPosition(source, offset + startingIndex + strlen("return "), '(', " int");
+        if(typecastIndex == offset + startingIndex + strlen("return ")) {
+            offset += startingIndex + strlen("return ");
+            continue;
+        }
+
+        // We have a typecast, get the end on instruction and wrap it
+        unsigned long endInstructionIndex = GetNextTokenPosition(source, typecastIndex, ';', "");
+        source = InplaceInsertByIndex(source, sourceLength, endInstructionIndex, ")");
+        source = InplaceInsertByIndex(source, sourceLength, startingIndex + offset + strlen("return "), "float(");
+
+        offset = endInstructionIndex;
+    }
     return source;
 }
 
