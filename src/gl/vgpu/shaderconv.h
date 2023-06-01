@@ -56,4 +56,6 @@ char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, 
 char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue);
 int GetOperatorValue(char operator, char operator2);
 
+int IsVariableNamePresent(const char * source, const int * sourceLength, const char * variableName);
+
 #endif //UNTITLED_SHADERCONV_H

@@ -1273,6 +1273,38 @@ char * ReplaceVariableName(char * source, int * sourceLength, char * initialName
 }
 
 /**
+ * Look if the variable name is present
+ * @return 1 if the variable is present, 0 otherwise
+ */
+int IsVariableNamePresent(const char * source, const int * sourceLength, const char * variableName) {
+    char * toReplace = malloc(strlen(variableName) + 3);
+    char * charBefore = "{}([];+-*/~!%<>,&| \n\t";
+    char * charAfter = ")[];+-*/%<>;,|&. \n\t";
+
+    unsigned variableLength = strlen(variableName);
+
+    // Prepare the fixed part of the strings
+    strcpy(toReplace + 1, variableName);
+    toReplace[variableLength + 2] = '\0';
+
+    for (int i = 0; i < strlen(charBefore); ++i) {
+        for (int j = 0; j < strlen(charAfter); ++j) {
+            toReplace[0] = charBefore[i];
+            toReplace[variableLength+1] = charAfter[j];
+
+            // Look if the combination exists
+            if (strstr(source, toReplace) != NULL) {
+                return 1;
+            }
+        }
+    }
+
+    free(toReplace);
+
+    return 0;
+}
+
+/**
  * Replace a function definition and calls to the function to another name
  * @param source The shader as a string
  * @param sourceLength The shader length

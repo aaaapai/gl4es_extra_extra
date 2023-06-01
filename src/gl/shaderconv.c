@@ -9,6 +9,7 @@
 #include "string_utils.h"
 #include "shader_hacks.h"
 #include "logs.h"
+#include "vgpu/shaderconv.h"
 
 typedef struct {
     const char* glname;
@@ -733,7 +734,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
       // check for builtin OpenGL attributes...
       int n = sizeof(builtin_attrib)/sizeof(builtin_attrib_t);
       for (int i=0; i<n; i++) {
-          if(strstr(Tmp, builtin_attrib[i].glname)) {
+          if(IsVariableNamePresent(Tmp, &tmpsize, builtin_attrib[i].glname)) {
               // ok, this attribute is used
               // replace gl_name by _gl4es_ one
               Tmp = gl4es_inplace_replace(Tmp, &tmpsize, builtin_attrib[i].glname, builtin_attrib[i].name);
