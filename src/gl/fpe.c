@@ -1489,7 +1489,12 @@ void realize_glenv(int ispoint, int first, int count, GLenum type, const void* i
                 }
                 DBG(printf("using Buffer %d\n", v->real_buffer);)
                 bindBuffer(GL_ARRAY_BUFFER, v->real_buffer);
+                gles_glVertexAttribPointer(i, v->size, v->type, v->normalized, v->stride, v->pointer);
 
+                // TODO STUB
+                // In theory, calling the real implementation is something good to do. However it seems to break
+                // chromebooks and some samsung phone. Partially due to how the gl4es counterpart method had been implemented
+                /*
                 if (v->integer) {
                     if(gles_glVertexAttribIPointer)
                         gles_glVertexAttribIPointer(i, v->size, v->type, v->stride, v->pointer);
@@ -1500,7 +1505,7 @@ void realize_glenv(int ispoint, int first, int count, GLenum type, const void* i
                 else {
                     gles_glVertexAttribPointer(i, v->size, v->type, v->normalized, v->stride, v->pointer);
                     DBG(printf("glVertexAttribPointer(%d, %d, %s, %d, %d, %p)\n", i, v->size, PrintEnum(v->type), v->normalized, v->stride, v->pointer);)
-                }
+                }*/
             }
         } else {
             // single value case
