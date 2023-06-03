@@ -918,7 +918,10 @@ char * ForceIntegerLayoutOutput(char *source, int *sourceLength) {
 
         // Find the dot for floating point
         unsigned long dotIndex = GetNextTokenPosition(source + offset, assignmentIndex, '.', "\\)");
-        if(dotIndex == 0) break;
+        if(dotIndex == assignmentIndex) {
+            offset += assignmentIndex;
+            continue;
+        }
 
         unsigned long endIndex = GetNextTokenPosition(source + offset, dotIndex, ')',"");
         source = InplaceReplaceByIndex(source, sourceLength, dotIndex + offset, endIndex + offset -1, "");
