@@ -1781,13 +1781,18 @@ IR_TO_GLSL::visit(ir_return* ir)
 void
 IR_TO_GLSL::visit(ir_discard* ir)
 {
+    if (ir->condition != NULL)
+    {
+        generated_source.append("if ( ");
+        ir->condition->accept(this);
+        generated_source.append(") {");
+    }
+
 	generated_source.append("discard");
 
-	if (ir->condition != NULL)
-	{
-		generated_source.append(" ");
-		ir->condition->accept(this);
-	}
+    if (ir->condition != NULL) {
+        generated_source.append(" ;}");
+    }
 }
 
 void
