@@ -140,6 +140,8 @@ SET(GL_H
         ${CMAKE_CURRENT_SOURCE_DIR}/gl/vgpu/shaderconv.h
 )
 
+add_subdirectory(./glsl_optimizer)
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT NO_LOADER)
     include_directories(glx)
 #    aux_source_directory(glx GLX_SOURCES)
@@ -245,7 +247,7 @@ endif()
 SET(EGL_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/egl/egl.c
     ${CMAKE_CURRENT_SOURCE_DIR}/egl/lookup.c
-)
+        glsl_optimizer/src/code/GlslConvert.cpp)
 
 SET(EGL_H
     ${CMAKE_CURRENT_SOURCE_DIR}/egl/egl.h
