@@ -1264,6 +1264,9 @@ IR_TO_GLSL::visit(ir_texture* ir)
 		generated_source.append(", ");
 		ir->lod_info.bias->accept(this);
 	}
+
+    // Close the function call
+    generated_source.append(")");
 }
 
 void
