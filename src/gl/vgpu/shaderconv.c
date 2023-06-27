@@ -27,12 +27,15 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     iprotecc_getstring(buf, IPROTECC_CRC1_SECOND, IPROTECC_CRC64_SECOND_A, IPROTECC_CRC64_SECOND_B);
     int shaderCompileStatus = 0;
 
-    // First, simple backward port, destructive only if asked to do so
-    shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
-    shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+    if(GetShaderVersion(shader_source->source) < 150 || globals4es.vgpu_force_conv){
+        // First, simple backward port, destructive only if asked to do so
+        shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
+        shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
 
-    if(!globals4es.vgpu_force_conv || second_pass)  // Skip the test, consider it uncompiled
-        shaderCompileStatus = testGenericShader(shader_source);
+        if(!globals4es.vgpu_force_conv || second_pass)  // Skip the test, consider it uncompiled
+            shaderCompileStatus = testGenericShader(shader_source);
+    }
+
 
     // At last resort, use forward porting
     if(!shaderCompileStatus && hardext.glsl300es){
@@ -65,7 +68,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     char * source = shader_source->converted;
     int sourceLength = strlen(source) + 1;
     // For now, skip stuff
-    if(gl4es_find_string(source, "#version 100")){
+    if(gl4es_find_string(source, "#version 100")) {
 
         // If forced, do a heavy pass additionally
         if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
@@ -587,7 +590,8 @@ char * InsertExtension(char * source, int * sourceLength, const int insertPoint,
 }
 
 int doesShaderVersionContainsES(const char * source){
-    return GetShaderVersion(source) >= 300;
+    int version = GetShaderVersion(source);
+    return version >= 300 &&  version <= 320;
 }
 
 char * WrapIvecFunctions(char * source, int * sourceLength){
@@ -1758,17 +1762,36 @@ char * insertIntAtFunctionCall(char * source, int * sourceSize, const char * fun
     return source;
 }
 
+/** Convenience macro to test shader versions */
+#define test_version_context(version, context) \
+    if(gl4es_find_string(source, "#version "#version " " #context)){ return version; }
+
+#define test_version(version) \
+    if(gl4es_find_string(source, "#version "#version)){ return version; }
+
 /**
  * @param source The shader as a string
  * @return The shader version: eg. 310 for #version 310 es
  */
 int GetShaderVersion(const char * source){
-    // Oh yeah, I won't care much about this function
-    if(gl4es_find_string(source, "#version 320 es")){return 320;}
-    if(gl4es_find_string(source, "#version 310 es")){return 310;}
-    if(gl4es_find_string(source, "#version 300 es")){return 300;}
-    if(gl4es_find_string(source, "#version 150")){return 150;}
-    if(gl4es_find_string(source, "#version 130")){return 130;}
-    if(gl4es_find_string(source, "#version 120")){return 120;}
+    test_version(150)
+    test_version(100)
+    test_version_context(320, es)
+    test_version_context(310, es)
+    test_version_context(300, es)
+
+    test_version(120)
+    test_version(110)
+    test_version(140)
+    test_version(130)
+
+    test_version(460)
+    test_version(450)
+    test_version(440)
+    test_version(430)
+    test_version(420)
+    test_version(410)
+    test_version(400)
+
     return 100;
 }
