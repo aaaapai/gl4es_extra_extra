@@ -68,7 +68,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     char * source = shader_source->converted;
     int sourceLength = strlen(source) + 1;
     // For now, skip stuff
-    if(gl4es_find_string(source, "#version 100")) {
+    if(GetShaderVersion(source) == 100) {
 
         // If forced, do a heavy pass additionally
         if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
@@ -502,10 +502,10 @@ char * BackportConstArrays(char *source, int * sourceLength){
  * @param endString The end of the substring
  * @return A newly allocated substring. Don't forget to free() it !
  */
-char * ExtractString(char * source, int startString, int endString){
-    char * subString = malloc((endString - startString) +1);
-    subString[(endString - startString) +1] = '\0';
+char * ExtractString(const char * source, int startString, int endString){
+    char * subString = malloc((endString - startString) + 1);
     memcpy(subString, source + startString, (endString - startString));
+    subString[(endString - startString)] = '\0';
     return subString;
 }
 
@@ -1420,7 +1420,7 @@ char * RemoveConstInsideBlocks(char* source, int * sourceLength){
  * @return The index position after the #version line, start of the shader if not found
  */
 int FindPositionAfterDirectives(char * source){
-    const char * position = gl4es_find_string(source, "#version");
+    const char * position = strstr(source, "#version");
     if (position == NULL) return 0;
     for(int i=7; 1; ++i){
         if(position[i] == '\n'){
@@ -1430,8 +1430,8 @@ int FindPositionAfterDirectives(char * source){
     }
 }
 
-int FindPositionAfterVersion(char * source){
-    const char * position = gl4es_find_string(source, "#version");
+int FindPositionAfterVersion(const char * source){
+    const char * position = strstr(source, "#version");
     if (position == NULL) return 0;
     for(int i=7; 1; ++i){
         if(position[i] == '\n'){
@@ -1764,16 +1764,19 @@ char * insertIntAtFunctionCall(char * source, int * sourceSize, const char * fun
 
 /** Convenience macro to test shader versions */
 #define test_version_context(version, context) \
-    if(gl4es_find_string(source, "#version "#version " " #context)){ return version; }
+    if(strstr(versionString, "#version "#version " " #context) != NULL ){ free(versionString); return version; }
 
 #define test_version(version) \
-    if(gl4es_find_string(source, "#version "#version)){ return version; }
+    if(strstr(versionString, "#version "#version) != NULL ){ free(versionString); return version; }
 
 /**
  * @param source The shader as a string
  * @return The shader version: eg. 310 for #version 310 es
  */
-int GetShaderVersion(const char * source){
+int GetShaderVersion(const char * source) {
+    int endVersionPosition = FindPositionAfterVersion(source);
+    char * versionString = ExtractString(source, 0, endVersionPosition);
+
     test_version(150)
     test_version(100)
     test_version_context(320, es)
@@ -1793,5 +1796,6 @@ int GetShaderVersion(const char * source){
     test_version(410)
     test_version(400)
 
+    free(versionString);
     return 100;
 }
