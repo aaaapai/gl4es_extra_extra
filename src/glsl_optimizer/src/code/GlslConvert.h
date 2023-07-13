@@ -202,7 +202,7 @@ public:
 
 		struct DeadCodeOptions
 		{
-			bool keep_only_assigned_uniforms = true; // true => ne garde que les uniform assignés (loc >= 0) 
+			bool keep_only_assigned_uniforms = false; // true => ne garde que les uniform assignés (loc >= 0)
 		} deadCodeOptions;
 
 		struct DeadFunctionOptions

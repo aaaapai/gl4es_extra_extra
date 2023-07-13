@@ -125,13 +125,15 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     // Avoid keyword clash with gl4es #define blocks
     //printf("REPLACING KEYWORDS");
     source = gl4es_inplace_replace_simple(source, &sourceLength, "#define texture2D texture\n", "");
+    //FIXME temporary disables the texture clash
+    /*
     source = ReplaceVariableName(source, &sourceLength, "sample", "vgpu_Sample");
     source = ReplaceVariableName(source, &sourceLength, "texture", "vgpu_texture");
 
     source = ReplaceFunctionName(source, &sourceLength, "texture2D", "texture");
     source = ReplaceFunctionName(source, &sourceLength, "texture3D", "texture");
     source = ReplaceFunctionName(source, &sourceLength, "texture2DLod", "textureLod");
-
+    */
 
 
     //printf("REMOVING \" CHARS ");
@@ -1272,6 +1274,9 @@ char * ReplaceVariableName(char * source, int * sourceLength, char * initialName
             // Prepare the replacement string
             replacement[0] = charBefore[i];
             replacement[strlen(newName)+1] = charAfter[j];
+
+            // Special case: Spaces between what we think is a variable and the first parentheses
+            //TODO handle it
 
             source = gl4es_inplace_replace_simple(source, sourceLength, toReplace, replacement);
         }

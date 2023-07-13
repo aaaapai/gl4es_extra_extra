@@ -210,7 +210,7 @@ std::string IR_TO_GLSL::Convert(
 	}
 
 	print_texlod_workarounds(uses_texlod_impl, uses_texlodproj_impl, res);
-
+    res.append("\n\n");
 	return std::string(res.c_str());
 }
 
@@ -689,8 +689,8 @@ const char* const operator_glsl_strs[] = {
    ">=",
    "==",
    "!=",
-   "all_equal_TODO",
-   "any_nequal_TODO",
+   "==", // all_equal_TODO
+   "!=", // any_nequal_TODO
    "<<",
    ">>",
    "&",

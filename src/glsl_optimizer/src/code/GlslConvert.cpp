@@ -205,7 +205,7 @@ std::string GlslConvert::Optimize(
 
 	struct gl_shader_program* program = 0;
 
-	// si le format d'entr�� est un ir
+	// si le format d'entrée est un ir
 	//shader->ir = new(shader) exec_list;
 	//_mesa_glsl_initialize_types(state);
 	//_mesa_glsl_read_ir(state, shader->ir, input.c_str(), true);
