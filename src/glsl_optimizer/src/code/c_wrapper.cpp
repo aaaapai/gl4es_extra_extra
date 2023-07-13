@@ -43,10 +43,10 @@ char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVe
             optimizationStruct
             );
 
-    source = resize_if_needed(source, sourceLength, optimized_shader.length() - (*sourceLength) + 1 );
-    strcpy(source, optimized_shader.c_str());
+    char* copy_dest = (char*)malloc(optimized_shader.size()+1);
+    strcpy(copy_dest, optimized_shader.c_str());
 
-    return source;
+    return copy_dest;
 }
 
 #ifdef __cplusplus
