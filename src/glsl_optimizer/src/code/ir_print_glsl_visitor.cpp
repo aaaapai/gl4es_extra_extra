@@ -470,7 +470,7 @@ IR_TO_GLSL::visit(ir_variable* ir)
 		samp, patc, inv, explicit_inv, prec, precision[ir->data.precision],
 		mode[decormode][ir->data.mode], stream, interp[ir->data.interpolation]);
 
-	print_type(generated_source, ir->type, true);
+	print_type(generated_source, ir->type, false);
 	generated_source.append(" ");
 	print_var_name(ir);
 	print_type_post(generated_source, ir->type, false);
