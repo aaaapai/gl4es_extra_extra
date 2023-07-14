@@ -1529,8 +1529,8 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
                                       "precision lowp image3D;\n"
                                       "precision lowp imageCube;\n");
     }
-    int supportHighp = ((isVertex || hardext.highp) ? 1 : 0);
-    source = InplaceInsertByIndex(source, sourceLength, insertPoint, supportHighp ? "\nprecision highp float;\n" : "\nprecision medium float;\n");
+    int supportHighp = (hardext.highp ? 1 : 0);
+    source = InplaceInsertByIndex(source, sourceLength, insertPoint, supportHighp ? "\nprecision highp float;\nprecision highp int;\n" : "\nprecision mediump float;\nprecision mediump int;\n");
 
     if (globals4es.vgpu_precision != 0){
         char * target_precision;
