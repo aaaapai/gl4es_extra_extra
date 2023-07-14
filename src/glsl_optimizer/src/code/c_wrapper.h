@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion);
+char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion, int vTargetGLSLVersion );
 
 #ifdef __cplusplus
 } /* extern C */

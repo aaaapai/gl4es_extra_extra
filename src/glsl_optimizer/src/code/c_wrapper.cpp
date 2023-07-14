@@ -22,7 +22,7 @@ char* resize_if_needed(char* pBuffer, int *size, int addsize) {
     return p;
 }
 
-char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion) {
+char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion, int vTargetGLSLVersion) {
     std::string shader_source = std::string(source);
 
     GlslConvert::OptimizationStruct optimizationStruct {}; // Default struct with everything enabled
@@ -40,6 +40,8 @@ char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVe
             GlslConvert::API_OPENGL_COMPAT,
             GlslConvert::LANGUAGE_TARGET_GLSL,
             vGLSLVersion,
+            vTargetGLSLVersion,
+            true,
             optimizationStruct
             );
 

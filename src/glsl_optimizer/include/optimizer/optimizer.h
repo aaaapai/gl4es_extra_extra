@@ -29,7 +29,9 @@ public:
 	std::string Optimize(
 		std::string vShaderSource,
 		xShaderStage vShaderType,
-		int vGLSLVersion);
+		int vGLSLVersion,
+        int vTargetGLSLVersion,
+        bool isESShader);
 	bool Failed()const noexcept;
 	std::string GetLog();
 private:

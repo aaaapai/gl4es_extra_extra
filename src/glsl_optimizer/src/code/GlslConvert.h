@@ -253,7 +253,9 @@ public:
 		ShaderStage vShaderType,
 		ApiTarget vTarget, 
 		LanguageTarget vLanguageTarget, 
-		int vGLSLVersion, 
+		int vGLSLVersion,
+        int vTargetGLSLVersion,
+        bool isESShader,
 		OptimizationStruct vOptimisationStruct);
 	std::string GetLog()noexcept
 	{

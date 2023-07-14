@@ -41,10 +41,13 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     // At last resort, use forward porting
     if(!shaderCompileStatus && hardext.glsl300es){
         int shaderLength = strlen(shader_source->source);
-        shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, 150);
+        shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, 150, 320);
 
-        shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
-        shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+        //shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
+        //shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+        if (globals4es.vgpu_dump){
+            printf("New VGPU Shader source:\n%s\n", shader_source->converted);
+        }
     }
 
     return shader_source->converted;

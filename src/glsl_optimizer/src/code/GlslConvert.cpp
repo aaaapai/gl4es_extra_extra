@@ -151,6 +151,8 @@ std::string GlslConvert::Optimize(
 	ApiTarget vTarget,
 	LanguageTarget vLanguageTarget,
 	int vGLSLVersion,
+    int vTargetGLSLVersion,
+    bool isESShader,
 	OptimizationStruct vOptimizationStruct)
 {
 	std::string res;
@@ -359,6 +361,8 @@ std::string GlslConvert::Optimize(
 				else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_GLSL)
 				{
 					/* Print out the initial GLSL */
+                    state->es_shader = isESShader;
+                    state->language_version = vTargetGLSLVersion;
 					res = IR_TO_GLSL::Convert(ir, state, ralloc_strdup(shader, ""));
 				}
 				/*else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_HLSL)

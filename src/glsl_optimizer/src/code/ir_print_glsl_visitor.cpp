@@ -132,7 +132,12 @@ std::string IR_TO_GLSL::Convert(
 
 	if (state)
 	{
-		res.append("#version %i\n", state->language_version);
+        if(state->es_shader && state->language_version >= 300){
+            res.append("#version %i es\nprecision %s float;\nprecision %s int;\n", state->language_version, "highp", "highp");
+        }
+        else
+		    res.append("#version %i\n", state->language_version);
+
 
 		if (state->ARB_shader_texture_lod_enable)
 			res.append("#extension GL_ARB_shader_texture_lod : enable\n");
@@ -635,7 +640,7 @@ const char* const operator_glsl_strs[] = {
    "ceil",
    "floor",
    "fract",
-   "round_even",
+   "roundEven",
    "sin",
    "cos",
    "atan",
@@ -1075,12 +1080,23 @@ IR_TO_GLSL::visit(ir_expression* ir)
 		}
 
 
+		if (ir->operands[0]){
+            // mod needs floating types for some reason
+            if(ir->operation == ir_binop_mod)
+                generated_source.append("float(");
+            ir->operands[0]->accept(this);
+            if(ir->operation == ir_binop_mod)
+                generated_source.append(")");
+        }
 
-		if (ir->operands[0])
-			ir->operands[0]->accept(this);
 		generated_source.append(", ");
-		if (ir->operands[1])
-			ir->operands[1]->accept(this);
+		if (ir->operands[1]) {
+            if(ir->operation == ir_binop_mod)
+                generated_source.append("float(");
+            ir->operands[1]->accept(this);
+            if(ir->operation == ir_binop_mod)
+                generated_source.append(")");
+        }
 		generated_source.append(")");
 		if (ir->operation == ir_binop_mod)
 			generated_source.append("))");
@@ -1127,11 +1143,15 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	{
 		generated_source.append("textureSize (");
 		ir->sampler->accept(this);
-		/*if (ir_texture::has_lod(ir->sampler->type))
+		//TODO stub !
+        generated_source.append(", 0");
+        /*
+        if (ir_texture::has_lod(ir->sampler->type))
 		{
 			generated_source.append(", ");
 			ir->lod_info.lod->accept(this);
-		}*/
+		}
+         */
 		generated_source.append(")");
 		return;
 	}
