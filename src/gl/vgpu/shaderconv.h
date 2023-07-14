@@ -9,6 +9,7 @@
 
 char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass);
 char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass);
+char * ConvertShaderMinimal(char * input, int is_fragment);
 
 char * GLSLHeader(char* source);
 char * RemoveConstInsideBlocks(char* source, int * sourceLength);

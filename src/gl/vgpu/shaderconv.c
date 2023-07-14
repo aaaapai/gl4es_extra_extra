@@ -42,9 +42,8 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     if(!shaderCompileStatus && hardext.glsl300es){
         int shaderLength = strlen(shader_source->source);
         shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, 150, 320);
-
-        //shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
-        //shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+	shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
+	shader_source->converted = ConvertShaderMinimal(shader_source->converted, shader_source->type == GL_FRAGMENT_SHADER ? 1 : 0);
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader source:\n%s\n", shader_source->converted);
         }
@@ -60,6 +59,28 @@ void VerbosePrint(char * source, char * stage) {
         printf("Stage - %s :\n%s\n", stage, source);
     }
 }
+
+/** Some minimal required postprocessing after running through the optimizer, for proper FPE support and other things
+ * @param input the shader as a string
+ * @param is_fragment whether the input is a fragment shader
+ */
+char * ConvertShaderMinimal(char * input, int is_fragment) {
+    int shaderLength = strlen(input);
+    // add some extensions to have as little chance as possible at having missing functionality
+    input = InsertExtensions(input, &shaderLength);
+    // even after the gl4es shaderconv pass, there still remain things that dont have a defined precision, like sampler2DShadow
+    input = ReplacePrecisionQualifiers(input, &shaderLength, !is_fragment);
+    if(is_fragment) {
+    	// all <120 shaders can use that in the source, so run it
+    	input = ReplaceGLFragData(input, &shaderLength);
+    	// also fix up frag color
+    	input = ReplaceGLFragColor(input, &shaderLength);
+    	// remove the extension that GL4ES shaderconv adds in when it detects frag data acccesses
+    	input = gl4es_inplace_replace_simple(input, &shaderLength, "#extension GL_EXT_draw_buffers : enable", "");
+    }
+    return input;
+}
+
 
 /** Convert the shader through multiple steps
  * @param source The start of the shader as a string
@@ -1223,9 +1244,11 @@ char * ReplaceGLFragData(char * source, int * sourceLength){
  */
 char * ReplaceGLFragColor(char * source, int * sourceLength){
     if(strstr(source, "gl_FragColor")){
-        source = gl4es_inplace_replace_simple(source, sourceLength, "gl_FragColor", "vgpu_FragColor");
-        int insertPoint = FindPositionAfterDirectives(source);
-        source = InplaceInsertByIndex(source, sourceLength, insertPoint + 1, "out mediump vec4 vgpu_FragColor;\n");
+        if(!strstr(source, "vgpu_FragData0")) { // insert the 0th FragData output (because gl_FragColor is equivalent to gl_FragData[0]
+            int insertPoint = FindPositionAfterDirectives(source);
+            source = InplaceInsertByIndex(source, sourceLength, insertPoint + 1, "layout(location = 0) out mediump vec4 vgpu_FragData0;\n");
+        }
+        source = gl4es_inplace_replace_simple(source, sourceLength, "gl_FragColor", "vgpu_FragData0");
     }
     return source;
 }
