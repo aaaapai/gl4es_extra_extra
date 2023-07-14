@@ -1646,6 +1646,26 @@ print_float(sbuffer& str, float f)
 		str.append(".0");
 }
 
+void IR_TO_GLSL::print_float_checked(sbuffer& str, float f) {
+        int valid_float = 0;
+        char float_dest[5];
+        snprintf(float_dest, 5, "%f", f);
+        valid_float = strstr(float_dest, "nan") == nullptr && strstr(float_dest, "inf") == nullptr;
+	if (!valid_float) 
+		{
+		// Non-printable float. If we have bit conversions, we're fine. otherwise do hand-wavey things in print_float().
+		if ((state->es_shader && (state->language_version >= 300))
+			|| (state->language_version >= 330)
+			|| (state->ARB_shader_bit_encoding_enable))
+		{
+			str.append("uintBitsToFloat(%uu)", *((unsigned int*)(&f)));
+			return;
+		}
+	}
+	print_float(str, f);
+	return;
+}
+
 void
 IR_TO_GLSL::visit(ir_constant* ir)
 {
@@ -1653,18 +1673,7 @@ IR_TO_GLSL::visit(ir_constant* ir)
 
 	if (type == glsl_type::float_type)
 	{
-		if (fpcheck(ir->value.f[0]))
-		{
-			// Non-printable float. If we have bit conversions, we're fine. otherwise do hand-wavey things in print_float().
-			if ((state->es_shader && (state->language_version >= 300))
-				|| (state->language_version >= 330)
-				|| (state->ARB_shader_bit_encoding_enable))
-			{
-				generated_source.append("uintBitsToFloat(%uu)", ir->value.u[0]);
-				return;
-			}
-		}
-		print_float(generated_source, ir->value.f[0]);
+		print_float_checked(generated_source, ir->value.f[0]);
 		return;
 	}
 	else if (type == glsl_type::int_type)
@@ -1746,7 +1755,7 @@ IR_TO_GLSL::visit(ir_constant* ir)
 					generated_source.append("%d", ir->value.i[i]);
 				break;
 			}
-			case GLSL_TYPE_FLOAT: print_float(generated_source, ir->value.f[i]); break;
+			case GLSL_TYPE_FLOAT: print_float_checked(generated_source, ir->value.f[i]); break;
 			case GLSL_TYPE_BOOL:  generated_source.append("%d", ir->value.b[i]); break;
 			default: assert(0);
 			}

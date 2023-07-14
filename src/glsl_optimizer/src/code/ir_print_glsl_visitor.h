@@ -63,6 +63,7 @@ public:
 		const _mesa_glsl_parse_state* vState);
    virtual ~IR_TO_GLSL();
 
+   void print_float_checked(sbuffer& str, float f);
    void indent(void);
    void end_statement_line();
    void newline_indent();
