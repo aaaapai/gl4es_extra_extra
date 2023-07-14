@@ -1246,7 +1246,26 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	generated_source.append(", ");
 
 	// texture coordinate
-	ir->coordinate->accept(this);
+	
+        if(sampler_uv_dim > 4) { // samplerCubeArrayShadow (jesus christ)
+		ir->coordinate->accept(this);
+		generated_source.append(", ");
+		ir->shadow_comparator->accept(this); // the "float compare" bit, because khronos people were not crazy enough for vec5
+        }else if(is_shadow || is_proj) { // these two need to generate a new vector because of the split
+		generated_source.append("vec%i(", sampler_uv_dim); 
+		ir->coordinate->accept(this);
+		if(is_shadow) {
+			generated_source.append(", ");
+			ir->shadow_comparator->accept(this);
+		}
+		if(is_proj) {
+			generated_source.append(", ");
+			ir->projector->accept(this);
+		}
+		generated_source.append(")");
+	}else {
+		ir->coordinate->accept(this); // accept as usual if the function aint wacky
+	}
 
 	// lod
 	if (ir->op == ir_txl || ir->op == ir_txf)
