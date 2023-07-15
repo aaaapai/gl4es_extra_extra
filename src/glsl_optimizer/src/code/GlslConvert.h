@@ -248,8 +248,8 @@ public:
 		int vGLSLVersion,
 		std::function<void(struct _mesa_glsl_parse_state*)> vFinishFunc);
 	
-	std::string Optimize(
-		char * vShaderSource,
+	char * Optimize(
+		const char * vShaderSource,
 		ShaderStage vShaderType,
 		ApiTarget vTarget, 
 		LanguageTarget vLanguageTarget, 

@@ -49,7 +49,7 @@ public:
 	};
 
 public:
-	static std::string Convert(
+	static char * Convert(
 		exec_list *instructions,
 		struct _mesa_glsl_parse_state *state,
 		char* buffer);

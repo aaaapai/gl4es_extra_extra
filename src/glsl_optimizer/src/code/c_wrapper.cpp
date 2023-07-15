@@ -24,7 +24,7 @@ char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVe
     //optimizationStruct.optimizationFlags_Bis = (GlslConvert::OptimizationFlags_Bis)0;
     //optimizationStruct.instructionToLowerFlags = (GlslConvert::InstructionToLowerFlags)0;
     //std::string shader_source = std::string(source);
-    std::string optimized_shader = GlslConvert::Instance().Optimize(
+    char * optimized_shader = GlslConvert::Instance().Optimize(
             source,
             isVertex ? GlslConvert::MESA_SHADER_VERTEX : GlslConvert::MESA_SHADER_FRAGMENT,
             GlslConvert::API_OPENGL_COMPAT,
@@ -35,10 +35,7 @@ char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVe
             optimizationStruct
             );
 
-    char* copy_dest = (char*)malloc(optimized_shader.size()+1);
-    strcpy(copy_dest, optimized_shader.c_str());
-
-    return copy_dest;
+    return optimized_shader;
 }
 
 #ifdef __cplusplus

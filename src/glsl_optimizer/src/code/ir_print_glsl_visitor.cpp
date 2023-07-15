@@ -123,7 +123,9 @@ void IR_TO_GLSL::print_type_post(sbuffer& str, const glsl_type* t, bool arraySiz
 	}
 }
 
-std::string IR_TO_GLSL::Convert(
+// DANGER, the function allocates a new string
+// DO NOT FORGET TO FREE IT
+char * IR_TO_GLSL::Convert(
 	exec_list* instructions,
 	struct _mesa_glsl_parse_state* state,
 	char* generated_source)
@@ -216,7 +218,10 @@ std::string IR_TO_GLSL::Convert(
 
 	print_texlod_workarounds(uses_texlod_impl, uses_texlodproj_impl, res);
     res.append("\n\n");
-	return std::string(res.c_str());
+
+    // DANGER, A NEW STRING IS ALLOCATED !
+    // YOUR PROGRAM HAS TO FREE IT !
+	return res.c_str_take_ownership();
 }
 
 IR_TO_GLSL::IR_TO_GLSL(

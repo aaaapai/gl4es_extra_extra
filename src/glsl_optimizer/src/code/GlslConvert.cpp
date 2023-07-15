@@ -145,8 +145,8 @@ bool GlslConvert::CreateGraph(
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string GlslConvert::Optimize(
-	char * vShaderSource,
+char * GlslConvert::Optimize(
+	const char * vShaderSource,
 	ShaderStage vShaderType,
 	ApiTarget vTarget,
 	LanguageTarget vLanguageTarget,
@@ -155,8 +155,7 @@ std::string GlslConvert::Optimize(
     bool isESShader,
 	OptimizationStruct vOptimizationStruct)
 {
-	std::string res;
-	if (strlen(vShaderSource) == 0) return res;
+    char * optimized_shader = NULL;
 
 	struct gl_shader* shader = rzalloc(NULL, struct gl_shader);
 	shader->Stage = (gl_shader_stage)vShaderType;
@@ -255,7 +254,8 @@ std::string GlslConvert::Optimize(
 					}
 					else
 					{
-						res += buffer;
+						//res += buffer;
+                        //TODO STUB
 					}
 				}
 
@@ -361,7 +361,7 @@ std::string GlslConvert::Optimize(
 					/* Print out the initial GLSL */
                     state->es_shader = isESShader;
                     state->language_version = vTargetGLSLVersion;
-					res = IR_TO_GLSL::Convert(ir, state, ralloc_strdup(shader, ""));
+					optimized_shader = IR_TO_GLSL::Convert(ir, state, ralloc_strdup(shader, ""));
 				}
 				/*else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_HLSL)
 				{
@@ -397,7 +397,7 @@ std::string GlslConvert::Optimize(
 
 	ClearContext(ctx);
 
-	return res;
+	return optimized_shader;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

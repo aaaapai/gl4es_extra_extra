@@ -65,16 +65,28 @@ public:
 		m_Ptr = (char*)ralloc_size(mem_ctx, m_Capacity);
 		m_Size = 0;
 		m_Ptr[0] = 0;
+        m_Ownership_Lost = false;
 	}
 
 	~sbuffer()
 	{
-		ralloc_free(m_Ptr);
+        if(!m_Ownership_Lost)
+		    ralloc_free(m_Ptr);
 	}
 
 	bool empty() const { return m_Size == 0; }
 
 	const char* c_str() const { return m_Ptr; }
+
+    /**
+     * Dangerous, get the string and declare the ownership lost.
+     * Meaning the lifecycle of the char * goes beyond what the class normally allows.
+     * @return A C style string
+     */
+    char * c_str_take_ownership() {
+        m_Ownership_Lost = true;
+        return m_Ptr;
+    }
 
 	void append(const char *fmt, ...) PRINTFLIKE(2, 3)
 	{
@@ -112,6 +124,7 @@ private:
 	char* m_Ptr;
 	size_t m_Size;
 	size_t m_Capacity;
+    bool m_Ownership_Lost;
 };
 
 #endif // __ST_PRINTF__H__
