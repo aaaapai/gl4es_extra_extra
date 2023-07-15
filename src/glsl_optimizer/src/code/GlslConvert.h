@@ -249,7 +249,7 @@ public:
 		std::function<void(struct _mesa_glsl_parse_state*)> vFinishFunc);
 	
 	std::string Optimize(
-		std::string vShaderSource, 
+		char * vShaderSource,
 		ShaderStage vShaderType,
 		ApiTarget vTarget, 
 		LanguageTarget vLanguageTarget, 

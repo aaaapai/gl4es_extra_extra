@@ -146,7 +146,7 @@ bool GlslConvert::CreateGraph(
 ///////////////////////////////////////////////////////////////////////////////
 
 std::string GlslConvert::Optimize(
-	std::string vShaderSource,
+	char * vShaderSource,
 	ShaderStage vShaderType,
 	ApiTarget vTarget,
 	LanguageTarget vLanguageTarget,
@@ -156,7 +156,7 @@ std::string GlslConvert::Optimize(
 	OptimizationStruct vOptimizationStruct)
 {
 	std::string res;
-	if (vShaderSource.empty()) return res;
+	if (strlen(vShaderSource) == 0) return res;
 
 	struct gl_shader* shader = rzalloc(NULL, struct gl_shader);
 	shader->Stage = (gl_shader_stage)vShaderType;
@@ -212,7 +212,7 @@ std::string GlslConvert::Optimize(
 	//_mesa_glsl_initialize_types(state);
 	//_mesa_glsl_read_ir(state, shader->ir, input.c_str(), true);
 
-	shader->Source = input.c_str();
+	shader->Source = vShaderSource;
 	const char* source = shader->Source;
 
 	if (!(vOptimizationStruct.controlFlags & ControlFlags::CONTROL_SKIP_PREPROCESSING))

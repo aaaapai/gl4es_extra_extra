@@ -13,7 +13,7 @@ extern "C" {
 GlslConvert::OptimizationStruct optimizationStruct {}; // Default struct with everything enabled
 
 char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion, int vTargetGLSLVersion) {
-    std::string shader_source = std::string(source);
+
 
 
     /*optimizationStruct.optimizationFlags = (GlslConvert::OptimizationFlags)~(GlslConvert::OptimizationFlags::OPT_dead_code
@@ -23,9 +23,9 @@ char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVe
     //optimizationStruct.optimizationFlags = (GlslConvert::OptimizationFlags)0;
     //optimizationStruct.optimizationFlags_Bis = (GlslConvert::OptimizationFlags_Bis)0;
     //optimizationStruct.instructionToLowerFlags = (GlslConvert::InstructionToLowerFlags)0;
-
+    //std::string shader_source = std::string(source);
     std::string optimized_shader = GlslConvert::Instance().Optimize(
-            shader_source,
+            source,
             isVertex ? GlslConvert::MESA_SHADER_VERTEX : GlslConvert::MESA_SHADER_FRAGMENT,
             GlslConvert::API_OPENGL_COMPAT,
             GlslConvert::LANGUAGE_TARGET_GLSL,
