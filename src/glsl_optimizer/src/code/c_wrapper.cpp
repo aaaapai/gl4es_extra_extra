@@ -10,22 +10,12 @@
 extern "C" {
 #endif
 
-/** Version separated from C land */
-char* resize_if_needed(char* pBuffer, int *size, int addsize) {
-    char* p = pBuffer;
-    int newsize = strlen(pBuffer)+addsize+1;
-    if (newsize>*size) {
-        //newsize += 100;
-        p = (char*)realloc(pBuffer, newsize);
-        *size=newsize;
-    }
-    return p;
-}
+GlslConvert::OptimizationStruct optimizationStruct {}; // Default struct with everything enabled
 
 char *optimize_shader(char *source, int *sourceLength, int isVertex, int vGLSLVersion, int vTargetGLSLVersion) {
     std::string shader_source = std::string(source);
 
-    GlslConvert::OptimizationStruct optimizationStruct {}; // Default struct with everything enabled
+
     /*optimizationStruct.optimizationFlags = (GlslConvert::OptimizationFlags)~(GlslConvert::OptimizationFlags::OPT_dead_code
             | GlslConvert::OptimizationFlags::OPT_dead_code_local
             | GlslConvert::OptimizationFlags::OPT_dead_code_unlinked
