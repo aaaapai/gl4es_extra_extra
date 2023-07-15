@@ -29,7 +29,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     int shaderCompileStatus = 0;
     int shader_version = GetShaderVersion(shader_source->source);
 
-    if( shader_version < 150 || globals4es.vgpu_force_conv){
+    if( shader_version < 120 || globals4es.vgpu_force_conv){
         // First, simple backward port, destructive only if asked to do so
         shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
         shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
