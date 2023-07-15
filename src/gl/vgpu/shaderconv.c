@@ -28,25 +28,43 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     iprotecc_getstring(buf, IPROTECC_CRC1_SECOND, IPROTECC_CRC64_SECOND_A, IPROTECC_CRC64_SECOND_B);
     int shaderCompileStatus = 0;
     int shader_version = GetShaderVersion(shader_source->source);
+    int is_vertex = shader_source->type == GL_VERTEX_SHADER ? 1 : 0;
 
-    if( shader_version < 120 || globals4es.vgpu_force_conv){
-        // First, simple backward port, destructive only if asked to do so
-        shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
+    // ESSL 1.0 pipeline
+    if(!hardext.glsl300es) {
+        // Only possibility if to try to backport
+        shader_source->converted = ConvertShader(shader_source->source, is_vertex, &shader_source->need, 0);
+
+        // Force backport of newer features
+        if(shader_version >= 100)
+            shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+
+        // Skip testing, we only have one shot anyway
+        return shader_source->converted;
+    }
+
+    // ESSL 3.X pipeline
+    if( shader_version < 120 || globals4es.vgpu_force_conv || globals4es.vgpu_backport) {
+        // First, simple backward port, destructive only if asked to do so by env variables
+        shader_source->converted = ConvertShader(shader_source->source, is_vertex, &shader_source->need, 0);
         shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
 
-        if(!globals4es.vgpu_force_conv || second_pass)  // Skip the test, consider it uncompiled
+        if(!globals4es.vgpu_force_conv || second_pass || globals4es.vgpu_backport)  // Skip the test, consider it uncompiled
             shaderCompileStatus = testGenericShader(shader_source);
     }
 
+    // Port and optimize the shader
+    if(!shaderCompileStatus){
+        if(shader_source->converted)
+            free(shader_source->converted);
 
-    // At last resort, use forward porting
-    if(!shaderCompileStatus && hardext.glsl300es){
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
+        int shader_length = strlen(shader_source->source);
 
-        int shaderLength = strlen(shader_source->source);
-        shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, shader_version, target_version);
-        shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
-        shader_source->converted = ConvertShaderMinimal(shader_source->converted, shader_source->type == GL_FRAGMENT_SHADER ? 1 : 0);
+        shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, target_version);
+        shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 1);
+        shader_source->converted = ConvertShaderMinimal(shader_source->converted, is_vertex);
+
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader source:\n%s\n", shader_source->converted);
         }
