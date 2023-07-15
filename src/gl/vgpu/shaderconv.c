@@ -27,8 +27,9 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     char buf[256];
     iprotecc_getstring(buf, IPROTECC_CRC1_SECOND, IPROTECC_CRC64_SECOND_A, IPROTECC_CRC64_SECOND_B);
     int shaderCompileStatus = 0;
+    int shader_version = GetShaderVersion(shader_source->source);
 
-    if(GetShaderVersion(shader_source->source) < 150 || globals4es.vgpu_force_conv){
+    if( shader_version < 150 || globals4es.vgpu_force_conv){
         // First, simple backward port, destructive only if asked to do so
         shader_source->converted = ConvertShader(shader_source->source, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 0);
         shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
@@ -40,10 +41,12 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // At last resort, use forward porting
     if(!shaderCompileStatus && hardext.glsl300es){
+        int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
+
         int shaderLength = strlen(shader_source->source);
-        shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, 150, 320);
-	shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
-	shader_source->converted = ConvertShaderMinimal(shader_source->converted, shader_source->type == GL_FRAGMENT_SHADER ? 1 : 0);
+        shader_source->converted = optimize_shader(shader_source->source, &shaderLength, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, shader_version, target_version);
+        shader_source->converted = ConvertShader(shader_source->converted, shader_source->type == GL_VERTEX_SHADER ? 1 : 0, &shader_source->need, 1);
+        shader_source->converted = ConvertShaderMinimal(shader_source->converted, shader_source->type == GL_FRAGMENT_SHADER ? 1 : 0);
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader source:\n%s\n", shader_source->converted);
         }
