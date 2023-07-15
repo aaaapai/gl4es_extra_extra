@@ -200,8 +200,6 @@ std::string GlslConvert::Optimize(
 
 	ir_variable::temporaries_allocate_names = true;
 
-	const std::string& input = vShaderSource;
-
 	struct _mesa_glsl_parse_state* state
 		= new(shader) _mesa_glsl_parse_state(ctx, shader->Stage, shader);
 
