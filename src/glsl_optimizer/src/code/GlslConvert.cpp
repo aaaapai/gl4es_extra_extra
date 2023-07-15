@@ -160,32 +160,32 @@ std::string GlslConvert::Optimize(
 
 	struct gl_shader* shader = rzalloc(NULL, struct gl_shader);
 	shader->Stage = (gl_shader_stage)vShaderType;
-	switch (shader->Stage)
-	{
-	case gl_shader_stage::MESA_SHADER_VERTEX:
-		shader->Type = GL_VERTEX_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_TESS_CTRL:
-		shader->Type = GL_TESS_CONTROL_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_TESS_EVAL:
-		shader->Type = GL_TESS_EVALUATION_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_GEOMETRY:
-		shader->Type = GL_GEOMETRY_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_FRAGMENT:
-		shader->Type = GL_FRAGMENT_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_COMPUTE:
-		shader->Type = GL_COMPUTE_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_KERNEL:
-		// todo : opencl kernel target to generate after the others
-		//shader->Type = GL_KERNEL_SHADER;
-		break;
-	default:
-		break;
+	switch (shader->Stage) {
+        case gl_shader_stage::MESA_SHADER_VERTEX:
+            shader->Type = GL_VERTEX_SHADER;
+            break;
+        case gl_shader_stage::MESA_SHADER_FRAGMENT:
+            shader->Type = GL_FRAGMENT_SHADER;
+            break;
+        case gl_shader_stage::MESA_SHADER_TESS_CTRL:
+            shader->Type = GL_TESS_CONTROL_SHADER;
+            break;
+        case gl_shader_stage::MESA_SHADER_TESS_EVAL:
+            shader->Type = GL_TESS_EVALUATION_SHADER;
+            break;
+        case gl_shader_stage::MESA_SHADER_GEOMETRY:
+            shader->Type = GL_GEOMETRY_SHADER;
+            break;
+
+        case gl_shader_stage::MESA_SHADER_COMPUTE:
+            shader->Type = GL_COMPUTE_SHADER;
+            break;
+        case gl_shader_stage::MESA_SHADER_KERNEL:
+            // todo : opencl kernel target to generate after the others
+            //shader->Type = GL_KERNEL_SHADER;
+            break;
+        default:
+            break;
 	}
 
 	vOptimizationStruct.stage = vShaderType;
