@@ -55,7 +55,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // Port and optimize the shader
     if(!shaderCompileStatus){
-        if(shader_source->converted)
+        if(shader_source->converted != NULL)
             free(shader_source->converted);
 
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
