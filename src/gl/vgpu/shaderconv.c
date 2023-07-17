@@ -59,11 +59,11 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
             free(shader_source->converted);
 
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
-        int shader_length = strlen(shader_source->source);
+        size_t shader_length = strlen(shader_source->source);
 
         shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, target_version);
         shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 1);
-        shader_source->converted = ConvertShaderMinimal(shader_source->converted, is_vertex);
+        shader_source->converted = ConvertShaderMinimal(shader_source->converted, !is_vertex);
 
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader source:\n%s\n", shader_source->converted);

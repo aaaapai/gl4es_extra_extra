@@ -24,9 +24,9 @@ void IR_TO_IR::print_type(sbuffer& str, const glsl_type *t)
 	}
 }
 
-std::string IR_TO_IR::Convert(exec_list *instructions, struct _mesa_glsl_parse_state *state, char* buffer)
+char* IR_TO_IR::Convert(exec_list *instructions, struct _mesa_glsl_parse_state *state)
 {
-	sbuffer res(buffer);
+	sbuffer res;
 
 	if (state)
 	{
@@ -56,7 +56,9 @@ std::string IR_TO_IR::Convert(exec_list *instructions, struct _mesa_glsl_parse_s
 	}
 	res.append(")\n");
 
-	return std::string(res.c_str());
+   // DANGER, A NEW STRING IS ALLOCATED !
+   // YOUR PROGRAM HAS TO FREE IT !
+   return res.c_str_take_ownership();
 }
 
 IR_TO_IR::IR_TO_IR(sbuffer& str) : generated_source(str)

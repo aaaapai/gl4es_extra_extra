@@ -354,14 +354,14 @@ char * GlslConvert::Optimize(
 				if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_IR)
 				{
 					/* Print out the initial IR */
-					//res = IR_TO_IR::Convert(ir, state, ralloc_strdup(shader, ""));
+					//res = IR_TO_IR::Convert(ir, state);
 				}
 				else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_GLSL)
 				{
 					/* Print out the initial GLSL */
                     state->es_shader = isESShader;
                     state->language_version = vTargetGLSLVersion;
-					optimized_shader = IR_TO_GLSL::Convert(ir, state, ralloc_strdup(shader, ""));
+					optimized_shader = IR_TO_GLSL::Convert(ir, state);
 				}
 				/*else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_HLSL)
 				{

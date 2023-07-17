@@ -127,10 +127,9 @@ void IR_TO_GLSL::print_type_post(sbuffer& str, const glsl_type* t, bool arraySiz
 // DO NOT FORGET TO FREE IT
 char * IR_TO_GLSL::Convert(
 	exec_list* instructions,
-	struct _mesa_glsl_parse_state* state,
-	char* generated_source)
+	struct _mesa_glsl_parse_state* state)
 {
-	sbuffer res(generated_source);
+	sbuffer res;
 
 	if (state)
 	{

@@ -59,10 +59,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class sbuffer
 {
 public:
-	sbuffer(void* mem_ctx)
+	sbuffer()
 	{
 		m_Capacity = 512;
-		m_Ptr = (char*)ralloc_size(mem_ctx, m_Capacity);
+		m_Ptr = (char*)malloc(m_Capacity);
 		m_Size = 0;
 		m_Ptr[0] = 0;
         m_Ownership_Lost = false;
@@ -71,7 +71,7 @@ public:
 	~sbuffer()
 	{
         if(!m_Ownership_Lost)
-		    ralloc_free(m_Ptr);
+		    free(m_Ptr);
 	}
 
 	bool empty() const { return m_Size == 0; }
@@ -85,7 +85,7 @@ public:
      */
     char * c_str_take_ownership() {
         m_Ownership_Lost = true;
-        return m_Ptr;
+		return m_Ptr;
     }
 
 	void append(const char *fmt, ...) PRINTFLIKE(2, 3)
@@ -112,7 +112,7 @@ public:
 		if (m_Capacity < needed_length)
 		{
 			m_Capacity = MAX2(m_Capacity + m_Capacity / 2, needed_length);
-			m_Ptr = (char*)reralloc_size(ralloc_parent(m_Ptr), m_Ptr, m_Capacity);
+            m_Ptr = (char*)realloc(m_Ptr, m_Capacity);
 		}
 
 		vsnprintf(m_Ptr + m_Size, new_length + 1, fmt, args);

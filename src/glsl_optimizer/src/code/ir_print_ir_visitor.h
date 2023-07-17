@@ -34,10 +34,9 @@
 class IR_TO_IR : public ir_visitor 
 {
 public:
-	static std::string Convert(
+	static char* Convert(
 		struct exec_list *instructions,
-		struct _mesa_glsl_parse_state *state,
-		char* buffer);
+		struct _mesa_glsl_parse_state *state);
 	static void print_type(sbuffer& str, const glsl_type *t);
 
 public:

@@ -51,8 +51,7 @@ public:
 public:
 	static char * Convert(
 		exec_list *instructions,
-		struct _mesa_glsl_parse_state *state,
-		char* buffer);
+		struct _mesa_glsl_parse_state *state);
 	static void print_type(sbuffer& str, const glsl_type *t, bool arraySize);
 	static void print_type_post(sbuffer& str, const glsl_type *t, bool arraySize);
 
