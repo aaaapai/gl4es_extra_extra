@@ -1320,13 +1320,15 @@ char * ReplaceVariableName(char * source, int * sourceLength, char * initialName
     replacement[strlen(newName)+2] = '\0';
 
     for (int i = 0; i < strlen(charBefore); ++i) {
+        // Prepare the string to replace
+        toReplace[0] = charBefore[i];
+        // Prepare the replacement string
+        replacement[0] = charBefore[i];
+
         for (int j = 0; j < strlen(charAfter); ++j) {
             // Prepare the string to replace
-            toReplace[0] = charBefore[i];
             toReplace[strlen(initialName)+1] = charAfter[j];
-
             // Prepare the replacement string
-            replacement[0] = charBefore[i];
             replacement[strlen(newName)+1] = charAfter[j];
 
             // Special case: Spaces between what we think is a variable and the first parentheses
