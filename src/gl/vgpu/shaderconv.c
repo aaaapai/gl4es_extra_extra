@@ -55,8 +55,11 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // Port and optimize the shader
     if(!shaderCompileStatus){
-        if(shader_source->converted != NULL)
+        if(shader_source->converted != NULL) {
             free(shader_source->converted);
+            shader_source->converted = NULL;
+        }
+
 
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
         size_t shader_length = strlen(shader_source->source);

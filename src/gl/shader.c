@@ -235,6 +235,7 @@ void redoShader(GLuint shader, shaderconv_need_t *need) {
     //if (memcmp(&glshader->need, need, sizeof(shaderconv_need_t))==0)
         //return;
     free(glshader->converted);
+    glshader->converted = NULL;
     memcpy(&glshader->need, need, sizeof(shaderconv_need_t));
     glshader->converted = ConvertShaderConditionally(glshader, 1);
     // send source to GLES2 hardware if any
