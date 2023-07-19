@@ -582,7 +582,7 @@ char * ReplaceFragmentOut(char * source, int *sourceLength){
 
     // Load the variable inside another string
     char * variableName = malloc(t2 - t1 + 1);
-    variableName[t2 - t1 + 1] = '\0';
+    variableName[t2 - t1] = '\0';
     memcpy(variableName, source + t1, t2 - t1);
 
     // Removing the declaration
