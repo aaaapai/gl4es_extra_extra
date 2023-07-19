@@ -383,6 +383,16 @@ IR_TO_GLSL::visit(ir_variable* ir)
 	// GLSL 1.30 and up use "in" and "out" for everything
 	if (this->state->language_version >= 130)
 		decormode = 0;
+	else {
+		switch (this->state->stage) {
+			case MESA_SHADER_FRAGMENT:
+				decormode = 2;
+				break;
+			case MESA_SHADER_VERTEX:
+				decormode = 1;
+				break;
+		}
+	}
 
 	// give an id to any variable defined in a 
 	// function that is not an uniform
