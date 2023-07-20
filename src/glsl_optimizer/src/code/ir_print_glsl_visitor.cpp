@@ -1282,7 +1282,7 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	}
 
 	// lod
-	if (ir->op == ir_txl || ir->op == ir_txf)
+	if ((ir->op == ir_txl || ir->op == ir_txf) && state->language_version >= 130)
 	{
 		generated_source.append(", ");
 		ir->lod_info.lod->accept(this);
