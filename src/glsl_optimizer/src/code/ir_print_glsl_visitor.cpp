@@ -286,14 +286,17 @@ void
 IR_TO_GLSL::print_var_name(ir_variable* v)
 {
 	hash_entry* entry = _mesa_hash_table_search(global->var_hash, v);
+    long id;
+
+
 	if (entry)
 	{
-		long id = (long)entry->data;
-		if (!id && v->data.mode == ir_var_temporary)
-		{
-			id = ++global->var_counter;
-			_mesa_hash_table_insert(global->var_hash, v, (void*)id);
-		}
+        id = (long)entry->data;
+        if (!id && v->data.mode == ir_var_temporary)
+        {
+            id = ++global->var_counter;
+            _mesa_hash_table_insert(global->var_hash, v, (void*)id);
+        }
 		if (id)
 		{
 			if (v->data.mode == ir_var_temporary)
@@ -308,7 +311,13 @@ IR_TO_GLSL::print_var_name(ir_variable* v)
 	}
 	else
 	{
-		generated_source.append("%s", v->name);
+        if (v->data.mode == ir_var_temporary) {
+            id = ++global->var_counter;
+            _mesa_hash_table_insert(global->var_hash, v, (void*)id);
+            generated_source.append("tmpvar_%d", (int)id);
+        }
+        else
+		    generated_source.append("%s", v->name);
 	}
 }
 
