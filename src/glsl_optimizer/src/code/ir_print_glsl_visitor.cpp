@@ -1213,6 +1213,12 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	//ACS: shadow lookups and lookups with dimensionality included in the name were deprecated in 130
 	if (state->language_version < 130)
 	{
+		if(ir->op == ir_txf || ir->op == ir_txf_ms) {
+			// texelfetch has to be emulated manually.
+			// FIXME emulated the fetch properly
+			generated_source.append("vec4(1.0)");
+			return;
+		}
 		generated_source.append("%s", is_shadow ? "shadow" : "texture");
 		generated_source.append("%s", tex_sampler_dim_name[sampler_dim]);
 	}
