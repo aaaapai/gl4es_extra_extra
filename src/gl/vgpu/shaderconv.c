@@ -31,41 +31,59 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
     int is_vertex = shader_source->type == GL_VERTEX_SHADER ? 1 : 0;
 
     // ESSL 1.0 pipeline
-    if(!hardext.glsl300es) {
+    if(!hardext.glsl300es || globals4es.vgpu_backport) {
+        shader_source->converted = optimize_shader(converted_shader, &shader_length, is_vertex, shader_version, 100);
+
         // Only possibility if to try to backport
-        shader_source->converted = ConvertShader(shader_source->source, is_vertex, &shader_source->need, 0);
+        shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 0);
+        size_t newLength = strlen(shader_source->converted);
 
         // Force backport of newer features
-        if(shader_version >= 100)
-            shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+        if(shader_version >= 100) {
+            shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 1);
+        }
 
         // Skip testing, we only have one shot anyway
         return shader_source->converted;
     }
 
     // ESSL 3.X pipeline
-    if( shader_version < 120 || globals4es.vgpu_force_conv || globals4es.vgpu_backport) {
-        // First, simple backward port, destructive only if asked to do so by env variables
-        shader_source->converted = ConvertShader(shader_source->source, is_vertex, &shader_source->need, 0);
-        shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+    if( shader_version < 120 || globals4es.vgpu_force_conv) {
+        size_t shader_length = strlen(shader_source->source);
 
-        if(!globals4es.vgpu_force_conv || second_pass || globals4es.vgpu_backport)  // Skip the test, consider it uncompiled
+        if (globals4es.vgpu_dump){
+            printf("New VGPU Shader source:\n%s\n", shader_source->source);
+        }
+
+        // First, simple backward port
+        shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, 100);
+        shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 0);
+
+        size_t newLength = strlen(shader_source->converted);
+        shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0)
+
+        if (globals4es.vgpu_dump){
+            printf("New VGPU Shader output:\n%s\n", shader_source->converted);
+        }
+
+        //shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
+
+        if(!globals4es.vgpu_force_conv && !second_pass)  // Skip the test, consider it uncompiled
             shaderCompileStatus = testGenericShader(shader_source);
     }
 
-    // Port and optimize the shader
-    if(!shaderCompileStatus){
+    // Otherwise forward port the shader
+    if(!shaderCompileStatus) {
         if(shader_source->converted != NULL) {
             free(shader_source->converted);
             shader_source->converted = NULL;
         }
 
-
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
         size_t shader_length = strlen(shader_source->source);
 
         if (globals4es.vgpu_dump){
-            printf("VGPU Shader source:\n%s\n", shader_source->converted);
+            printf("VGPU Shader source:\n%s\n", shader_source->source);
         }
 
         shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, target_version);
@@ -76,6 +94,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
             printf("New VGPU Shader output:\n%s\n", shader_source->converted);
         }
     }
+     */
 
     return shader_source->converted;
 }
@@ -109,6 +128,35 @@ char * ConvertShaderMinimal(char * input, int is_fragment) {
     return input;
 }
 
+/** Some minimal required pre-processing to run through the optimizer, for backported shaders
+ * @param input the shader as a string
+ * @param is_fragment whether the input is a fragment shader
+ */
+char * PreConvertShaderMinimalBackport(char * input, int * length, int is_fragment) {
+    int shaderLength = strlen(input);
+
+
+}
+
+/** Some minimal required postprocessing after running through the optimizer, for backported shaders
+ * @param input the shader as a string
+ * @param is_fragment whether the input is a fragment shader
+ */
+char * ConvertShaderMinimalBackport(char * input, int * length, int is_fragment, int destructive) {
+    input = gl4es_inplace_replace_simple(input,  length, "flat ", "");
+
+    if (is_fragment) {
+        // Replace the out fragcolor, not done in the printer since it would involve checking the var name everywhere
+        input = ReplaceFragmentOut(input, length);
+    }
+
+    if (destructive) {
+        input = ReplaceVariableName(input, length, "gl_VertexID", "0", 0);
+        input = BackportAttributes(input, length);
+    }
+    return input;
+}
+
 
 /** Convert the shader through multiple steps
  * @param source The start of the shader as a string
@@ -129,10 +177,10 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
         // If forced, do a heavy pass additionally
         if((globals4es.vgpu_force_conv || globals4es.vgpu_backport) && second_pass){
             if (shader_source->type == GL_VERTEX_SHADER){
-                source = ReplaceVariableName(source, &sourceLength, "in", "attribute");
-                source = ReplaceVariableName(source, &sourceLength, "out", "varying");
+                source = ReplaceVariableName(source, &sourceLength, "in", "attribute", 0);
+                source = ReplaceVariableName(source, &sourceLength, "out", "varying", 0);
             }else{
-                source = ReplaceVariableName(source, &sourceLength, "in", "varying");
+                source = ReplaceVariableName(source, &sourceLength, "in", "varying", 0);
                 source = ReplaceFragmentOut(source, &sourceLength);
             }
 
@@ -150,7 +198,7 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
             source = InplaceInsertByIndex(source, &sourceLength, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
 
             // Well, we don't have gl_VertexID on OPENGL 1
-            source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0");
+            source = ReplaceVariableName(source, &sourceLength, "gl_VertexID", "0", 0);
 
             if (globals4es.vgpu_dump){
                 printf("New VGPU Shader conversion:\n%s\n", source);
@@ -229,10 +277,10 @@ char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass){
     source = gl4es_inplace_replace_simple(source, &sourceLength, "#define varying out\n", "");
 
     if (shader_source->type == GL_VERTEX_SHADER){
-        source = ReplaceVariableName(source, &sourceLength, "attribute", "in");
-        source = ReplaceVariableName(source, &sourceLength, "varying", "out");
+        source = ReplaceVariableName(source, &sourceLength, "attribute", "in", 0);
+        source = ReplaceVariableName(source, &sourceLength, "varying", "out", 0);
     }else{
-        source = ReplaceVariableName(source, &sourceLength, "varying", "in");
+        source = ReplaceVariableName(source, &sourceLength, "varying", "in", 0);
     }
 
     VerbosePrint(source, "Basic renames - PART 2");
@@ -452,6 +500,7 @@ char * FixSimpleSwitchCases(char *source, int *sourceLength){
     return source;
 }
 
+
 /**
  * Turn const arrays and its accesses into a function and function calls
  * @param source The shader as a string
@@ -584,17 +633,77 @@ char * ReplaceFragmentOut(char * source, int *sourceLength){
     char * variableName = malloc(t2 - t1 + 1);
     variableName[t2 - t1] = '\0';
     memcpy(variableName, source + t1, t2 - t1);
+    printf("%s", variableName);
 
     // Removing the declaration
     source = InplaceReplaceByIndex(source, sourceLength, startPosition, t2 + 1, "");
 
     // Replacing occurrences of the variable
-    source = ReplaceVariableName(source, sourceLength, variableName, "gl_FragColor");
+    source = ReplaceVariableName(source, sourceLength, variableName, "gl_FragColor", 0);
 
     free(variableName);
 
     return source;
 }
+
+/**
+ * Backport ivec/bvec attributes to vec
+ * @param source The shader as a string
+ * @param sourceLength The shader allocated length
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * BackportAttributes(char * source, int *sourceLength) {
+    unsigned long offset = 0;
+
+    while (1){
+        char vec_type;
+        char vec_number;
+        int startPosition = strstrPos(source + offset, "attribute");
+        if(startPosition == 0) return source; // No "attribute" keyword
+        int t1, t2;
+        GetNextWord(source, startPosition + offset, &t1, &t2); // Catches "attribute"
+        GetNextWord(source, t2, &t1, &t2); // Catches ivecX
+
+
+
+        if((source[t1] != 'i' && source[t1] != 'b') || source[t1 + 1] != 'v') {
+            offset = t2;
+            continue;
+        }
+
+        // Remove the i/bvec
+        vec_type = source[t1];
+        source[t1] = ' ';
+
+        // Get the vec number
+        vec_number = source[t2-1];
+
+        // Catch the variableName
+        GetNextWord(source, t2, &t1, &t2);
+        char * variableName = ExtractString(source, t1, t2);
+
+        // Create the replacement string: i/bvecX(<var_name>)
+        char * replacementString = malloc(6 + strlen(variableName) + 2);
+        memcpy(replacementString+1, "vec (", 5);
+        replacementString[0] = vec_type;
+        replacementString[4] = vec_number;
+        memcpy(replacementString + 6, variableName, strlen(variableName));
+        replacementString[6 + strlen(variableName)] = ')';
+        replacementString[6 + strlen(variableName) + 1] = '\0';
+
+        source = ReplaceVariableName(source, sourceLength, variableName, replacementString, t2);
+
+        // Remove temporary allocated strings
+        free(variableName);
+        free(replacementString);
+
+        offset = t1;
+    }
+
+    return source;
+}
+
+
 
 /**
  * Get to the start, then end of the next of current word.
@@ -820,9 +929,9 @@ char * CoerceIntToFloat(char * source, int * sourceLength){
 
     // Step 1 is to translate keywords
     // Attempt and loop unrolling -> worked well, time to fix my shit I guess
-    source = ReplaceVariableName(source, sourceLength, "int", "float");
+    source = ReplaceVariableName(source, sourceLength, "int", "float", 0);
     source = WrapFunction(source, sourceLength, "int", "float", "\n ");
-    source = ReplaceVariableName(source, sourceLength, "uint", "float");
+    source = ReplaceVariableName(source, sourceLength, "uint", "float", 0);
     source = WrapFunction(source, sourceLength, "uint", "float", "\n ");
 
     // TODO Yes I could just do the same as above but I'm lazy at times
@@ -1229,6 +1338,61 @@ char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int r
 }
 
 /**
+ * Replace the variable name in a shader, mostly used to avoid keyword clashing
+ * @param source The shader as a string
+ * @param initialName The initial name for the variable
+ * @param newName The new name for the variable
+ * @param offset Where to start the replacement from.
+ * @return The shader as a string, maybe in a different memory location
+ */
+char * ReplaceVariableName(char * source, int * sourceLength, char * initialName, char* newName, size_t offset) {
+
+    char * toReplace = malloc(strlen(initialName) + 3);
+    char * replacement = malloc(strlen(newName) + 3);
+    char * charBefore = "{}([];+-*/~!%<>,&| \n\t";
+    char * charAfter = ")[];+-*/%<>;,|&. \n\t";
+
+    // Prepare the fixed part of the strings
+    strcpy(toReplace+1, initialName);
+    toReplace[strlen(initialName)+2] = '\0';
+
+    strcpy(replacement+1, newName);
+    replacement[strlen(newName)+2] = '\0';
+
+    for (int i = 0; i < strlen(charBefore); ++i) {
+        for (int j = 0; j < strlen(charAfter); ++j) {
+            // Prepare the string to replace
+            toReplace[0] = charBefore[i];
+            toReplace[strlen(initialName)+1] = charAfter[j];
+
+            // Prepare the replacement string
+            replacement[0] = charBefore[i];
+            replacement[strlen(newName)+1] = charAfter[j];
+
+            // Pre-reserve the memory space to avoid pointer mutation with offset
+            int found = gl4es_countstring_simple(source + offset, toReplace);
+            if(found){
+                source = gl4es_resize_if_needed(source, sourceLength, found * strlen(replacement));
+
+                // Pre reservation has been done, so there should be no pointer mutation
+                char * new_source = gl4es_inplace_replace_simple(source + offset, sourceLength, toReplace, replacement);
+                if(source != new_source) {
+                    printf("REPLACE VARIABLE ERROR: %s, %s", toReplace, replacement);
+                    return source;
+                }
+            }
+
+        }
+    }
+
+    free(toReplace);
+    free(replacement);
+
+    return source;
+}
+
+
+/**
  * Replace any gl_FragData[n] reference by creating an out variable with the manual layout binding
  * @param source  The shader source as a string
  * @return The shader as a string, maybe at a different memory location
@@ -1295,52 +1459,6 @@ char * RemoveUnsupportedExtensions(char * source){
             ++i;
         }
     }
-    return source;
-}
-
-/**
- * Replace the variable name in a shader, mostly used to avoid keyword clashing
- * @param source The shader as a string
- * @param initialName The initial name for the variable
- * @param newName The new name for the variable
- * @return The shader as a string, maybe in a different memory location
- */
-char * ReplaceVariableName(char * source, int * sourceLength, char * initialName, char* newName) {
-
-    char * toReplace = malloc(strlen(initialName) + 3);
-    char * replacement = malloc(strlen(newName) + 3);
-    char * charBefore = "{}([];+-*/~!%<>,&| \n\t";
-    char * charAfter = ")[];+-*/%<>;,|&. \n\t";
-
-    // Prepare the fixed part of the strings
-    strcpy(toReplace+1, initialName);
-    toReplace[strlen(initialName)+2] = '\0';
-
-    strcpy(replacement+1, newName);
-    replacement[strlen(newName)+2] = '\0';
-
-    for (int i = 0; i < strlen(charBefore); ++i) {
-        // Prepare the string to replace
-        toReplace[0] = charBefore[i];
-        // Prepare the replacement string
-        replacement[0] = charBefore[i];
-
-        for (int j = 0; j < strlen(charAfter); ++j) {
-            // Prepare the string to replace
-            toReplace[strlen(initialName)+1] = charAfter[j];
-            // Prepare the replacement string
-            replacement[strlen(newName)+1] = charAfter[j];
-
-            // Special case: Spaces between what we think is a variable and the first parentheses
-            //TODO handle it
-
-            source = gl4es_inplace_replace_simple(source, sourceLength, toReplace, replacement);
-        }
-    }
-
-    free(toReplace);
-    free(replacement);
-
     return source;
 }
 
@@ -1570,9 +1688,9 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
             case 3: target_precision = "lowp"; break;
             default: target_precision = "highp";
         }
-        source = ReplaceVariableName(source, sourceLength, "highp", target_precision);
-        source = ReplaceVariableName(source, sourceLength, "mediump", target_precision);
-        source = ReplaceVariableName(source, sourceLength, "lowp", target_precision);
+        source = ReplaceVariableName(source, sourceLength, "highp", target_precision, 0);
+        source = ReplaceVariableName(source, sourceLength, "mediump", target_precision, 0);
+        source = ReplaceVariableName(source, sourceLength, "lowp", target_precision, 0);
     }
 
     return source;

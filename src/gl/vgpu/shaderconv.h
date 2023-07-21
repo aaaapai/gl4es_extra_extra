@@ -10,6 +10,8 @@
 char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass);
 char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass);
 char * ConvertShaderMinimal(char * input, int is_fragment);
+char * ConvertShaderMinimalBackport(char * input, int * length, int is_fragment, int destructive);
+char * BackportAttributes(char * source, int *sourceLength);
 
 char * GLSLHeader(char* source);
 char * RemoveConstInsideBlocks(char* source, int * sourceLength);
@@ -24,7 +26,7 @@ int FindPositionAfterDirectives(char * source);
 int FindPositionAfterVersion(const char * source);
 char * ReplaceGLFragData(char * source, int * sourceLength);
 char * ReplaceGLFragColor(char * source, int * sourceLength);
-char * ReplaceVariableName(char * source, int * sourceLength, char * initialName, char* newName);
+char * ReplaceVariableName(char * source, int * sourceLength, char * initialName, char* newName, size_t offset);
 char * ReplaceFunctionName(char * source, int * sourceLength, char * initialName, char * finalName);
 char * RemoveUnsupportedExtensions(char * source);
 int doesShaderVersionContainsES(const char * source);
