@@ -481,8 +481,8 @@ IR_TO_GLSL::visit(ir_variable* ir)
 		binding, loc, component, cent, bindless, bound,
 		image_format, memory_read_only, memory_write_only,
 		memory_coherent, memory_volatile, memory_restrict,
-		samp, patc, inv, explicit_inv, prec, precision[ir->data.precision],
-		mode[decormode][ir->data.mode], stream, interp[ir->data.interpolation]);
+		samp, patc, inv, explicit_inv, prec, mode[decormode][ir->data.mode],
+		precision[ir->data.precision], stream, interp[ir->data.interpolation]);
 
 	print_type(generated_source, ir->type, false);
 	generated_source.append(" ");
