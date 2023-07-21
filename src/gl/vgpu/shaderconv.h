@@ -6,6 +6,7 @@
 #define UNTITLED_SHADERCONV_H
 
 #include "../shader.h"
+void VerbosePrint(char * source, char * stage);
 
 char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pass);
 char * ConvertShaderVgpu(struct shader_s * shader_source, int second_pass);
