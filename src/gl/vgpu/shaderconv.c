@@ -32,7 +32,8 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // ESSL 1.0 pipeline
     if(!hardext.glsl300es || globals4es.vgpu_backport) {
-        shader_source->converted = optimize_shader(converted_shader, &shader_length, is_vertex, shader_version, 100);
+        size_t original_length = strlen(shader_source->source);
+        shader_source->converted = optimize_shader(shader_source->source, &original_length, is_vertex, shader_version, 100);
 
         // Only possibility if to try to backport
         shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 0);
@@ -60,7 +61,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         shader_source->converted = ConvertShader(shader_source->converted, is_vertex, &shader_source->need, 0);
 
         size_t newLength = strlen(shader_source->converted);
-        shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0)
+        shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0);
 
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader output:\n%s\n", shader_source->converted);
@@ -94,7 +95,6 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
             printf("New VGPU Shader output:\n%s\n", shader_source->converted);
         }
     }
-     */
 
     return shader_source->converted;
 }
@@ -128,21 +128,11 @@ char * ConvertShaderMinimal(char * input, int is_fragment) {
     return input;
 }
 
-/** Some minimal required pre-processing to run through the optimizer, for backported shaders
- * @param input the shader as a string
- * @param is_fragment whether the input is a fragment shader
- */
-char * PreConvertShaderMinimalBackport(char * input, int * length, int is_fragment) {
-    int shaderLength = strlen(input);
-
-
-}
-
 /** Some minimal required postprocessing after running through the optimizer, for backported shaders
  * @param input the shader as a string
  * @param is_fragment whether the input is a fragment shader
  */
-char * ConvertShaderMinimalBackport(char * input, int * length, int is_fragment, int destructive) {
+char * ConvertShaderMinimalBackport(char * input, size_t * length, int is_fragment, int destructive) {
     input = gl4es_inplace_replace_simple(input,  length, "flat ", "");
 
     if (is_fragment) {
