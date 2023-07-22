@@ -52,6 +52,8 @@ public:
 	static char * Convert(
 		exec_list *instructions,
 		struct _mesa_glsl_parse_state *state);
+	static const char* processed_uniform_blocks[64];
+	static int   num_uniform_blocks;
 	static void print_type(sbuffer& str, const glsl_type *t, bool arraySize);
 	static void print_type_post(sbuffer& str, const glsl_type *t, bool arraySize);
 
@@ -96,6 +98,7 @@ public:
    virtual void visit(ir_emit_vertex *);
    virtual void visit(ir_end_primitive *);
    virtual void visit(ir_barrier *);
+   void visit_uniform_block(ir_variable* var);
 
 public:
 	int mode = 1;

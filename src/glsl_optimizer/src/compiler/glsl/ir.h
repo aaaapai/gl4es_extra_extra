@@ -451,6 +451,14 @@ public:
              this->interface_type != NULL;
    }
 
+    /**
+     * Determine whether or not a variable is part of a uniform block.
+     */
+    inline bool is_in_uniform_block() const
+    {
+        return this->data.mode == ir_var_uniform && this->interface_type != NULL;
+    }
+
    /**
     * Determine whether or not a variable is the declaration of an interface
     * block
@@ -475,7 +483,7 @@ public:
       return this->type->without_array() == this->interface_type;
    }
 
-   /**
+    /**
     * Return whether this variable contains a bindless sampler/image.
     */
    inline bool contains_bindless() const

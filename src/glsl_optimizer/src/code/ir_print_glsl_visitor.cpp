@@ -9,6 +9,8 @@
 #include "../util/hash_table.h"
 #include "../util/u_string.h"
 
+const char* const precision[] = { "", "highp ", "mediump ", "lowp " };
+
 struct ga_entry : public exec_node
 {
 	ga_entry(ir_instruction* ir)
@@ -223,6 +225,9 @@ char * IR_TO_GLSL::Convert(
 	return res.c_str_take_ownership();
 }
 
+const char* IR_TO_GLSL::processed_uniform_blocks[64] = { 0 };
+int   IR_TO_GLSL::num_uniform_blocks = 0;
+
 IR_TO_GLSL::IR_TO_GLSL(
 	sbuffer& str,
 	global_print_tracker* vGlobals,
@@ -372,6 +377,11 @@ IR_TO_GLSL::visit(ir_rvalue*)
 void
 IR_TO_GLSL::visit(ir_variable* ir)
 {
+	if ( ir->is_in_uniform_block()) // only supporting uniform blocks for now, might add SSBOs later
+	{
+		visit_uniform_block( ir );
+		return;
+	}
 	char binding[32] = { 0 };
 	if (ir->data.binding)
 		snprintf(binding, sizeof(binding), "binding=%i ", ir->data.binding);
@@ -474,7 +484,6 @@ IR_TO_GLSL::visit(ir_variable* ir)
 		{ "", "uniform ", "shader_storage", "shader_shared", "attribute ", "varying ", "in ", "out ", "inout ", "const_in ", "sys ", "" },
 		{ "", "uniform ", "shader_storage", "shader_shared", "varying ",   "out ",     "in ", "out ", "inout ", "const_in ", "sys ", "" }
 	};
-	const char* const precision[] = { "", "highp ", "mediump ", "lowp " };
 	const char* const interp[] = { "", "smooth ", "flat ", "noperspective " };
 	STATIC_ASSERT(ARRAY_SIZE(interp) == INTERP_MODE_COUNT);
 
@@ -1764,17 +1773,18 @@ IR_TO_GLSL::visit(ir_constant* ir)
 			ir->get_array_element(i)->accept(this);
 		}
 	}
-	/*else if (ir->type->is_struct())
+	else if (ir->type->is_struct())
 	{
 		bool first = true;
-		foreach_in_list(ir_constant, inst, &ir->const_elements)
+		for(unsigned int i = 0; i < ir->type->length; i++)
 		{
+			ir_instruction* inst = ir->const_elements[i];
 			if (!first)
 				generated_source.append(", ");
 			first = false;
 			inst->accept(this);
 		}
-	}*/
+	}
 	else
 	{
 		bool first = true;
@@ -2130,4 +2140,58 @@ void
 IR_TO_GLSL::visit(ir_barrier*)
 {
 	generated_source.append("barrier-TODO\n");
+}
+
+void IR_TO_GLSL::visit_uniform_block(ir_variable *ir) {
+	const glsl_type* itype = ir->get_interface_type();
+
+	for ( int i = 0; i < num_uniform_blocks; i++ )
+	{
+		if ( itype->name == processed_uniform_blocks[i] )
+		{
+			skipped_this_ir = true;
+			return;
+		}
+	}
+
+	assert( num_uniform_blocks < sizeof( processed_uniform_blocks ) / sizeof( processed_uniform_blocks[0] ) );
+
+	processed_uniform_blocks[num_uniform_blocks++] = itype->name;
+
+	const char* packing = nullptr;
+
+	switch ( itype->interface_packing )
+	{
+		case GLSL_INTERFACE_PACKING_STD140: packing = "std140"; break;
+		case GLSL_INTERFACE_PACKING_STD430: packing = "std430"; break;
+		case GLSL_INTERFACE_PACKING_SHARED: packing = "shared"; break;
+		default: packing = nullptr;  break;
+	}
+
+	// TODO: handle explicit locations and bindings within layout expression for uniform blocks.
+	// that does not appear to be getting preserved.
+	if ( packing )
+	{
+		generated_source.append( "layout(%s) ", packing );
+	}
+	generated_source.append( "uniform %s {\n", itype->name );
+
+	for ( unsigned int i = 0; i < itype->length; i++ )
+	{
+		const glsl_type* field_type = itype->fields.structure[i].type;
+		const char* field_name = itype->fields.structure[i].name;
+		const unsigned int precision_int = itype->fields.structure[i].precision;
+		generated_source.append( "  %s ", precision[precision_int]);
+		print_type( generated_source, field_type, false );
+		generated_source.append( " %s", field_name );
+		print_type_post( generated_source, field_type, false );
+		generated_source.append( ";\n" );
+	}
+
+	generated_source.append( "}" );
+
+	if ( ir->is_interface_instance() )
+	{
+		generated_source.append( " %s", ir->name );
+	}
 }
