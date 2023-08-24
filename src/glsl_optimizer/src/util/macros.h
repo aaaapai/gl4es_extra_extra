@@ -192,7 +192,7 @@ do {                       \
  */
 #   if (defined(__clang__) && defined(__has_feature))
 #      if __has_feature(has_trivial_destructor)
-#         define HAS_TRIVIAL_DESTRUCTOR(T) __has_trivial_destructor(T)
+#         define HAS_TRIVIAL_DESTRUCTOR(T) __is_trivially_destructible(T)
 #      endif
 #   elif defined(__GNUC__)
 #      if ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 3)))
