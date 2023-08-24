@@ -32,7 +32,7 @@ static inline __attribute__((always_inline)) void iprotecc_gencrctab(uint64_t* c
   }
 }
 
-static inline __attribute__((always_inline)) uint64_t iprotecc_docrc(const char* a, const uint64_t* crctab, const uint64_t crcstart) {
+static inline __attribute__((always_inline)) uint64_t iprotecc_docrc(const volatile char* a, const uint64_t* crctab, const uint64_t crcstart) {
   uint64_t crc = crcstart;
   for(size_t i = 0; i < iprotecc_strlen; i++) {
     crc = crctab[(uint8_t)(crc >> 56) ^ a[i]] ^ (crc << 8);  
