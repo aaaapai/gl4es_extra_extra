@@ -438,21 +438,38 @@ void GetHardwareExtensions(int notest)
     else if(strstr(vendor, "Imagination Technologies"))
         hardext.vendor = VEND_IMGTEC;
     if(hardext.esversion>1) {
+        /*
         if(testGLSL("#version 120", 1))
             hardext.glsl120 = 1;
-        if(testGLSL("#version 300 es", 0))
+        */
+
+        // Test ogl version, only supported on ogl(es) 3+
+        GLint major_version = 0;
+        gles_glGetIntegerv(GL_MAJOR_VERSION, &major_version);
+        gles_glGetError(); // Delete the error
+
+        if(major_version >= 3) {
             hardext.glsl300es = 1;
-        if(testGLSL("#version 310 es", 1))
-            hardext.glsl310es = 1;
-        // VGPU SPECIFIC
-        if(testGLSL("#version 320 es", 1))
-            hardext.glsl320es = 1;
+
+            GLint minor_version = 0;
+            gles_glGetIntegerv(GL_MINOR_VERSION, &minor_version);
+
+            if(minor_version >= 1){
+                hardext.glsl310es = 1;
+            }
+            if(minor_version >= 2){
+                hardext.glsl320es = 1;
+            }
+        }
     }
     if(hardext.glsl120) {
         SHUT_LOGD("GLSL 120 supported and used\n");
     }
+
+
+
     if(hardext.glsl300es) {
-        SHUT_LOGD("GLSL 300 es supported%s\n", (hardext.glsl120||hardext.glsl310es)?"":" and used");
+        SHUT_LOGD("GLSL 300 es supported%s\n", (hardext.glsl120||hardext.glsl300es)?"":" and used");
 	    hardext.drawbuffers = 1;
     }
     if(hardext.glsl310es) {
