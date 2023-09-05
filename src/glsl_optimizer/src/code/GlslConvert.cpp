@@ -768,6 +768,8 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
 		ctx->Const.MaxVarying = 60 / 4;
 		break;
 	case 300:
+	case 310:
+	case 320:
 		ctx->Const.MaxClipPlanes = 8;
 		ctx->Const.MaxCombinedTextureImageUnits = 32;
 		ctx->Const.MaxDrawBuffers = 4;
@@ -806,6 +808,9 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
 
 	ctx->Driver.NewProgram = new_program;
 	//ctx->Driver.DeleteProgram = 0;
+
+	// Gl4es overrides
+	ctx->Const.MaxTextureCoordUnits = 16;
 }
 
 void GlslConvert::ClearContext(struct gl_context* ctx)
