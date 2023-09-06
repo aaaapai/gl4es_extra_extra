@@ -155,7 +155,7 @@ char * GlslConvert::Optimize(
     bool isESShader,
 	OptimizationStruct vOptimizationStruct)
 {
-	this.failed = false;
+	this->failed = false;
     char * optimized_shader = NULL;
 
 	struct gl_shader* shader = rzalloc(NULL, struct gl_shader);
