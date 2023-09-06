@@ -120,10 +120,16 @@ char * ConvertShaderMinimal(char * input, int is_fragment) {
     if(is_fragment) {
     	// all <120 shaders can use that in the source, so run it
     	input = ReplaceGLFragData(input, &shaderLength);
+        // Gl4es post-process add old glsl keywords
+        input = ReplaceVariableName(input, &shaderLength, "varying", "in", 0);
     	// also fix up frag color
     	input = ReplaceGLFragColor(input, &shaderLength);
     	// remove the extension that GL4ES shaderconv adds in when it detects frag data acccesses
     	input = gl4es_inplace_replace_simple(input, &shaderLength, "#extension GL_EXT_draw_buffers : enable", "");
+    }else {
+        // Gl4es post-process add old glsl keywords
+        input = ReplaceVariableName(input, &shaderLength, "attribute", "in", 0);
+        input = ReplaceVariableName(input, &shaderLength, "varying", "out", 0);
     }
     return input;
 }
