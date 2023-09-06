@@ -656,7 +656,7 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
 	case 120:
 		ctx->Const.MaxClipPlanes = 6;
 		ctx->Const.MaxCombinedTextureImageUnits = 2;
-		ctx->Const.MaxDrawBuffers = 1;
+		ctx->Const.MaxDrawBuffers = 8;
 		ctx->Const.MinProgramTexelOffset = 0;
 		ctx->Const.MaxProgramTexelOffset = 0;
 		ctx->Const.MaxLights = 8;
