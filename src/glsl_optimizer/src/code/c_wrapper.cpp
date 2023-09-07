@@ -27,6 +27,7 @@ char *optimize_shader(char *source, size_t *sourceLength, int isVertex, int vGLS
             );
     if(converter.Failed()) {
         printf("Shader conversion failed!\n%s\n", converter.GetLog().c_str());
+        return nullptr;
     }
     return optimized_shader;
 }
