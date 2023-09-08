@@ -811,6 +811,34 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
 
 	// Gl4es overrides
 	ctx->Const.MaxTextureCoordUnits = 16;
+
+    // Abused override
+    ctx->Const.MaxClipPlanes = 8;
+    ctx->Const.MaxCombinedTextureImageUnits = 32;
+    ctx->Const.MaxDrawBuffers = 4;
+    ctx->Const.MinProgramTexelOffset = -8;
+    ctx->Const.MaxProgramTexelOffset = 7;
+    ctx->Const.MaxLights = 0;
+    ctx->Const.MaxTextureCoordUnits = 0;
+    ctx->Const.MaxTextureUnits = 0;
+    ctx->Const.MaxUniformBufferBindings = 84;
+    ctx->Const.MaxVertexStreams = 4;
+    ctx->Const.MaxTransformFeedbackBuffers = 4;
+
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxAttribs = 16;
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxTextureImageUnits = 16;
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxUniformComponents = 1024;
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxCombinedUniformComponents = 1024;
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxInputComponents = 0; /* not used */
+    ctx->Const.Program[MESA_SHADER_VERTEX].MaxOutputComponents = 16 * 4;
+
+    ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxTextureImageUnits = 16;
+    ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxUniformComponents = 224;
+    ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxCombinedUniformComponents = 224;
+    ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxInputComponents = 15 * 4;
+    ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxOutputComponents = 0; /* not used */
+
+    ctx->Const.MaxVarying = ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxInputComponents / 4;
 }
 
 void GlslConvert::ClearContext(struct gl_context* ctx)
