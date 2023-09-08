@@ -104,8 +104,9 @@ _mesa_reference_program_(struct gl_context *ctx, struct gl_program **ptr,
 
 void
 _mesa_shader_debug(struct gl_context *, GLenum, GLuint *,
-                   const char *)
+                   const char * text)
 {
+    printf("%s\n", text);
 }
 
 struct gl_shader *
