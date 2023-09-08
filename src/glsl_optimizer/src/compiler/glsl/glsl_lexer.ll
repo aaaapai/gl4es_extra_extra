@@ -700,10 +700,10 @@ namespace	KEYWORD(110, 100, 0, 0, NAMESPACE);
 using		KEYWORD(110, 100, 0, 0, USING);
 
     /* Additional reserved words in GLSL 1.20. */
-lowp		KEYWORD(120, 100, 130, 100, LOWP);
-mediump		KEYWORD(120, 100, 130, 100, MEDIUMP);
-highp		KEYWORD(120, 100, 130, 100, HIGHP);
-precision	KEYWORD(120, 100, 130, 100, PRECISION);
+lowp		KEYWORD(120, 100, 120, 100, LOWP);
+mediump		KEYWORD(120, 100, 120, 100, MEDIUMP);
+highp		KEYWORD(120, 100, 120, 100, HIGHP);
+precision	KEYWORD(120, 100, 120, 100, PRECISION);
 
     /* Additional reserved words in GLSL 1.30. */
 case		KEYWORD(130, 300, 130, 300, CASE);

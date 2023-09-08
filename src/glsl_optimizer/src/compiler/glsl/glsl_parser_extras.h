@@ -149,7 +149,7 @@ struct _mesa_glsl_parse_state {
 
    bool check_precision_qualifiers_allowed(YYLTYPE *locp)
    {
-      return check_version(130, 100, locp,
+      return check_version(120, 100, locp,
                            "precision qualifiers are forbidden");
    }
 
