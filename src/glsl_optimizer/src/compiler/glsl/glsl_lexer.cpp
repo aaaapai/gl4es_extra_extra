@@ -1478,7 +1478,7 @@ static int classify_identifier(struct _mesa_glsl_parse_state *, const char *,
       } else if (yyextra->is_version(reserved_glsl,			\
                                      reserved_glsl_es)) {		\
 	 _mesa_glsl_error(yylloc, yyextra,				\
-			  "illegal use of reserved word `%s'", yytext);	\
+			  "ALT: illegal use of reserved word `%s'", yytext );	\
 	 return ERROR_TOK;						\
       } else {								\
 	 return classify_identifier(yyextra, yytext, yyleng, yylval);	\
@@ -1499,7 +1499,7 @@ static int classify_identifier(struct _mesa_glsl_parse_state *, const char *,
       } else if (yyextra->is_version(reserved_glsl,			\
                                      reserved_glsl_es)) {		\
 	 _mesa_glsl_error(yylloc, yyextra,				\
-			  "illegal use of reserved word `%s'", yytext);	\
+			  "TYPE ALT: illegal use of reserved word `%s'", yytext);	\
 	 return ERROR_TOK;						\
       } else {								\
 	 return classify_identifier(yyextra, yytext, yyleng, yylval);	\
@@ -1521,7 +1521,7 @@ static int classify_identifier(struct _mesa_glsl_parse_state *, const char *,
    do {									\
       if (yyextra->is_version(0, 300)) {				\
 	 _mesa_glsl_error(yylloc, yyextra,				\
-			  "illegal use of reserved word `%s'", yytext);	\
+			  "DEPRECATED: illegal use of reserved word `%s'", yytext);	\
 	 return ERROR_TOK;						\
       } else {								\
          return token;							\
@@ -1535,7 +1535,7 @@ static int classify_identifier(struct _mesa_glsl_parse_state *, const char *,
    do {									\
       if (yyextra->is_version(0, 300)) {				\
          _mesa_glsl_error(yylloc, yyextra,				\
-                          "illegal use of reserved word `%s'", yytext);	\
+                          "DEPRECATED ALT: illegal use of reserved word `%s'", yytext);	\
          return ERROR_TOK;						\
       } else if (alt_expr) {						\
          yylval->type = gtype;						\
