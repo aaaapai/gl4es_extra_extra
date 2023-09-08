@@ -1513,7 +1513,7 @@ void gl4es_setCurrentFBO() {
 void APIENTRY_GL4ES gl4es_glDrawBuffers(GLsizei n, const GLenum *bufs) {
     DBG(printf("glDrawBuffers(%d, %p) [0]=%s\n", n, bufs, n?PrintEnum(bufs[0]):"nil");)
     if(hardext.drawbuffers) {
-        LOAD_GLES_EXT(glDrawBuffers);
+        LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
         gles_glDrawBuffers(n, bufs);
         errorGL();
     } else {
@@ -1535,7 +1535,7 @@ void APIENTRY_GL4ES gl4es_glNamedFramebufferDrawBuffers(GLuint framebuffer, GLsi
     if(hardext.drawbuffers) {
         GLuint oldf = glstate->fbo.fbo_draw->id;
         gl4es_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb->id);
-        LOAD_GLES_EXT(glDrawBuffers);
+        LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
         gles_glDrawBuffers(n, bufs);
         errorGL();
         gl4es_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, oldf);
@@ -1559,7 +1559,7 @@ void APIENTRY_GL4ES gl4es_glClearBufferiv(GLenum buffer, GLint drawbuffer, const
                 return;
             } else {
                 GLfloat oldclear[4];
-                LOAD_GLES_EXT(glDrawBuffers);
+                LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...
                 if(hardext.drawbuffers)
                     gles_glDrawBuffers(1, (const GLenum *) &drawbuffer);
@@ -1604,7 +1604,7 @@ void APIENTRY_GL4ES gl4es_glClearBufferuiv(GLenum buffer, GLint drawbuffer, cons
                 return;
             } else {
                 GLfloat oldclear[4];
-                LOAD_GLES_EXT(glDrawBuffers);
+                LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...
                 if(hardext.drawbuffers)
                     gles_glDrawBuffers(1, (const GLenum *) &drawbuffer);
@@ -1637,7 +1637,7 @@ void APIENTRY_GL4ES gl4es_glClearBufferfv(GLenum buffer, GLint drawbuffer, const
                 return;
             } else {
                 GLfloat oldclear[4];
-                LOAD_GLES_EXT(glDrawBuffers);
+                LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...
                 if(hardext.drawbuffers)
                     gles_glDrawBuffers(1, (const GLenum *) &drawbuffer);

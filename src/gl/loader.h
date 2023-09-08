@@ -214,6 +214,17 @@ EXPORT extern void *egl;
         LOAD_RAW(gles, name, proc_address(gles, #name"EXT")); \
     }
 
+#define LOAD_GLES_IF_EXT(name, hardext_name) \
+    DEFINE_RAW(gles, name); \
+    { \
+        if(hardext_name) { \
+            LOAD_RAW(gles, name, proc_address(gles, #name"EXT")); \
+        } else { \
+            LOAD_RAW(gles, name, proc_address(gles, #name)); \
+        } \
+    }
+
+
 #define LOAD_GLES2_OR_OES(name) \
     DEFINE_RAW(gles, name); \
     { \
@@ -238,6 +249,17 @@ EXPORT extern void *egl;
     { \
         LOAD_EGL(eglGetProcAddress); \
         LOAD_RAW(gles, name, egl_eglGetProcAddress(#name"EXT")); \
+    }
+
+#define LOAD_GLES_IF_EXT(name, hardext_name) \
+    DEFINE_RAW(gles, name); \
+    { \
+        LOAD_EGL(eglGetProcAddress); \
+        if(hardext_name) { \
+            LOAD_RAW(gles, name, egl_eglGetProcAddress(#name"EXT")); \
+        } else { \
+            LOAD_RAW(gles, name, egl_eglGetProcAddress(#name)); \
+        } \
     }
 
 #define LOAD_GLES2_OR_OES(name) \
