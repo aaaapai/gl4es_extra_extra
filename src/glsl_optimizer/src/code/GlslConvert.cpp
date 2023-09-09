@@ -362,6 +362,7 @@ char * GlslConvert::Optimize(
 					/* Print out the initial GLSL */
                     state->es_shader = isESShader;
                     state->language_version = vTargetGLSLVersion;
+                    state->original_language_version = vGLSLVersion;
 					optimized_shader = IR_TO_GLSL::Convert(ir, state);
 				}
 				/*else if (vLanguageTarget == LanguageTarget::LANGUAGE_TARGET_HLSL)

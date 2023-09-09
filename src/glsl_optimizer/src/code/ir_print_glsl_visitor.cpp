@@ -1229,6 +1229,7 @@ IR_TO_GLSL::visit(ir_texture* ir)
 
 	// texture function name
 	//ACS: shadow lookups and lookups with dimensionality included in the name were deprecated in 130
+
 	if (state->language_version < 130)
 	{
 		if(ir->op == ir_txf || ir->op == ir_txf_ms) {
@@ -1237,6 +1238,7 @@ IR_TO_GLSL::visit(ir_texture* ir)
 			generated_source.append("vec4(1.0)");
 			return;
 		}
+        // Note: when backporting a texture op with a shadow sampler, only take the X component of it
 		generated_source.append("%s", is_shadow ? "shadow" : "texture");
 		generated_source.append("%s", tex_sampler_dim_name[sampler_dim]);
 	}
@@ -1244,8 +1246,14 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	{
 		if (ir->op == ir_txf || ir->op == ir_txf_ms)
 			generated_source.append("texelFetch");
-		else
-			generated_source.append("texture");
+		else {
+            // The signature changed from vec4 to float, so when forward porting we need to wrap it
+            if (is_shadow && state->original_language_version < 130)
+                generated_source.append("vec4(");
+
+            generated_source.append("texture");
+        }
+
 	}
 
 	if (is_array && state->EXT_texture_array_enable)
@@ -1344,6 +1352,14 @@ IR_TO_GLSL::visit(ir_texture* ir)
 
     // Close the function call
     generated_source.append(")");
+
+    // Handle forward/back porting
+    if (is_shadow) {
+        if (state->language_version >= 130 && state->original_language_version < 130)
+            generated_source.append(")"); // Close the vec4 wrapper
+        else if (state->language_version < 130 && state->original_language_version >= 130)
+            generated_source.append(".x"); // Reduce from vec4 to float
+    }
 }
 
 void
