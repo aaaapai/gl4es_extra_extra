@@ -58,7 +58,9 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
         // First, simple backward port
         shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, 100);
+        VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
+        VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
 
         size_t newLength = strlen(shader_source->converted);
         shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0);
@@ -88,7 +90,9 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         }
 
         shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, target_version);
+        VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
+        VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
         shader_source->converted = ConvertShaderMinimal(shader_source->converted, !is_vertex);
 
         if (globals4es.vgpu_dump){
@@ -102,7 +106,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
 /** Just prints the shader at a stage, for heavy dump */
 void VerbosePrint(char * source, char * stage) {
-    if(globals4es.vgpu_dump > 1){
+    if(globals4es.vgpu_dump > 1 && source != NULL){
         printf("Stage - %s :\n%s\n", stage, source);
     }
 }
