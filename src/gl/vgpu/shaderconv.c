@@ -1618,7 +1618,7 @@ int FindPositionAfterVersion(const char * source){
     if (position == NULL) return 0;
     for(int i=7; 1; ++i){
         if(position[i] == '\n'){
-            return i;
+            return (position - source) + i;
         }
     }
 }
