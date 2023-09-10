@@ -1962,22 +1962,23 @@ int GetShaderVersion(const char * source) {
 
     test_version(150)
     test_version(100)
-    test_version_context(320, es)
-    test_version_context(310, es)
-    test_version_context(300, es)
 
     test_version(120)
     test_version(110)
     test_version(140)
     test_version(130)
-
+    test_version(400)
+    test_version(330)
     test_version(460)
     test_version(450)
     test_version(440)
     test_version(430)
     test_version(420)
     test_version(410)
-    test_version(400)
+
+    test_version_context(320, es)
+    test_version_context(310, es)
+    test_version_context(300, es)
 
     free(versionString);
     return 100;
