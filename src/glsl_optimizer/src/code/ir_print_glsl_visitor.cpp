@@ -543,7 +543,7 @@ IR_TO_GLSL::visit(ir_function_signature* ir)
 		indent();
 	}
 
-	if (ir->body.is_empty())
+	if (ir->body.is_empty() && strcmp(ir->function()->name, "main") != 0)
 	{
 		generated_source.append(");\n");
 		return;
