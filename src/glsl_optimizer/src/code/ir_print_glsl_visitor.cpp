@@ -1244,12 +1244,14 @@ IR_TO_GLSL::visit(ir_texture* ir)
 	}
 	else
 	{
-		if (ir->op == ir_txf || ir->op == ir_txf_ms)
-			generated_source.append("texelFetch");
-		else {
+        if (ir->op == ir_txf || ir->op == ir_txf_ms){
+            generated_source.append("texelFetch");
+        } else {
             // The signature changed from vec4 to float, so when forward porting we need to wrap it
-            if (is_shadow && state->original_language_version < 130)
-                generated_source.append("vec4(");
+            if (is_shadow && ir->type->vector_elements > 2){
+                generated_source.append(ir->type->name);
+                generated_source.append("(");
+            }
 
             generated_source.append("texture");
         }
@@ -1355,10 +1357,16 @@ IR_TO_GLSL::visit(ir_texture* ir)
 
     // Handle forward/back porting
     if (is_shadow) {
-        if (state->language_version >= 130 && state->original_language_version < 130)
+        printf("stateversion: %i, %i\n", state->language_version, state->original_language_version);
+        if (state->language_version >= 130 && ir->type->vector_elements > 2){
+            printf("closing vec4 wrapper");
             generated_source.append(")"); // Close the vec4 wrapper
-        else if (state->language_version < 130 && state->original_language_version >= 130)
-            generated_source.append(".x"); // Reduce from vec4 to float
+        } else {
+            if (state->language_version < 130 && state->original_language_version >= 130) {
+                printf("reducing vec4 to float");
+                generated_source.append(".x"); // Reduce from vec4 to float
+            }
+        }
     }
 }
 
