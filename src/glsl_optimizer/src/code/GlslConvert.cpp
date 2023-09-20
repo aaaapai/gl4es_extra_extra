@@ -198,6 +198,8 @@ char * GlslConvert::Optimize(
 		ctx->Const.ShaderCompilerOptions[(int)shader->Stage];
 	FillCompilerOptions(&compileOptions, &vOptimizationStruct);
 
+    ctx->Const.AllowGLSLExtensionDirectiveMidShader = true;
+
 	ir_variable::temporaries_allocate_names = true;
 
 	struct _mesa_glsl_parse_state* state
