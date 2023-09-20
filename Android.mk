@@ -229,7 +229,8 @@ LOCAL_CPP_FEATURES := exceptions
 
 LOCAL_CPPFLAGS = -std=gnu++20
 
-LOCAL_CFLAGS += -g -funwind-tables -Ofast -ffast-math -mllvm -polly -flto -fvisibility=hidden -include include/android_debug.h
+LOCAL_CFLAGS += -g -funwind-tables -fvisibility=hidden -include include/android_debug.h
+LOCAL_CFLAGS += -Ofast -ffast-math -mllvm -polly -flto
 LOCAL_CFLAGS += -DNOX11
 LOCAL_CFLAGS += -DNO_GBM
 #LOCAL_CFLAGS += -DNO_INIT_CONSTRUCTOR
