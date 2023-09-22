@@ -32,8 +32,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // ESSL 1.0 pipeline
     if(!hardext.glsl300es || globals4es.vgpu_backport) {
-        size_t original_length = strlen(shader_source->source);
-        shader_source->converted = optimize_shader(shader_source->source, &original_length, is_vertex, shader_version, 100);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100);
 
         // Only possibility if to try to backport
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
@@ -45,25 +44,26 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         }
 
         // Skip testing, we only have one shot anyway
+        shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
         return shader_source->converted;
     }
 
     // ESSL 3.X pipeline
     if( shader_version < 120 || globals4es.vgpu_force_conv) {
-        size_t shader_length = strlen(shader_source->source);
-
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader source:\n%s\n", shader_source->source);
         }
 
         // First, simple backward port
-        shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, 100);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100);
         VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
         VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
 
         size_t newLength = strlen(shader_source->converted);
         shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0);
+
+        shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
 
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader output:\n%s\n", shader_source->converted);
@@ -83,22 +83,26 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         }
 
         int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
-        size_t shader_length = strlen(shader_source->source);
 
         if (globals4es.vgpu_dump){
             printf("VGPU Shader source:\n%s\n", shader_source->source);
         }
 
-        shader_source->converted = optimize_shader(shader_source->source, &shader_length, is_vertex, shader_version, target_version);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version);
         VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
         VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
         shader_source->converted = ConvertShaderMinimal(shader_source->converted, !is_vertex);
 
+        size_t newLength = strlen(shader_source->converted);
+        shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
+
         if (globals4es.vgpu_dump){
             printf("New VGPU Shader output:\n%s\n", shader_source->converted);
         }
     }
+
+
 
     return shader_source->converted;
 }
@@ -1679,7 +1683,11 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
     }
     int supportHighp = (hardext.highp ? 1 : 0);
     source = InplaceInsertByIndex(source, sourceLength, insertPoint, supportHighp ? "\nprecision highp float;\nprecision highp int;\n" : "\nprecision mediump float;\nprecision mediump int;\n");
+    return source;
+}
 
+/** Overrides the precision if specified */
+char * OverridePrecision(char * source, unsigned long * sourceLength) {
     if (globals4es.vgpu_precision != 0){
         char * target_precision;
         switch (globals4es.vgpu_precision) {
@@ -1692,7 +1700,6 @@ char * ReplacePrecisionQualifiers(char * source, int * sourceLength, int isVerte
         source = ReplaceVariableName(source, sourceLength, "mediump", target_precision, 0);
         source = ReplaceVariableName(source, sourceLength, "lowp", target_precision, 0);
     }
-
     return source;
 }
 

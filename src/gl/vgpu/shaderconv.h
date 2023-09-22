@@ -55,6 +55,7 @@ char * SimplifyConstIntTypecasts(char * source, int * sourceLength);
 char * SimplifyRedundantIntTypecasts(char * source, int * sourceLength);
 char * SimplifyRedundantParentheses(char * source, int * sourceLength);
 char * FixReturnTypes(char * source, int * sourceLength);
+char * OverridePrecision(char * source, unsigned long * sourceLength);
 
 char* GetOperandFromOperator(char* source, int operatorIndex, int rightOperand, int * limit);
 char* GetOperandFromOperatorValueOverride(char* source, int operatorIndex, int rightOperand, int * limit, int overrideTokenValue);
