@@ -359,6 +359,11 @@ Whether the shader gets forcefully backported to the #version 100
 * 0 : Default, don't attempt to forcefully backport the shader
 * 1 : Try to forcefully backport the shader. The resulting shader might bug but it compiles.
 
+##### LIBGL_VGPU_LOWER
+Whether the shader instructions get lowered
+* 0 : Do not lower the shader instructions
+* 1 : Default, lower the instructions
+
 
 ##### LIBGL_BUFFER_FORCE_BIND
 Whether buffers are rebound each time they are needed.

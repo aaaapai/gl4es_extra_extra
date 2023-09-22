@@ -655,6 +655,10 @@ void initialize_gl4es() {
     if(globals4es.vgpu_dump > 1)
         SHUT_LOGD_NOPREFIX("Dump the shaders at every vgpu stage\n");
 
+    GetEnvVarInt("LIBGL_VGPU_LOWER", &globals4es.vgpu_lower_instructions, 1);
+    if (!globals4es.vgpu_lower_instructions) {
+        SHUT_LOGD_NOPREFIX("Do not lower the instructions\n");
+    }
 
     env(LIBGL_VGPU_FORCE, globals4es.vgpu_force_conv, "Force VGPU pipeline to convert every shader")
     env(LIBGL_VGPU_BACKPORT, globals4es.vgpu_backport, "Attempt HARD to backport shaders to #version 100")

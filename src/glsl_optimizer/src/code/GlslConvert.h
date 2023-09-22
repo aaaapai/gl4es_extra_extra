@@ -168,8 +168,8 @@ public:
 		// the rest is to save
 		CompilerFlags compilerFlags = (GlslConvert::CompilerFlags)0;
 		ControlFlags controlFlags = (GlslConvert::ControlFlags)0;
-		OptimizationFlags optimizationFlags = (GlslConvert::OptimizationFlags)~0; // all
-		OptimizationFlags_Bis optimizationFlags_Bis = (GlslConvert::OptimizationFlags_Bis)~0; // all
+		int optimizationFlags = (GlslConvert::OptimizationFlags)~0; // all
+		int optimizationFlags_Bis = (GlslConvert::OptimizationFlags_Bis)~0; // all
 		InstructionToLowerFlags instructionToLowerFlags = (GlslConvert::InstructionToLowerFlags)~0; // all
 		
 		struct AlgebraicOptions
