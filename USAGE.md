@@ -364,6 +364,12 @@ Whether the shader instructions get lowered
 * 0 : Do not lower the shader instructions
 * 1 : Default, lower the instructions
 
+##### LIBGL_VGPU_OPT
+Whether the shader gets optimized by mesa
+* 0 : Do not optimize the shader
+* 1 : Default, optimize the shader
+
+
 
 ##### LIBGL_BUFFER_FORCE_BIND
 Whether buffers are rebound each time they are needed.
