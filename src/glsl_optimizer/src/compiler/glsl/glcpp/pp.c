@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "glcpp.h"
-#include "../../../mesa/main/mtypes.h"
+#include "main/mtypes.h"
 
 void
 glcpp_error (YYLTYPE *locp, glcpp_parser_t *parser, const char *fmt, ...)
@@ -195,10 +195,10 @@ remove_line_continuations(glcpp_parser_t *ctx, const char *shader)
 			}
 		}
 
-		search_start = backslash + 1;
-
 		if (backslash == NULL)
 			break;
+
+		search_start = backslash + 1;
 
 		/* At each line continuation, (backslash followed by a
 		 * newline), copy all preceding text to the output, then

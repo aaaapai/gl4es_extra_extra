@@ -30,7 +30,7 @@
 #include "../mesa/main/mtypes.h"
 #include "../mesa/main/menums.h"
 #include "../compiler/glsl/builtin_functions.h"
-#include "../compiler/glsl/loop_analysis.h"
+//#include "../compiler/glsl/loop_analysis.h"
 
  //#include "ir_print_ir_visitor.h"
 #include "ir_print_glsl_visitor.h"
@@ -86,9 +86,6 @@ bool GlslConvert::CreateGraph(
 		break;
 	case gl_shader_stage::MESA_SHADER_FRAGMENT:
 		shader->Type = GL_FRAGMENT_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_COMPUTE:
-		shader->Type = GL_COMPUTE_SHADER;
 		break;
 	case gl_shader_stage::MESA_SHADER_KERNEL:
 		// todo : opencl kernel target to generate after the others
@@ -175,10 +172,6 @@ char * GlslConvert::Optimize(
             break;
         case gl_shader_stage::MESA_SHADER_GEOMETRY:
             shader->Type = GL_GEOMETRY_SHADER;
-            break;
-
-        case gl_shader_stage::MESA_SHADER_COMPUTE:
-            shader->Type = GL_COMPUTE_SHADER;
             break;
         case gl_shader_stage::MESA_SHADER_KERNEL:
             // todo : opencl kernel target to generate after the others

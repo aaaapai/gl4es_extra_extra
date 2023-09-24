@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,7 @@
 #include "ir.h"
 #include "ir_visitor.h"
 #include "ir_rvalue_visitor.h"
-#include "../glsl_types.h"
+#include "compiler/glsl_types.h"
 
 ir_visitor_status
 ir_rvalue_base_visitor::rvalue_visit(ir_expression *ir)
@@ -53,6 +53,7 @@ ir_rvalue_base_visitor::rvalue_visit(ir_texture *ir)
    handle_rvalue(&ir->projector);
    handle_rvalue(&ir->shadow_comparator);
    handle_rvalue(&ir->offset);
+   handle_rvalue(&ir->clamp);
 
    switch (ir->op) {
    case ir_tex:
@@ -117,8 +118,6 @@ ir_visitor_status
 ir_rvalue_base_visitor::rvalue_visit(ir_assignment *ir)
 {
    handle_rvalue(&ir->rhs);
-   handle_rvalue(&ir->condition);
-
    return visit_continue;
 }
 

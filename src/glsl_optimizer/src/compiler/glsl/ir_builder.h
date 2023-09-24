@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2012 Intel Corporation
+ * Copyright © 2012 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -125,8 +125,6 @@ public:
 
 ir_assignment *assign(deref lhs, operand rhs);
 ir_assignment *assign(deref lhs, operand rhs, int writemask);
-ir_assignment *assign(deref lhs, operand rhs, operand condition);
-ir_assignment *assign(deref lhs, operand rhs, operand condition, int writemask);
 
 ir_return *ret(operand retval);
 

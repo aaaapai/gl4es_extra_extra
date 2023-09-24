@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2016 Intel Corporation
+ * Copyright © 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  */
 #include "ir_builder.h"
 #include "builtin_functions.h"
-#include "../../mesa/program/prog_instruction.h" /* for SWIZZLE_X, &c. */
+#include "program/prog_instruction.h" /* for SWIZZLE_X, &c. */
 
 using namespace ir_builder;
 

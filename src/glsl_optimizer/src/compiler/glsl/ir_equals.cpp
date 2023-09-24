@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2013 Intel Corporation
+ * Copyright © 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -137,6 +137,9 @@ ir_texture::equals(const ir_instruction *ir, enum ir_node_type ignore) const
    if (op != other->op)
       return false;
 
+   if (is_sparse != other->is_sparse)
+      return false;
+
    if (!possibly_null_equals(coordinate, other->coordinate, ignore))
       return false;
 
@@ -147,6 +150,9 @@ ir_texture::equals(const ir_instruction *ir, enum ir_node_type ignore) const
       return false;
 
    if (!possibly_null_equals(offset, other->offset, ignore))
+      return false;
+
+   if (!possibly_null_equals(clamp, other->clamp, ignore))
       return false;
 
    if (!sampler->equals(other->sampler, ignore))

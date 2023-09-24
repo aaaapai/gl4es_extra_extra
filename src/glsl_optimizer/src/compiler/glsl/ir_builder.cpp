@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2012 Intel Corporation
+ * Copyright © 2012 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  */
 
 #include "ir_builder.h"
-#include "../../mesa/program/prog_instruction.h"
+#include "program/prog_instruction.h"
 
 using namespace ir_builder;
 
@@ -46,19 +46,6 @@ ir_factory::make_temp(const glsl_type *type, const char *name)
 }
 
 ir_assignment *
-assign(deref lhs, operand rhs, operand condition, int writemask)
-{
-   void *mem_ctx = ralloc_parent(lhs.val);
-
-   ir_assignment *assign = new(mem_ctx) ir_assignment(lhs.val,
-                                                      rhs.val,
-                                                      condition.val,
-                                                      writemask);
-
-   return assign;
-}
-
-ir_assignment *
 assign(deref lhs, operand rhs)
 {
    return assign(lhs, rhs, (1 << lhs.val->type->vector_elements) - 1);
@@ -67,13 +54,13 @@ assign(deref lhs, operand rhs)
 ir_assignment *
 assign(deref lhs, operand rhs, int writemask)
 {
-   return assign(lhs, rhs, (ir_rvalue *) NULL, writemask);
-}
+   void *mem_ctx = ralloc_parent(lhs.val);
 
-ir_assignment *
-assign(deref lhs, operand rhs, operand condition)
-{
-   return assign(lhs, rhs, condition, (1 << lhs.val->type->vector_elements) - 1);
+   ir_assignment *assign = new(mem_ctx) ir_assignment(lhs.val,
+                                                      rhs.val,
+                                                      writemask);
+
+   return assign;
 }
 
 ir_return *

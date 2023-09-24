@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,13 +27,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../../../mesa/main/menums.h"
+#include "main/menums.h"
 
-#include "../../../util/ralloc.h"
+#include "util/ralloc.h"
 
-#include "../../../util/hash_table.h"
+#include "util/hash_table.h"
 
-#include "../../../util/string_buffer.h"
+#include "util/string_buffer.h"
 
 struct gl_context;
 
@@ -91,6 +91,7 @@ do {								\
       (Current).first_column = YYRHSLOC(Rhs, 1).first_column;	\
       (Current).last_line    = YYRHSLOC(Rhs, N).last_line;	\
       (Current).last_column  = YYRHSLOC(Rhs, N).last_column;	\
+      (Current).source       = YYRHSLOC(Rhs, N).source;		\
    }								\
    else								\
    {								\
@@ -98,11 +99,12 @@ do {								\
 	 YYRHSLOC(Rhs, 0).last_line;				\
       (Current).first_column = (Current).last_column =		\
 	 YYRHSLOC(Rhs, 0).last_column;				\
+      (Current).source       = YYRHSLOC(Rhs, 0).source;		\
    }								\
-   (Current).source = 0;					\
 } while (0)
 
 struct token {
+	bool expanding;
 	int type;
 	YYSTYPE value;
 	YYLTYPE location;

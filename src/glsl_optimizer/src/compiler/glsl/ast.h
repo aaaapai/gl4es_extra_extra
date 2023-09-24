@@ -27,8 +27,8 @@
 
 #include "list.h"
 #include "glsl_parser_extras.h"
-#include "../glsl_types.h"
-#include "../../util/bitset.h"
+#include "compiler/glsl_types.h"
+#include "util/bitset.h"
 
 struct _mesa_glsl_parse_state;
 
@@ -663,6 +663,12 @@ struct ast_type_qualifier {
          /** \{ */
          unsigned derivative_group:1;
          /** \} */
+
+         /**
+          * Flag set if GL_NV_viewport_array2 viewport_relative layout
+          * qualifier is used.
+          */
+         unsigned viewport_relative:1;
       }
       /** \brief Set of flags, accessed by name. */
       q;
@@ -773,7 +779,7 @@ struct ast_type_qualifier {
     * \note
     * This field is only valid if \c explicit_image_format is set.
     */
-   GLenum image_format;
+   enum pipe_format image_format;
 
    /**
     * Arrangement of invocations used to calculate derivatives in a compute
@@ -1164,6 +1170,9 @@ public:
 
 protected:
    void test_to_hir(exec_list *, struct _mesa_glsl_parse_state *);
+   void eval_test_expression(exec_list *instructions,
+                             struct _mesa_glsl_parse_state *state);
+   ir_rvalue *test_val;
 };
 
 class ast_iteration_statement : public ast_node {
@@ -1185,6 +1194,8 @@ public:
    ast_node *init_statement;
    ast_node *condition;
    ast_expression *rest_expression;
+
+   exec_list rest_instructions;
 
    ast_node *body;
 

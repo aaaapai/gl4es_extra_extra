@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2011 Intel Corporation
+ * Copyright © 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,21 +31,17 @@
 #define STANDALONE_SCAFFOLDING_H
 
 #include <assert.h>
-#include "../../mesa/main/menums.h"
-#include "../../mesa/program/prog_statevars.h"
+#include "main/menums.h"
+#include "program/prog_statevars.h"
 
 extern "C" void
 _mesa_warning(struct gl_context *ctx, const char *fmtString, ... );
 
 extern "C" void
-_mesa_problem(struct gl_context *ctx, const char *fmtString, ... );
-
-extern "C" void 
-_mesa_error_no_memory(const char *caller);
+_mesa_problem(const struct gl_context *ctx, const char *fmtString, ... );
 
 extern "C" void
-_mesa_reference_shader_program_data(struct gl_context *ctx,
-                                    struct gl_shader_program_data **ptr,
+_mesa_reference_shader_program_data(struct gl_shader_program_data **ptr,
                                     struct gl_shader_program_data *data);
 
 extern "C" void
@@ -113,5 +109,11 @@ _mesa_shader_enum_to_shader_stage(GLenum v)
  */
 void initialize_context_to_defaults(struct gl_context *ctx, gl_api api);
 
+struct gl_shader_program *
+standalone_create_shader_program(void);
+void
+standalone_destroy_shader_program(struct gl_shader_program *whole_program);
+struct gl_shader *
+standalone_add_shader_source(struct gl_context *ctx, struct gl_shader_program *whole_program, GLenum type, const char *source);
 
 #endif /* STANDALONE_SCAFFOLDING_H */

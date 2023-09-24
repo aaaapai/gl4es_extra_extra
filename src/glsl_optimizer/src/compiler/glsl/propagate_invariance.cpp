@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2016 Intel Corporation
+ * Copyright © 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@
 #include "ir_visitor.h"
 #include "ir_rvalue_visitor.h"
 #include "ir_optimization.h"
-#include "../glsl_types.h"
+#include "compiler/glsl_types.h"
 
 namespace {
 
@@ -113,13 +113,17 @@ ir_invariance_propagation_visitor::visit(ir_dereference_variable *ir)
    return visit_continue;
 }
 
-void
+bool
 propagate_invariance(exec_list *instructions)
 {
    ir_invariance_propagation_visitor visitor;
+   bool progress = false;
 
    do {
       visitor.progress = false;
       visit_list_elements(&visitor, instructions);
+      progress = progress || visitor.progress;
    } while (visitor.progress);
+
+   return progress;
 }

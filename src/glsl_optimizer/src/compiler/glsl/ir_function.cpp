@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,10 +21,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "../glsl_types.h"
+#include "compiler/glsl_types.h"
 #include "ir.h"
 #include "glsl_parser_extras.h"
-#include "../../mesa/main/errors.h"
+#include "main/errors.h"
 
 typedef enum {
    PARAMETER_LIST_NO_MATCH,
@@ -83,8 +83,9 @@ parameter_lists_match(_mesa_glsl_parse_state *state,
 
       case ir_var_const_in:
       case ir_var_function_in:
-	 if (!actual->type->can_implicitly_convert_to(param->type, state))
-	    return PARAMETER_LIST_NO_MATCH;
+         if (param->data.implicit_conversion_prohibited ||
+             !actual->type->can_implicitly_convert_to(param->type, state))
+            return PARAMETER_LIST_NO_MATCH;
 	 break;
 
       case ir_var_function_out:
@@ -329,6 +330,9 @@ ir_function::matching_signature(_mesa_glsl_parse_state *state,
          free(inexact_matches);
          return sig;
       case PARAMETER_LIST_INEXACT_MATCH:
+         /* Subroutine signatures must match exactly */
+         if (this->is_subroutine)
+            continue;
          inexact_matches_temp = (ir_function_signature **)
                realloc(inexact_matches,
                        sizeof(*inexact_matches) *

@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2013 Intel Corporation
+ * Copyright © 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,20 @@
 #define LINK_UNIFORM_BLOCK_ACTIVE_VISITOR_H
 
 #include "ir.h"
-#include "../../util/hash_table.h"
+#include "util/hash_table.h"
 
 struct uniform_block_array_elements {
    unsigned *array_elements;
    unsigned num_array_elements;
+   /**
+    * Size of the array before array-trimming optimizations.
+    *
+    * Locations are only assigned to active array elements, but the location
+    * values are calculated as if all elements are active. The total number
+    * of elements in an array including the elements in arrays of arrays before
+    * inactive elements are removed is needed to be perform that calculation.
+    */
+   unsigned aoa_size;
 
    ir_dereference_array *ir;
 

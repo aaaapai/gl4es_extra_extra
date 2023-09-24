@@ -23,10 +23,11 @@
 
 #include "glsl_symbol_table.h"
 #include "ast.h"
-#include "../glsl_types.h"
+#include "compiler/glsl_types.h"
 #include "ir.h"
-#include "../../mesa/main/mtypes.h"
-#include "../../mesa/main/shaderobj.h"
+#include "main/shader_types.h"
+#include "main/consts_exts.h"
+#include "main/shaderobj.h"
 #include "builtin_functions.h"
 
 static ir_rvalue *
@@ -48,6 +49,13 @@ process_parameters(exec_list *instructions, exec_list *actual_parameters,
        */
       ast->set_is_lhs(true);
       ir_rvalue *result = ast->hir(instructions, state);
+
+      /* Error happened processing function parameter */
+      if (!result) {
+         actual_parameters->push_tail(ir_rvalue::error_value(mem_ctx));
+         count++;
+         continue;
+      }
 
       ir_constant *const constant =
          result->constant_expression_value(mem_ctx);
@@ -175,6 +183,37 @@ is_atomic_function(const char *func_name)
           !strcmp(func_name, "atomicCompSwap");
 }
 
+static bool
+verify_atomic_image_parameter_qualifier(YYLTYPE *loc, _mesa_glsl_parse_state *state,
+                                        ir_variable *var)
+{
+   if (!var ||
+       (var->data.image_format != PIPE_FORMAT_R32_UINT &&
+        var->data.image_format != PIPE_FORMAT_R32_SINT &&
+        var->data.image_format != PIPE_FORMAT_R32_FLOAT)) {
+      _mesa_glsl_error(loc, state, "Image atomic functions should use r32i/r32ui "
+                       "format qualifier");
+      return false;
+   }
+   return true;
+}
+
+static bool
+is_atomic_image_function(const char *func_name)
+{
+   return !strcmp(func_name, "imageAtomicAdd") ||
+          !strcmp(func_name, "imageAtomicMin") ||
+          !strcmp(func_name, "imageAtomicMax") ||
+          !strcmp(func_name, "imageAtomicAnd") ||
+          !strcmp(func_name, "imageAtomicOr") ||
+          !strcmp(func_name, "imageAtomicXor") ||
+          !strcmp(func_name, "imageAtomicExchange") ||
+          !strcmp(func_name, "imageAtomicCompSwap") ||
+          !strcmp(func_name, "imageAtomicIncWrap") ||
+          !strcmp(func_name, "imageAtomicDecWrap");
+}
+
+
 /**
  * Verify that 'out' and 'inout' actual parameters are lvalues.  Also, verify
  * that 'const_in' formal parameters (an extension in our IR) correspond to
@@ -198,9 +237,6 @@ verify_parameter_modes(_mesa_glsl_parse_state *state,
       const ast_expression *const actual_ast =
          exec_node_data(ast_expression, actual_ast_node, link);
 
-      /* FIXME: 'loc' is incorrect (as of 2011-01-21). It is always
-       * FIXME: 0:0(0).
-       */
       YYLTYPE loc = actual_ast->get_location();
 
       /* Verify that 'const_in' parameters are ir_constants. */
@@ -340,6 +376,19 @@ verify_parameter_modes(_mesa_glsl_parse_state *state,
       YYLTYPE loc = actual_ast->get_location();
 
       if (!verify_first_atomic_parameter(&loc, state,
+                                         actual->variable_referenced())) {
+         return false;
+      }
+   } else if (is_atomic_image_function(func_name)) {
+      const ir_rvalue *const actual =
+         (ir_rvalue *) actual_ir_parameters.get_head_raw();
+
+      const ast_expression *const actual_ast =
+         exec_node_data(ast_expression,
+                        actual_ast_parameters.get_head_raw(), link);
+      YYLTYPE loc = actual_ast->get_location();
+
+      if (!verify_atomic_image_parameter_qualifier(&loc, state,
                                          actual->variable_referenced())) {
          return false;
       }
@@ -583,7 +632,7 @@ generate_call(exec_list *instructions, ir_function_signature *sig,
     * instructions; just generate an ir_constant.
     */
    if (state->is_version(120, 100) ||
-       state->ctx->Const.AllowGLSLBuiltinConstantExpression) {
+       state->consts->AllowGLSLBuiltinConstantExpression) {
       ir_constant *value = sig->constant_expression_value(ctx,
                                                           actual_parameters,
                                                           NULL);
@@ -602,6 +651,7 @@ generate_call(exec_list *instructions, ir_function_signature *sig,
       ir_variable *var;
 
       var = new(ctx) ir_variable(sig->return_type, name, ir_var_temporary);
+      var->data.precision = sig->return_precision;
       instructions->push_tail(var);
 
       ralloc_free(name);
@@ -612,11 +662,6 @@ generate_call(exec_list *instructions, ir_function_signature *sig,
    ir_call *call = new(ctx) ir_call(sig, deref,
                                     actual_parameters, sub_var, array_idx);
    instructions->push_tail(call);
-   if (sig->is_builtin()) {
-      /* inline immediately */
-      call->generate_inline(call);
-      call->remove();
-   }
 
    /* Also emit any necessary out-parameter conversions. */
    instructions->append_list(&post_call_conversions);
@@ -1221,8 +1266,7 @@ process_vec_mat_constructor(exec_list *instructions,
          assert(var->type->is_vector());
          assert(i < 4);
          ir_dereference *lhs = new(ctx) ir_dereference_variable(var);
-         assignment = new(ctx) ir_assignment(lhs, rhs, NULL,
-                                             (unsigned)(1 << i));
+         assignment = new(ctx) ir_assignment(lhs, rhs, 1u << i);
       }
 
       instructions->push_tail(assignment);
@@ -1412,15 +1456,7 @@ emit_inline_vector_constructor(const glsl_type *type,
    const unsigned lhs_components = type->components();
    if (single_scalar_parameter(parameters)) {
       ir_rvalue *first_param = (ir_rvalue *)parameters->get_head_raw();
-      ir_rvalue *rhs = new(ctx) ir_swizzle(first_param, 0, 0, 0, 0,
-                                           lhs_components);
-      ir_dereference_variable *lhs = new(ctx) ir_dereference_variable(var);
-      const unsigned mask = (1U << lhs_components) - 1;
-
-      assert(rhs->type == lhs->type);
-
-      ir_instruction *inst = new(ctx) ir_assignment(lhs, rhs, NULL, mask);
-      instructions->push_tail(inst);
+      return new(ctx) ir_swizzle(first_param, 0, 0, 0, 0, lhs_components);
    } else {
       unsigned base_component = 0;
       unsigned base_lhs_component = 0;
@@ -1489,7 +1525,7 @@ emit_inline_vector_constructor(const glsl_type *type,
          ir_rvalue *rhs = new(ctx) ir_constant(rhs_type, &data);
 
          ir_instruction *inst =
-            new(ctx) ir_assignment(lhs, rhs, NULL, constant_mask);
+            new(ctx) ir_assignment(lhs, rhs, constant_mask);
          instructions->push_tail(inst);
       }
 
@@ -1523,7 +1559,7 @@ emit_inline_vector_constructor(const glsl_type *type,
                new(ctx) ir_swizzle(param, 0, 1, 2, 3, rhs_components);
 
             ir_instruction *inst =
-               new(ctx) ir_assignment(lhs, rhs, NULL, write_mask);
+               new(ctx) ir_assignment(lhs, rhs, write_mask);
             instructions->push_tail(inst);
          }
 
@@ -1574,7 +1610,7 @@ assign_to_matrix_column(ir_variable *var, unsigned column, unsigned row_base,
    /* Mask of fields to be written in the assignment. */
    const unsigned write_mask = ((1U << count) - 1) << row_base;
 
-   return new(mem_ctx) ir_assignment(column_ref, src, NULL, write_mask);
+   return new(mem_ctx) ir_assignment(column_ref, src, write_mask);
 }
 
 
@@ -1642,7 +1678,7 @@ emit_inline_matrix_constructor(const glsl_type *type,
       ir_dereference *const rhs_ref =
          new(ctx) ir_dereference_variable(rhs_var);
 
-      inst = new(ctx) ir_assignment(rhs_ref, first_param, NULL, 0x01);
+      inst = new(ctx) ir_assignment(rhs_ref, first_param, 0x01);
       instructions->push_tail(inst);
 
       /* Assign the temporary vector to each column of the destination matrix
@@ -1791,7 +1827,7 @@ emit_inline_matrix_constructor(const glsl_type *type,
          }
 
          ir_instruction *inst =
-            new(ctx) ir_assignment(lhs, rhs, NULL, write_mask);
+            new(ctx) ir_assignment(lhs, rhs, write_mask);
          instructions->push_tail(inst);
       }
    } else {
@@ -2004,10 +2040,18 @@ ast_function_expression::handle_method(exec_list *instructions,
                                 "length called on unsized array"
                                 " only available with"
                                 " ARB_shader_storage_buffer_object");
+               goto fail;
+            } else if (op->variable_referenced()->is_in_shader_storage_block()) {
+               /* Calculate length of an unsized array in run-time */
+               result = new(ctx)
+                  ir_expression(ir_unop_ssbo_unsized_array_length, op);
+            } else {
+               /* When actual size is known at link-time, this will be
+                * replaced with a constant expression.
+                */
+               result = new (ctx)
+                  ir_expression(ir_unop_implicitly_sized_array_length, op);
             }
-            /* Calculate length of an unsized array in run-time */
-            result = new(ctx) ir_expression(ir_unop_ssbo_unsized_array_length,
-                                            op);
          } else {
             result = new(ctx) ir_constant(op->type->array_size());
          }
@@ -2108,8 +2152,8 @@ ast_function_expression::hir(exec_list *instructions,
       }
 
       if (constructor_type->is_array()) {
-         if (!state->check_version(120, 300, &loc,
-                                   "array constructors forbidden")) {
+         if (!state->check_version(state->allow_glsl_120_subset_in_110 ? 110 : 120,
+                                   300, &loc, "array constructors forbidden")) {
             return ir_rvalue::error_value(ctx);
          }
 

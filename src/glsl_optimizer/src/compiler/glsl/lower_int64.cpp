@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2016 Intel Corporation
+ * Copyright © 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,20 +29,20 @@
  * called __builtin_foo with the same number of parameters that takes uvec2
  * sources and produces uvec2 results.  An operation like
  *
- *     uint64_t(x) * uint64_t(y)
+ *     uint64_t(x) / uint64_t(y)
  *
  * becomes
  *
- *     packUint2x32(__builtin_umul64(unpackUint2x32(x), unpackUint2x32(y)));
+ *     packUint2x32(__builtin_udiv64(unpackUint2x32(x), unpackUint2x32(y)));
  */
 
-#include "../../util/macros.h"
-#include "../glsl_types.h"
+#include "main/macros.h"
+#include "compiler/glsl_types.h"
 #include "ir.h"
 #include "ir_rvalue_visitor.h"
 #include "ir_builder.h"
 #include "ir_optimization.h"
-#include "../../util/hash_table.h"
+#include "util/hash_table.h"
 #include "builtin_functions.h"
 
 typedef ir_function_signature *(*function_generator)(void *mem_ctx,
@@ -73,7 +73,7 @@ public:
         function_list(), added_functions(&function_list, mem_ctx)
    {
       functions = _mesa_hash_table_create(mem_ctx,
-                                          _mesa_key_hash_string,
+                                          _mesa_hash_string,
                                           _mesa_key_string_equal);
 
       foreach_in_list(ir_instruction, node, instructions) {
@@ -353,12 +353,6 @@ lower_64bit_visitor::handle_rvalue(ir_rvalue **rvalue)
    assert(ir != NULL);
 
    switch (ir->operation) {
-   case ir_unop_sign:
-      if (lowering(SIGN64)) {
-         *rvalue = handle_op(ir, "__builtin_sign64", generate_ir::sign64);
-      }
-      break;
-
    case ir_binop_div:
       if (lowering(DIV64)) {
          if (ir->type->base_type == GLSL_TYPE_UINT64) {
@@ -376,12 +370,6 @@ lower_64bit_visitor::handle_rvalue(ir_rvalue **rvalue)
          } else {
             *rvalue = handle_op(ir, "__builtin_imod64", generate_ir::imod64);
          }
-      }
-      break;
-
-   case ir_binop_mul:
-      if (lowering(MUL64)) {
-         *rvalue = handle_op(ir, "__builtin_umul64", generate_ir::umul64);
       }
       break;
 

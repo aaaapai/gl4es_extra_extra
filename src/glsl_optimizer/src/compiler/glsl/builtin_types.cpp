@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2013 Intel Corporation
+ * Copyright © 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,10 +34,10 @@
  * version and set of enabled extensions.
  */
 
-#include "../glsl_types.h"
+#include "compiler/glsl_types.h"
 #include "glsl_parser_extras.h"
-#include "../../util/macros.h"
-#include "../../mesa/main/mtypes.h"
+#include "util/macros.h"
+#include "main/consts_exts.h"
 
 /**
  * Declarations of type flyweights (glsl_type::_foo_type) and
@@ -83,12 +83,12 @@ static const struct glsl_struct_field gl_LightSourceParameters_fields[] = {
    glsl_struct_field(glsl_type::vec4_type, "position"),
    glsl_struct_field(glsl_type::vec4_type, "halfVector"),
    glsl_struct_field(glsl_type::vec3_type, "spotDirection"),
-   glsl_struct_field(glsl_type::float_type, "spotExponent"),
-   glsl_struct_field(glsl_type::float_type, "spotCutoff"),
    glsl_struct_field(glsl_type::float_type, "spotCosCutoff"),
    glsl_struct_field(glsl_type::float_type, "constantAttenuation"),
    glsl_struct_field(glsl_type::float_type, "linearAttenuation"),
    glsl_struct_field(glsl_type::float_type, "quadraticAttenuation"),
+   glsl_struct_field(glsl_type::float_type, "spotExponent"),
+   glsl_struct_field(glsl_type::float_type, "spotCutoff"),
 };
 
 static const struct glsl_struct_field gl_LightModelParameters_fields[] = {
@@ -113,7 +113,7 @@ static const struct glsl_struct_field gl_FogParameters_fields[] = {
    glsl_struct_field(glsl_type::float_type, "scale"),
 };
 
-#include "../builtin_type_macros.h"
+#include "compiler/builtin_type_macros.h"
 /** @} */
 
 /**
@@ -140,10 +140,10 @@ static const struct builtin_type_versions {
    T(ivec2,                           110, 100)
    T(ivec3,                           110, 100)
    T(ivec4,                           110, 100)
-   T(uint,                            120, 300)
-   T(uvec2,                           120, 300)
-   T(uvec3,                           120, 300)
-   T(uvec4,                           120, 300)
+   T(uint,                            130, 300)
+   T(uvec2,                           130, 300)
+   T(uvec3,                           130, 300)
+   T(uvec4,                           130, 300)
    T(float,                           110, 100)
    T(vec2,                            110, 100)
    T(vec3,                            110, 100)
@@ -333,17 +333,17 @@ _mesa_glsl_initialize_types(struct _mesa_glsl_parse_state *state)
 
       add_type(symbols, glsl_type::samplerCubeShadow_type);
 
-      if (state->ctx->Extensions.EXT_texture_array) {
+      if (state->exts->EXT_texture_array) {
          add_type(symbols, glsl_type::sampler1DArray_type);
          add_type(symbols, glsl_type::sampler2DArray_type);
          add_type(symbols, glsl_type::sampler1DArrayShadow_type);
          add_type(symbols, glsl_type::sampler2DArrayShadow_type);
       }
-      if (state->ctx->Extensions.EXT_texture_buffer_object) {
+      if (state->exts->EXT_texture_buffer_object) {
          add_type(symbols, glsl_type::samplerBuffer_type);
       }
 
-      if (state->ctx->Extensions.EXT_texture_integer) {
+      if (state->exts->EXT_texture_integer) {
          add_type(symbols, glsl_type::isampler1D_type);
          add_type(symbols, glsl_type::isampler2D_type);
          add_type(symbols, glsl_type::isampler3D_type);
@@ -354,17 +354,17 @@ _mesa_glsl_initialize_types(struct _mesa_glsl_parse_state *state)
          add_type(symbols, glsl_type::usampler3D_type);
          add_type(symbols, glsl_type::usamplerCube_type);
 
-         if (state->ctx->Extensions.NV_texture_rectangle) {
+         if (state->exts->NV_texture_rectangle) {
             add_type(symbols, glsl_type::isampler2DRect_type);
             add_type(symbols, glsl_type::usampler2DRect_type);
          }
-         if (state->ctx->Extensions.EXT_texture_array) {
+         if (state->exts->EXT_texture_array) {
             add_type(symbols, glsl_type::isampler1DArray_type);
             add_type(symbols, glsl_type::isampler2DArray_type);
             add_type(symbols, glsl_type::usampler1DArray_type);
             add_type(symbols, glsl_type::usampler2DArray_type);
          }
-         if (state->ctx->Extensions.EXT_texture_buffer_object) {
+         if (state->exts->EXT_texture_buffer_object) {
             add_type(symbols, glsl_type::isamplerBuffer_type);
             add_type(symbols, glsl_type::usamplerBuffer_type);
          }

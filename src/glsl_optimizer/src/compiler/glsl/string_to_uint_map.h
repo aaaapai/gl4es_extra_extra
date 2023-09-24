@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2008 Intel Corporation
+ * Copyright © 2008 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 
 #include <string.h>
 #include <limits.h>
-#include "../../util/hash_table.h"
+#include "util/hash_table.h"
 
 struct string_to_uint_map;
 
@@ -61,7 +61,7 @@ struct string_to_uint_map {
 public:
    string_to_uint_map()
    {
-      this->ht = _mesa_hash_table_create(NULL, _mesa_key_hash_string,
+      this->ht = _mesa_hash_table_create(NULL, _mesa_hash_string,
                                          _mesa_key_string_equal);
    }
 

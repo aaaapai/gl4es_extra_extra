@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2016 Intel Corporation
+ * Copyright © 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,11 @@
 #include "ir_builder.h"
 #include "ir_optimization.h"
 #include "ir_hierarchical_visitor.h"
-#include "../../mesa/program/prog_instruction.h"
-#include "../../mesa/program/prog_statevars.h"
-#include "../../util/bitscan.h"
+#include "program/prog_instruction.h"
+#include "program/prog_statevars.h"
+#include "util/bitscan.h"
 #include "builtin_functions.h"
-#include "../../mesa/main/mtypes.h"
+#include "main/shader_types.h"
 
 using namespace ir_builder;
 
@@ -329,8 +329,7 @@ calc_blend_result(ir_factory f,
 
    unsigned choices = blend_qualifiers;
    while (choices) {
-      enum gl_advanced_blend_mode choice = (enum gl_advanced_blend_mode)
-         (1u << u_bit_scan(&choices));
+      enum gl_advanced_blend_mode choice = (enum gl_advanced_blend_mode)u_bit_scan(&choices);
 
       ir_if *iff = new(mem_ctx) ir_if(is_mode(mode, choice));
       casefactory.emit(iff);
@@ -385,7 +384,6 @@ calc_blend_result(ir_factory f,
          set_lum(&casefactory, factor, dst_rgb, src_rgb);
          break;
       case BLEND_NONE:
-      case BLEND_ALL:
          unreachable("not real cases");
       }
 
@@ -465,13 +463,15 @@ get_main(gl_linked_shader *sh)
 bool
 lower_blend_equation_advanced(struct gl_linked_shader *sh, bool coherent)
 {
-   if (sh->Program->sh.fs.BlendSupport == 0)
+   assert(sh->Stage == MESA_SHADER_FRAGMENT);
+
+   if (sh->Program->info.fs.advanced_blend_modes == 0)
       return false;
 
    /* Lower early returns in main() so there's a single exit point
     * where we can insert our lowering code.
     */
-   do_lower_jumps(sh->ir, false, false, true, false, false);
+   do_lower_jumps(sh->ir, false, false, true, false);
 
    void *mem_ctx = ralloc_parent(sh->ir);
 
@@ -491,9 +491,8 @@ lower_blend_equation_advanced(struct gl_linked_shader *sh, bool coherent)
    mode->allocate_state_slots(1);
    ir_state_slot *slot0 = &mode->get_state_slots()[0];
    slot0->swizzle = SWIZZLE_XXXX;
-   slot0->tokens[0] = STATE_INTERNAL;
-   slot0->tokens[1] = STATE_ADVANCED_BLENDING_MODE;
-   for (int i = 2; i < STATE_LENGTH; i++)
+   slot0->tokens[0] = STATE_ADVANCED_BLENDING_MODE;
+   for (int i = 1; i < STATE_LENGTH; i++)
       slot0->tokens[i] = 0;
 
    sh->ir->push_head(fb);
@@ -551,7 +550,7 @@ lower_blend_equation_advanced(struct gl_linked_shader *sh, bool coherent)
 
    ir_variable *result_dest =
       calc_blend_result(f, mode, fb, blend_source,
-                        sh->Program->sh.fs.BlendSupport);
+                        sh->Program->info.fs.advanced_blend_modes);
 
    /* Copy the result back to the original values.  It would be simpler
     * to demote the program's output variables, and create a new vec4

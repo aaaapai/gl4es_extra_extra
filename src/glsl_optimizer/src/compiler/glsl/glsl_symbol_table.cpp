@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -258,7 +258,7 @@ int glsl_symbol_table::get_default_precision_qualifier(const char *type_name)
    char *name = ralloc_asprintf(mem_ctx, "#default_precision_%s", type_name);
    symbol_table_entry *entry = get_entry(name);
    if (!entry)
-      return ast_precision_high; // FIXME allow this to be tweaked ?
+      return ast_precision_none;
    return entry->a->default_precision;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2014 Intel Corporation
+ * Copyright © 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,13 +27,14 @@
 #ifdef HAVE_DLFCN_H
 #include <dlfcn.h>
 #include <stdio.h>
-#include "DUMMY"
+#include "util/build_id.h"
 #endif
 #include <assert.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <sys/stat.h>
-#include "mesa-sha1.h"
+#include "util/mesa-sha1.h"
+#include "util/detect_os.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,6 +44,8 @@ extern "C" {
 #define CACHE_KEY_SIZE 20
 
 #define CACHE_DIR_NAME "mesa_shader_cache"
+#define CACHE_DIR_NAME_SF "mesa_shader_cache_sf"
+#define CACHE_DIR_NAME_DB "mesa_shader_cache_db"
 
 typedef uint8_t cache_key[CACHE_KEY_SIZE];
 
@@ -132,6 +135,15 @@ disk_cache_get_function_identifier(void *ptr, struct mesa_sha1 *ctx)
       return false;
    return true;
 }
+#elif DETECT_OS_WINDOWS
+bool
+disk_cache_get_function_identifier(void *ptr, struct mesa_sha1 *ctx);
+#else
+static inline bool
+disk_cache_get_function_identifier(void *ptr, struct mesa_sha1 *ctx)
+{
+   return false;
+}
 #endif
 
 /* Provide inlined stub functions if the shader cache is disabled. */
@@ -174,6 +186,12 @@ disk_cache_create(const char *gpu_name, const char *timestamp,
 void
 disk_cache_destroy(struct disk_cache *cache);
 
+/* Wait for all previous disk_cache_put() calls to be processed (used for unit
+ * testing).
+ */
+void
+disk_cache_wait_for_idle(struct disk_cache *cache);
+
 /**
  * Remove the item in the cache under the name \key.
  */
@@ -193,6 +211,22 @@ void
 disk_cache_put(struct disk_cache *cache, const cache_key key,
                const void *data, size_t size,
                struct cache_item_metadata *cache_item_metadata);
+
+/**
+ * Store an item in the cache under the name \key without copying the data param.
+ *
+ * The item can be retrieved later with disk_cache_get(), (unless the item has
+ * been evicted in the interim).
+ *
+ * Any call to disk_cache_put() may cause an existing, random item to be
+ * evicted from the cache.
+ *
+ * @p data will be freed
+ */
+void
+disk_cache_put_nocopy(struct disk_cache *cache, const cache_key key,
+                      void *data, size_t size,
+                      struct cache_item_metadata *cache_item_metadata);
 
 /**
  * Retrieve an item previously stored in the cache with the name <key>.
@@ -256,8 +290,8 @@ disk_cache_create(const char *gpu_name, const char *timestamp,
 }
 
 static inline void
-disk_cache_destroy(struct disk_cache *cache) {
-   return;
+disk_cache_destroy(struct disk_cache *cache)
+{
 }
 
 static inline void
@@ -265,13 +299,18 @@ disk_cache_put(struct disk_cache *cache, const cache_key key,
                const void *data, size_t size,
                struct cache_item_metadata *cache_item_metadata)
 {
-   return;
+}
+
+static inline void
+disk_cache_put_nocopy(struct disk_cache *cache, const cache_key key,
+                      void *data, size_t size,
+                      struct cache_item_metadata *cache_item_metadata)
+{
 }
 
 static inline void
 disk_cache_remove(struct disk_cache *cache, const cache_key key)
 {
-   return;
 }
 
 static inline uint8_t *
@@ -283,7 +322,6 @@ disk_cache_get(struct disk_cache *cache, const cache_key key, size_t *size)
 static inline void
 disk_cache_put_key(struct disk_cache *cache, const cache_key key)
 {
-   return;
 }
 
 static inline bool
@@ -294,16 +332,14 @@ disk_cache_has_key(struct disk_cache *cache, const cache_key key)
 
 static inline void
 disk_cache_compute_key(struct disk_cache *cache, const void *data, size_t size,
-                       const cache_key key)
+                       cache_key key)
 {
-   return;
 }
 
 static inline void
 disk_cache_set_callbacks(struct disk_cache *cache, disk_cache_put_cb put,
                          disk_cache_get_cb get)
 {
-   return;
 }
 
 #endif /* ENABLE_SHADER_CACHE */

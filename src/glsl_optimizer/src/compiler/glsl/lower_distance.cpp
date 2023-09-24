@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2011 Intel Corporation
+ * Copyright © 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,12 +45,12 @@
  * LowerCombinedClipCullDistance flag in gl_shader_compiler_options to true.
  */
 
-#include "../../util/macros.h"
+#include "main/macros.h"
 #include "glsl_symbol_table.h"
 #include "ir_rvalue_visitor.h"
 #include "ir.h"
-#include "../../mesa/program/prog_instruction.h" /* For WRITEMASK_* */
-#include "../../mesa/main/mtypes.h"
+#include "program/prog_instruction.h" /* For WRITEMASK_* */
+#include "main/shader_types.h"
 
 #define GLSL_CLIP_VAR_NAME "gl_ClipDistanceMESA"
 
@@ -169,6 +169,7 @@ lower_distance_visitor::visit(ir_variable *ir)
       *new_var = ir->clone(ralloc_parent(ir), NULL);
       (*new_var)->name = ralloc_strdup(*new_var, GLSL_CLIP_VAR_NAME);
       (*new_var)->data.location = VARYING_SLOT_CLIP_DIST0;
+      (*new_var)->data.assigned = true;
 
       if (!ir->type->fields.array->is_array()) {
          /* gl_ClipDistance (used for vertex, tessellation evaluation and

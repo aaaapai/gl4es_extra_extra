@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2010 Intel Corporation
+ * Copyright © 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,12 +27,19 @@
 #include <getopt.h>
 
 #include "glcpp.h"
-#include "../../../mesa/main/mtypes.h"
-#include "../../../mesa/main/shaderobj.h"
-#include "../../../util/strtod.h"
+#include "main/mtypes.h"
+#include "main/shaderobj.h"
+#include "util/strtod.h"
 
 extern int glcpp_parser_debug;
 
+void
+_mesa_reference_shader(struct gl_context *ctx, struct gl_shader **ptr,
+                       struct gl_shader *sh)
+{
+   (void) ctx;
+   *ptr = sh;
+}
 
 /* Read from fp until EOF and return a string of everything read.
  */
@@ -95,6 +102,7 @@ load_text_file(void *ctx, const char *filename)
 static void
 init_fake_gl_context (struct gl_context *gl_ctx)
 {
+	memset(gl_ctx, 0, sizeof(*gl_ctx));
 	gl_ctx->API = API_OPENGL_COMPAT;
 	gl_ctx->Const.DisableGLSLLineContinuations = false;
 }

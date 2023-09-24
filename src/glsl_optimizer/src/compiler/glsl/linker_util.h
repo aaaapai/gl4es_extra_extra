@@ -24,8 +24,11 @@
 #ifndef GLSL_LINKER_UTIL_H
 #define GLSL_LINKER_UTIL_H
 
-#include "list.h"
+#include "util/bitset.h"
+#include "util/glheader.h"
+#include "compiler/glsl/list.h"
 
+struct gl_constants;
 struct gl_shader_program;
 struct gl_uniform_storage;
 
@@ -46,11 +49,32 @@ struct empty_uniform_block {
    unsigned slots;
 };
 
+/**
+ * Describes an access of an array element or an access of the whole array
+ */
+struct array_deref_range {
+   /**
+    * Index that was accessed.
+    *
+    * All valid array indices are less than the size of the array.  If index
+    * is equal to the size of the array, this means the entire array has been
+    * accessed (e.g., due to use of a non-constant index).
+    */
+   unsigned index;
+
+   /** Size of the array.  Used for offset calculations. */
+   unsigned size;
+};
+
 void
 linker_error(struct gl_shader_program *prog, const char *fmt, ...);
 
 void
 linker_warning(struct gl_shader_program *prog, const char *fmt, ...);
+
+long
+link_util_parse_program_resource_name(const GLchar *name, const size_t len,
+                                      const GLchar **out_base_name_end);
 
 bool
 link_util_should_add_buffer_variable(struct gl_shader_program *prog,
@@ -71,6 +95,21 @@ link_util_find_empty_block(struct gl_shader_program *prog,
 
 void
 link_util_update_empty_uniform_locations(struct gl_shader_program *prog);
+
+void
+link_util_check_subroutine_resources(struct gl_shader_program *prog);
+
+void
+link_util_check_uniform_resources(const struct gl_constants *consts,
+                                  struct gl_shader_program *prog);
+
+void
+link_util_calculate_subroutine_compat(struct gl_shader_program *prog);
+
+void
+link_util_mark_array_elements_referenced(const struct array_deref_range *dr,
+                                         unsigned count, unsigned array_depth,
+                                         BITSET_WORD *bits);
 
 #ifdef __cplusplus
 }

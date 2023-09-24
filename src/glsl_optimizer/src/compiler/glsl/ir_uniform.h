@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2011 Intel Corporation
+ * Copyright © 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,8 +28,8 @@
 /* stdbool.h is necessary because this file is included in both C and C++ code.
  */
 #include <stdbool.h>
-#include "../../util/macros.h"
-#include "../../mesa/program/prog_parameter.h"  /* For union gl_constant_value. */
+#include "util/macros.h"
+#include "program/prog_parameter.h"  /* For union gl_constant_value. */
 
 /**
  * Used by GL_ARB_explicit_uniform_location extension code in the linker
@@ -88,8 +88,17 @@ struct gl_opaque_uniform_index {
    bool active;
 };
 
+struct gl_resource_name
+{
+   char *string;
+   int length;              /* strlen(string) or 0 */
+   int last_square_bracket; /* (strrchr(name, '[') - name) or -1 */
+   bool suffix_is_zero_square_bracketed; /* suffix is [0] */
+};
+
 struct gl_uniform_storage {
-   char *name;
+   struct gl_resource_name name;
+
    /** Type of this uniform data stored.
     *
     * In the case of an array, it's the type of a single array element.
@@ -213,6 +222,9 @@ struct gl_uniform_storage {
     */
    bool is_bindless;
 };
+
+void
+resource_name_updated(struct gl_resource_name *name);
 
 #ifdef __cplusplus
 }
