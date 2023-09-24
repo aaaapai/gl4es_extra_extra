@@ -523,6 +523,17 @@ enum pipe_shader_type {
    PIPE_SHADER_TYPES,
 };
 
+// Added by Mathias Boulay so CLION stops being annoying
+enum mesa_shader_type {
+    MESA_SHADER_VERTEX = 0,
+    MESA_SHADER_FRAGMENT,
+    MESA_SHADER_GEOMETRY,
+    MESA_SHADER_TESS_CTRL,
+    MESA_SHADER_TESS_EVAL,
+    MESA_SHADER_COMPUTE,
+    MESA_SHADER_TYPES,
+};
+
 /**
  * Primitive types:
  */
