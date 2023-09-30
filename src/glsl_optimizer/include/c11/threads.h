@@ -59,9 +59,10 @@ enum {
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include "threads_win32.h"
 #elif defined(HAVE_PTHREAD)
-#include "threads_posix.h"
+
 #else
-#error Not supported on this platform.
+#include "threads_posix.h"
+//#error Not supported on this platform.
 #endif
 
 #endif /* EMULATED_THREADS_H_INCLUDED_ */

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,8 @@
 #include "nir_builder.h"
 #include "nir_deref.h"
 
-#include "util/bitscan.h"
-#include "util/u_dynarray.h"
+#include "../../util/bitscan.h"
+#include "../../util/u_dynarray.h"
 
 static const bool debug = false;
 

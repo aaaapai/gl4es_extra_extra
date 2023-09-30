@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 Intel Corporation
+ * Copyright Â© 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,10 +34,10 @@
  * version and set of enabled extensions.
  */
 
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "glsl_parser_extras.h"
-#include "util/macros.h"
-#include "main/consts_exts.h"
+#include "../../util/macros.h"
+#include "../../mesa/main/consts_exts.h"
 
 /**
  * Declarations of type flyweights (glsl_type::_foo_type) and
@@ -113,7 +113,7 @@ static const struct glsl_struct_field gl_FogParameters_fields[] = {
    glsl_struct_field(glsl_type::float_type, "scale"),
 };
 
-#include "compiler/builtin_type_macros.h"
+#include "../builtin_type_macros.h"
 /** @} */
 
 /**

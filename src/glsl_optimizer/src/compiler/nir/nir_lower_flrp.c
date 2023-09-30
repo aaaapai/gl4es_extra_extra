@@ -23,7 +23,7 @@
 #include <math.h>
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/u_vector.h"
+#include "../../util/u_vector.h"
 
 /**
  * Lower flrp instructions.

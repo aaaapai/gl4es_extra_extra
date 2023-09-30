@@ -36,9 +36,9 @@
 
 #include <assert.h>
 
-#include "util/macros.h"
-#include "util/u_endian.h"
-#include "util/detect_arch.h"
+#include "macros.h"
+#include "u_endian.h"
+#include "detect_arch.h"
 
 /**
  * Define CPU_TO_LE32

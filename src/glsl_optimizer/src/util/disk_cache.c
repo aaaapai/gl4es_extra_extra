@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,15 +37,15 @@
 #include <dirent.h>
 #include <inttypes.h>
 
-#include "util/compress.h"
-#include "util/crc32.h"
-#include "util/u_debug.h"
-#include "util/rand_xor.h"
-#include "util/u_atomic.h"
-#include "util/mesa-sha1.h"
-#include "util/perf/cpu_trace.h"
-#include "util/ralloc.h"
-#include "util/compiler.h"
+#include "compress.h"
+#include "crc32.h"
+#include "u_debug.h"
+#include "rand_xor.h"
+#include "u_atomic.h"
+#include "mesa-sha1.h"
+#include "./perf/cpu_trace.h"
+#include "ralloc.h"
+#include "compiler.h"
 
 #include "disk_cache.h"
 #include "disk_cache_os.h"

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Timothy Arceri
+ * Copyright Â© 2017 Timothy Arceri
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

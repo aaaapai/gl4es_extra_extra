@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Google LLC
+ * Copyright Â© 2020 Google LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 
 /*
  * Round up a vector size to a vector size that's valid in NIR. At present, NIR

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright Â© 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,8 +31,8 @@
 #define STANDALONE_SCAFFOLDING_H
 
 #include <assert.h>
-#include "main/menums.h"
-#include "program/prog_statevars.h"
+#include "../../mesa/main/menums.h"
+#include "../../mesa/program/prog_statevars.h"
 
 extern "C" void
 _mesa_warning(struct gl_context *ctx, const char *fmtString, ... );

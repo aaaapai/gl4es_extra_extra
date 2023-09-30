@@ -75,8 +75,8 @@
 
 #include "blob.h"
 #include "ralloc.h"
-#include "util/bitset.h"
-#include "util/u_dynarray.h"
+#include "bitset.h"
+#include "u_dynarray.h"
 #include "u_math.h"
 #include "register_allocate.h"
 #include "register_allocate_internal.h"

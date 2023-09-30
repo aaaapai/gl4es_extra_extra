@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Valve Corporation
+ * Copyright Â© 2020 Valve Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@
 #include <sys/inotify.h>
 #endif
 
-#include "util/u_debug.h"
+#include "u_debug.h"
 
 #include "crc32.h"
 #include "hash_table.h"

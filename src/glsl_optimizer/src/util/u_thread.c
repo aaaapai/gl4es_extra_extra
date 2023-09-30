@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "util/u_thread.h"
+#include "u_thread.h"
 
 #include "macros.h"
 

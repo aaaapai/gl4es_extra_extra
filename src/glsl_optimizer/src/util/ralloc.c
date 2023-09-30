@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,10 +28,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "util/list.h"
-#include "util/macros.h"
-#include "util/u_math.h"
-#include "util/u_printf.h"
+#include "list.h"
+#include "macros.h"
+#include "u_math.h"
+#include "u_printf.h"
 
 #include "ralloc.h"
 

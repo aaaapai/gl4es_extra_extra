@@ -27,7 +27,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 
 typedef struct {
    uint32_t task_count_shared_addr;

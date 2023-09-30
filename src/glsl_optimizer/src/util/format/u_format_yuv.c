@@ -34,8 +34,8 @@
  */
 
 
-#include "util/u_debug.h"
-#include "util/format/u_format_yuv.h"
+#include "../u_debug.h"
+#include "u_format_yuv.h"
 
 
 void

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Red Hat Inc.
+ * Copyright Â© 2018 Red Hat Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #ifndef NIR_BUILTIN_BUILDER_H
 #define NIR_BUILTIN_BUILDER_H
 
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 #include "nir_builder.h"
 
 #ifdef __cplusplus

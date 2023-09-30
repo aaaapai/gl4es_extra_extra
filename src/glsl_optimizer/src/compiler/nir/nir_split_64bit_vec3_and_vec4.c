@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Collabora Ltd
+ * Copyright Â© 2022 Collabora Ltd
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 #include "nir_builder.h"
 
 #include "nir_deref.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 
 /* This pass splits stores to and loads from 64 bit vec3
  * and vec4 local variables to use at most vec2, and it also

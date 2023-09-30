@@ -1,5 +1,5 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright Â© 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,8 +28,8 @@
 /* stdbool.h is necessary because this file is included in both C and C++ code.
  */
 #include <stdbool.h>
-#include "util/macros.h"
-#include "program/prog_parameter.h"  /* For union gl_constant_value. */
+#include "../../util/macros.h"
+#include "../../mesa/program/prog_parameter.h"  /* For union gl_constant_value. */
 
 /**
  * Used by GL_ARB_explicit_uniform_location extension code in the linker

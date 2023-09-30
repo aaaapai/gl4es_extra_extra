@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,10 +25,10 @@
 #include "glsl_parser_extras.h"
 #include "ir.h"
 #include "program.h"
-#include "util/set.h"
-#include "util/hash_table.h"
+#include "../../util/set.h"
+#include "../../util/hash_table.h"
 #include "linker.h"
-#include "main/shader_types.h"
+#include "../../mesa/main/shader_types.h"
 
 static ir_function_signature *
 find_matching_signature(const char *name, const exec_list *actual_parameters,

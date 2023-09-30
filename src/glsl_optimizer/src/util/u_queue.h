@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Advanced Micro Devices, Inc.
+ * Copyright Â© 2016 Advanced Micro Devices, Inc.
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -36,12 +36,12 @@
 #include <string.h>
 
 #include "simple_mtx.h"
-#include "util/futex.h"
-#include "util/list.h"
-#include "util/macros.h"
-#include "util/os_time.h"
-#include "util/u_atomic.h"
-#include "util/u_thread.h"
+#include "futex.h"
+#include "list.h"
+#include "macros.h"
+#include "os_time.h"
+#include "u_atomic.h"
+#include "u_thread.h"
 
 #ifdef __cplusplus
 extern "C" {

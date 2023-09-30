@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,11 +21,11 @@
  * IN THE SOFTWARE.
  */
 
-#include "nir.h"
+#include "../nir/nir.h"
 #include "gl_nir_linker.h"
-#include "compiler/glsl/ir_uniform.h" /* for gl_uniform_storage */
-#include "main/shader_types.h"
-#include "main/consts_exts.h"
+#include "ir_uniform.h" /* for gl_uniform_storage */
+#include "../../mesa/main/shader_types.h"
+#include "../../mesa/main/consts_exts.h"
 
 struct set_opaque_binding_closure {
    struct gl_shader_program *shader_prog;

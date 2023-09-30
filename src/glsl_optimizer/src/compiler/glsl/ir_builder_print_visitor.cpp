@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,11 +25,11 @@
 #include "ir.h"
 #include "ir_hierarchical_visitor.h"
 #include "ir_builder_print_visitor.h"
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "glsl_parser_extras.h"
-#include "main/macros.h"
-#include "util/hash_table.h"
-#include "util/u_string.h"
+#include "../../util/macros.h"
+#include "../../util/hash_table.h"
+#include "../../util/u_string.h"
 
 class ir_builder_print_visitor : public ir_hierarchical_visitor {
 public:

@@ -30,8 +30,8 @@
 #ifndef __XMLCONFIG_H
 #define __XMLCONFIG_H
 
-#include "util/mesa-sha1.h"
-#include "util/ralloc.h"
+#include "mesa-sha1.h"
+#include "ralloc.h"
 #include <stdint.h>
 #include <string.h>
 

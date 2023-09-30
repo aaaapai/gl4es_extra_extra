@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Valve Corporation
+ * Copyright Â© 2020 Valve Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,8 +27,8 @@
  * ACCESS_COHERENT on memory loads/stores
  */
 
-#include "nir/nir.h"
-#include "shader_enums.h"
+#include "nir.h"
+#include "../shader_enums.h"
 
 static bool
 get_intrinsic_info(nir_intrinsic_instr *intrin, nir_variable_mode *modes,

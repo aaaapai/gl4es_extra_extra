@@ -27,7 +27,7 @@
 
 /*
  * Authors:
- *      Christian König <christian.koenig@amd.com>
+ *      Christian KÃ¶nig <christian.koenig@amd.com>
  *
  */
 
@@ -38,7 +38,7 @@
 #ifndef vl_rbsp_h
 #define vl_rbsp_h
 
-#include "util/vl_vlc.h"
+#include "vl_vlc.h"
 
 struct vl_rbsp {
    struct vl_vlc nal;

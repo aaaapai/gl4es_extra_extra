@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,14 +29,14 @@
  * Supports serializing and deserializing glsl programs using a blob.
  */
 
-#include "compiler/glsl_types.h"
-#include "compiler/shader_info.h"
+#include "../glsl_types.h"
+#include "../shader_info.h"
 #include "ir_uniform.h"
-#include "main/mtypes.h"
-#include "main/shaderobj.h"
-#include "program/program.h"
+#include "../../mesa/main/mtypes.h"
+#include "../../mesa/main/shaderobj.h"
+#include "program.h"
 #include "string_to_uint_map.h"
-#include "util/bitscan.h"
+#include "../../util/bitscan.h"
 
 
 static void

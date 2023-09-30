@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,13 +23,13 @@
  */
 #include <ctype.h>
 
-#include "glsl_types.h"
+#include "../glsl_types.h"
 #include "linker_util.h"
-#include "util/bitscan.h"
-#include "util/set.h"
+#include "../../util/bitscan.h"
+#include "../../util/set.h"
 #include "ir_uniform.h" /* for gl_uniform_storage */
-#include "main/shader_types.h"
-#include "main/consts_exts.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../mesa/main/consts_exts.h"
 
 /**
  * Given a string identifying a program resource, break it into a base name

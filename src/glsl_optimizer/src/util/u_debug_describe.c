@@ -24,10 +24,10 @@
  *
  **************************************************************************/
 
-#include "pipe/p_state.h"
-#include "util/format/u_format.h"
-#include "util/u_debug_describe.h"
-#include "util/u_string.h"
+#include "../gallium/include/pipe/p_state.h"
+#include "./format/u_format.h"
+#include "u_debug_describe.h"
+#include "u_string.h"
 
 void
 debug_describe_reference(char* buf, UNUSED const struct pipe_reference*ptr)

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright Â© 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -123,7 +123,7 @@
 #include "ir.h"
 #include "glsl_parser_extras.h"
 #include "linker.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 #include "program.h"
 
 namespace {

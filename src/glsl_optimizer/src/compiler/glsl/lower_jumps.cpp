@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Luca Barbieri
+ * Copyright Â© 2010 Luca Barbieri
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -56,7 +56,7 @@
  * prevents further optimization, and thus is not currently performed.
  */
 
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include <string.h>
 #include "ir.h"
 

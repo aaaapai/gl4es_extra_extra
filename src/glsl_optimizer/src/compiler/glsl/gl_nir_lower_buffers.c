@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Intel Corporation
+ * Copyright Â© 2019 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,13 +21,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "compiler/nir/nir.h"
-#include "compiler/nir/nir_builder.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
 #include "gl_nir.h"
 #include "ir_uniform.h"
 
-#include "util/compiler.h"
-#include "main/shader_types.h"
+#include "../../util/compiler.h"
+#include "../../mesa/main/shader_types.h"
 
 static nir_ssa_def *
 get_block_array_index(nir_builder *b, nir_deref_instr *deref,

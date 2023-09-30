@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Broadcom
+ * Copyright Â© 2019 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,8 @@
 #define DAG_H
 
 #include <stdint.h>
-#include "util/list.h"
-#include "util/u_dynarray.h"
+#include "list.h"
+#include "u_dynarray.h"
 
 #ifdef __cplusplus
 extern "C" {

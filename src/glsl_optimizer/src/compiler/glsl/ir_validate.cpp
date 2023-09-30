@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -35,11 +35,11 @@
 
 #include "ir.h"
 #include "ir_hierarchical_visitor.h"
-#include "util/u_debug.h"
-#include "util/hash_table.h"
-#include "util/macros.h"
-#include "util/set.h"
-#include "compiler/glsl_types.h"
+#include "../../util/u_debug.h"
+#include "../../util/hash_table.h"
+#include "../../util/macros.h"
+#include "../../util/set.h"
+#include "../glsl_types.h"
 
 namespace {
 

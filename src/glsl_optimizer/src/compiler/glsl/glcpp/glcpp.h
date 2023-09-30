@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,13 +27,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "main/menums.h"
+#include "../../../mesa/main/menums.h"
 
-#include "util/ralloc.h"
+#include "../../../util/ralloc.h"
 
-#include "util/hash_table.h"
+#include "../../../util/hash_table.h"
 
-#include "util/string_buffer.h"
+#include "../../../util/string_buffer.h"
 
 struct gl_context;
 

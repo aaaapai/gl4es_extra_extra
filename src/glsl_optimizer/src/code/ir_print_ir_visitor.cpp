@@ -175,7 +175,7 @@ void IR_TO_IR::visit(ir_variable *ir)
    STATIC_ASSERT(ARRAY_SIZE(mode) == ir_var_mode_count);
    /* aiekick 03/01/2020 */
    const char *const precision[] = { "", "highp ", "mediump ", "lowp " };
-   const char *const interp[] = { "", "smooth", "flat", "noperspective" };
+   const char *const interp[] = { "", "smooth", "flat", "noperspective", "EXPLICIT ", "COLOR " };
    STATIC_ASSERT(ARRAY_SIZE(interp) == INTERP_MODE_COUNT);
 
    generated_source.append("(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s) ",
@@ -398,8 +398,8 @@ void IR_TO_IR::visit(ir_assignment *ir)
 {
    generated_source.append("(assign ");
 
-   if (ir->condition)
-      ir->condition->accept(this);
+   //if (ir->condition)
+   //   ir->condition->accept(this);
 
    char mask[5];
    unsigned j = 0;

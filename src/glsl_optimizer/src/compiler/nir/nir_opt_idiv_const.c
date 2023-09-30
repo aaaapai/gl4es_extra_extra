@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,8 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/fast_idiv_by_const.h"
-#include "util/u_math.h"
+#include "../../util/fast_idiv_by_const.h"
+#include "../../util/u_math.h"
 
 static nir_ssa_def *
 build_udiv(nir_builder *b, nir_ssa_def *n, uint64_t d)

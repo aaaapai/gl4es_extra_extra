@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Intel Corporation
+ * Copyright Â© 2021 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,10 +24,10 @@
 #include "nir.h"
 #include "nir_builder.h"
 
-#include "util/hash_table.h"
-#include "util/set.h"
-#include "util/macros.h"
-#include "util/u_dynarray.h"
+#include "../../util/hash_table.h"
+#include "../../util/set.h"
+#include "../../util/macros.h"
+#include "../../util/u_dynarray.h"
 
 /** @file nir_opt_ray_queries.c
  *

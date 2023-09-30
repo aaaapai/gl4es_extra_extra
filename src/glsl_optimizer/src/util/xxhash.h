@@ -78,7 +78,7 @@ XXH32        6.8 GB/s            6.0 GB/s
 #define XXH_FORCE_ALIGN_CHECK 0
 #define XXH_FORCE_MEMORY_ACCESS 0
 
-#include "util/compiler.h" /* for FALLTHROUGH */
+#include "compiler.h" /* for FALLTHROUGH */
 
 #if defined (__cplusplus)
 extern "C" {

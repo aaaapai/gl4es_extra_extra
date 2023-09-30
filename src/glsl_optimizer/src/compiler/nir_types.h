@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Connor Abbott
+ * Copyright Â© 2014 Connor Abbott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

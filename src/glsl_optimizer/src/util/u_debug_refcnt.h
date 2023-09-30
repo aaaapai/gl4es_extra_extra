@@ -27,8 +27,8 @@
 #ifndef U_DEBUG_REFCNT_H_
 #define U_DEBUG_REFCNT_H_
 
-#include "util/detect.h"
-#include "pipe/p_state.h"
+#include "detect.h"
+#include "../gallium/include/pipe/p_state.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,12 +34,12 @@
  */
 
 #include <math.h>
-#include "util/rounding.h" /* for _mesa_roundeven */
-#include "util/half_float.h"
+#include "../../util/rounding.h" /* for _mesa_roundeven */
+#include "../../util/half_float.h"
 #include "ir.h"
-#include "compiler/glsl_types.h"
-#include "util/hash_table.h"
-#include "util/u_math.h"
+#include "../glsl_types.h"
+#include "../../util/hash_table.h"
+#include "../../util/u_math.h"
 
 static float
 dot_f(ir_constant *op0, ir_constant *op1)

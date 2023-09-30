@@ -1,12 +1,12 @@
-#include "pipe/p_compiler.h"
-#include "util/u_debug.h"
-#include "util/u_math.h"
-#include "util/format/u_format_etc.h"
+#include "../../gallium/include/pipe/p_compiler.h"
+#include "../u_debug.h"
+#include "../u_math.h"
+#include "u_format_etc.h"
 
 /* define etc1_parse_block and etc. */
 #define UINT8_TYPE uint8_t
 #define TAG(x) x
-#include "util/format/texcompress_etc_tmp.h"
+#include "texcompress_etc_tmp.h"
 #undef TAG
 #undef UINT8_TYPE
 

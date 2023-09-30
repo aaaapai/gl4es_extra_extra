@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Red Hat
+ * Copyright Â© 2015 Red Hat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
  * lowers subroutines to an if ladder.
  */
 
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "glsl_parser_extras.h"
 #include "ir.h"
 #include "ir_builder.h"

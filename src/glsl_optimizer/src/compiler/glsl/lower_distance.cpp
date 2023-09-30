@@ -1,5 +1,5 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright Â© 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,12 +45,12 @@
  * LowerCombinedClipCullDistance flag in gl_shader_compiler_options to true.
  */
 
-#include "main/macros.h"
+#include "../../util/macros.h"
 #include "glsl_symbol_table.h"
 #include "ir_rvalue_visitor.h"
 #include "ir.h"
-#include "program/prog_instruction.h" /* For WRITEMASK_* */
-#include "main/shader_types.h"
+#include "../../mesa/program/prog_instruction.h" /* For WRITEMASK_* */
+#include "../../mesa/main/shader_types.h"
 
 #define GLSL_CLIP_VAR_NAME "gl_ClipDistanceMESA"
 

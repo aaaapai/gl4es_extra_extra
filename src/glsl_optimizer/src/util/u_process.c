@@ -25,7 +25,7 @@
  * of the Software.
  */
 
-#include "util/os_misc.h"
+#include "os_misc.h"
 #include "u_process.h"
 #include "detect_os.h"
 #include "macros.h"
@@ -52,7 +52,7 @@
 #include <fcntl.h>
 #endif
 
-#include "util/u_call_once.h"
+#include "u_call_once.h"
 
 #undef GET_PROGRAM_NAME_NOT_AVAILABLE
 

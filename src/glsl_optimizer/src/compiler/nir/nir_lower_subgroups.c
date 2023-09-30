@@ -23,7 +23,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 
 /**
  * \file nir_opt_intrinsics.c

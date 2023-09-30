@@ -23,11 +23,11 @@
  *
  **************************************************************************/
 
-#include "util/format/u_format.h"
-#include "util/format/u_format_fxt1.h"
-#include "util/format/u_format_pack.h"
-#include "util/format_srgb.h"
-#include "util/u_math.h"
+#include "u_format.h"
+#include "u_format_fxt1.h"
+#include "u_format_pack.h"
+#include "../format_srgb.h"
+#include "../u_math.h"
 
 #define RCOMP 0
 #define GCOMP 1

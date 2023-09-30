@@ -1,5 +1,5 @@
 /*
- * Copyright Â 2019 Alyssa Rosenzweig
+ * Copyright Ã‚ 2019 Alyssa Rosenzweig
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,8 @@
 #ifndef NIR_BLEND_H
 #define NIR_BLEND_H
 
-#include "compiler/nir/nir.h"
-#include "util/format/u_formats.h"
+#include "nir.h"
+#include "../../util/format/u_formats.h"
 
 /* These structs encapsulates the blend state such that it can be lowered
  * cleanly

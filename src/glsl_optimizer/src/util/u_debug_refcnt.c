@@ -37,14 +37,14 @@
 
 #include <stdio.h>
 
-#include "util/simple_mtx.h"
-#include "util/u_debug.h"
-#include "util/u_debug_refcnt.h"
-#include "util/u_debug_stack.h"
-#include "util/u_debug_symbol.h"
-#include "util/u_string.h"
-#include "util/u_hash_table.h"
-#include "util/u_thread.h"
+#include "simple_mtx.h"
+#include "u_debug.h"
+#include "u_debug_refcnt.h"
+#include "u_debug_stack.h"
+#include "u_debug_symbol.h"
+#include "u_string.h"
+#include "u_hash_table.h"
+#include "u_thread.h"
 
 int debug_refcnt_state;
 

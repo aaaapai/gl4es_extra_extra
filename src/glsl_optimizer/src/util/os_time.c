@@ -35,7 +35,7 @@
 #include "os_time.h"
 #include "detect_os.h"
 
-#include "util/u_atomic.h"
+#include "u_atomic.h"
 
 #if DETECT_OS_UNIX
 #  include <unistd.h> /* usleep */

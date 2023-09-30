@@ -33,7 +33,7 @@
 #define MENUMS_H
 
 #include <stdbool.h>
-#include "util/macros.h"
+#include "macros.h"
 
 /**
  * Enum for the OpenGL APIs we know about and may support.

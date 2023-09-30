@@ -16,7 +16,7 @@
 
 #include <stdint.h>
 #include <string.h>
-#include "u_endian.h"
+#include "../u_endian.h"
 #include "sha1.h"
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))

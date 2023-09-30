@@ -32,14 +32,14 @@
  * @author Jose Fonseca <jfonseca@vmware.com>
  */
 
-#include "pipe/p_compiler.h"
-#include "util/u_thread.h"
-#include "util/simple_mtx.h"
-#include "util/u_string.h"
+#include "../gallium/include/pipe/p_compiler.h"
+#include "u_thread.h"
+#include "simple_mtx.h"
+#include "u_string.h"
 
-#include "util/u_debug.h"
+#include "u_debug.h"
 #include "u_debug_symbol.h"
-#include "util/hash_table.h"
+#include "hash_table.h"
 
 
 #if DETECT_OS_WINDOWS

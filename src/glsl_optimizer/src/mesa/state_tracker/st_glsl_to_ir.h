@@ -1,5 +1,6 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright © 2010 Intel Corporation
+ * Copyright © 2011 Bryan Cain
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,9 +22,15 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef TEST_OPTPASS_H
-#define TEST_OPTPASS_H
+#include "main/mtypes.h"
 
-int test_optpass(int argc, char **argv);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif /* TEST_OPTPASS_H */
+GLboolean
+st_link_shader(struct gl_context *ctx, struct gl_shader_program *prog);
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2009 Intel Corporation
+ * Copyright Â© 2009 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,11 +22,11 @@
  */
 
 #include <stdio.h>
-#include "main/macros.h"
-#include "compiler/glsl/glsl_parser_extras.h"
+#include "../util/macros.h"
+#include "./glsl/glsl_parser_extras.h"
 #include "glsl_types.h"
-#include "util/hash_table.h"
-#include "util/u_string.h"
+#include "../util/hash_table.h"
+#include "../util/u_string.h"
 
 
 simple_mtx_t glsl_type::hash_mutex = SIMPLE_MTX_INITIALIZER;
@@ -2977,7 +2977,6 @@ glsl_type::count_dword_slots(bool is_bindless) const
    case GLSL_TYPE_TEXTURE:
       if (!is_bindless)
          return 0;
-      FALLTHROUGH;
    case GLSL_TYPE_DOUBLE:
    case GLSL_TYPE_UINT64:
    case GLSL_TYPE_INT64:
@@ -3037,7 +3036,7 @@ glsl_type::coordinate_components() const
 
 #define STRUCT_TYPE(NAME)
 
-#include "compiler/builtin_type_macros.h"
+#include "builtin_type_macros.h"
 /** @} */
 
 union packed_type {

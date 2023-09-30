@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Intel Corporation
+ * Copyright Â© 2015 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,9 @@
 
 #include "nir.h"
 #include "nir_deref.h"
-#include "main/menums.h"
+#include "../../mesa/main/menums.h"
 
-#include "util/set.h"
+#include "../../util/set.h"
 
 static bool
 src_is_invocation_id(const nir_src *src)

@@ -22,7 +22,7 @@
  */
 
 #include "nir.h"
-#include "compiler/nir/nir_builder.h"
+#include "nir_builder.h"
 
 static bool
 lower_discard_if_instr(nir_builder *b, nir_instr *instr_, void *cb_data)

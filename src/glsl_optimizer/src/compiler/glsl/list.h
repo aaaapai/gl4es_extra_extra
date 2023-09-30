@@ -1,5 +1,5 @@
 /*
- * Copyright © 2008, 2010 Intel Corporation
+ * Copyright Â© 2008, 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -48,7 +48,7 @@
 #endif
 #include <assert.h>
 
-#include "util/ralloc.h"
+#include "../../util/ralloc.h"
 
 struct exec_node {
    struct exec_node *next;

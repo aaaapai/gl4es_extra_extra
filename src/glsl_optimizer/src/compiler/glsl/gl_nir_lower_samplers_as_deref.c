@@ -55,14 +55,14 @@
  * the opaque uniform mapping.
  */
 
-#include "compiler/nir/nir.h"
-#include "compiler/nir/nir_builder.h"
-#include "compiler/nir/nir_deref.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
+#include "../nir/nir_deref.h"
 #include "gl_nir.h"
 #include "ir_uniform.h"
 
-#include "util/compiler.h"
-#include "main/shader_types.h"
+#include "../../util/compiler.h"
+#include "../../mesa/main/shader_types.h"
 
 struct lower_samplers_as_deref_state {
    nir_shader *shader;

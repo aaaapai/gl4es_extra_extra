@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Intel Corporation
+ * Copyright Â© 2015 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,8 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "util/set.h"
-#include "util/hash_table.h"
+#include "../../util/set.h"
+#include "../../util/hash_table.h"
 
 /* This file contains various little helpers for doing simple linking in
  * NIR.  Eventually, we'll probably want a full-blown varying packing

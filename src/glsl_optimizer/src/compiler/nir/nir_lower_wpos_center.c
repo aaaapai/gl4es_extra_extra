@@ -24,7 +24,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "program/prog_instruction.h"
+#include "../../mesa/program/prog_instruction.h"
 
 /**
  * This pass adds <0.5, 0.5> to all uses of gl_FragCoord.

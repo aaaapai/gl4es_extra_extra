@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 Intel Corporation
+ * Copyright Â© 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,9 +26,9 @@
  *
  */
 
-#include "util/streaming-load-memcpy.h"
-#include "util/u_cpu_detect.h"
-#include "util/u_math.h"
+#include "streaming-load-memcpy.h"
+#include "u_cpu_detect.h"
+#include "u_math.h"
 #ifdef USE_SSE41
 #include <smmintrin.h>
 #endif

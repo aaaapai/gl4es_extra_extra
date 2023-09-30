@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include "util/macros.h"
-#include "util/u_math.h"
-#include "util/vma.h"
+#include "macros.h"
+#include "u_math.h"
+#include "vma.h"
 
 struct util_vma_hole {
    struct list_head link;

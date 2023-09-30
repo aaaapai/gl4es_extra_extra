@@ -27,7 +27,7 @@
 #ifndef _API_H_
 #define _API_H_
 
-#include "util/format/u_formats.h"
+#include "../../../util/format/u_formats.h"
 
 struct st_context;
 

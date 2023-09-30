@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,9 +44,9 @@
  * corrupt, etc) we will use a fallback path to compile and link the IR.
  */
 
-#include "util/os_misc.h"
+#include "../../util/os_misc.h"
 
-#include "compiler/shader_info.h"
+#include "../shader_info.h"
 #include "glsl_symbol_table.h"
 #include "glsl_parser_extras.h"
 #include "ir.h"
@@ -55,18 +55,18 @@
 #include "ir_uniform.h"
 #include "linker.h"
 #include "link_varyings.h"
-#include "nir.h"
+#include "../nir/nir.h"
 #include "program.h"
 #include "serialize.h"
 #include "shader_cache.h"
-#include "util/mesa-sha1.h"
+#include "../../util/mesa-sha1.h"
 #include "string_to_uint_map.h"
-#include "main/mtypes.h"
+#include "../../mesa/main/mtypes.h"
 
 extern "C" {
-#include "main/enums.h"
-#include "main/shaderobj.h"
-#include "program/program.h"
+#include "../../mesa/main/enums.h"
+#include "../../mesa/main/shaderobj.h"
+#include "program.h"
 }
 
 static void

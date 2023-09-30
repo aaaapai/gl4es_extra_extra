@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Intel Corporation
+ * Copyright Â© 2015 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,8 +31,8 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "util/macros.h"
-#include "util/u_math.h"
+#include "macros.h"
+#include "u_math.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Google, Inc.
+ * Copyright Â© 2017 Google, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,15 +25,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "c11/threads.h"
-#include "util/detect_os.h"
-#include "util/log.h"
-#include "util/ralloc.h"
-#include "util/u_debug.h"
+#include "../../include/c11/threads.h"
+#include "detect_os.h"
+#include "log.h"
+#include "ralloc.h"
+#include "u_debug.h"
 
 #if DETECT_OS_UNIX
 #include <syslog.h>
-#include "util/u_process.h"
+#include "u_process.h"
 #endif
 
 #if DETECT_OS_ANDROID

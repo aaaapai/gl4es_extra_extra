@@ -24,7 +24,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "sha1/sha1.h"
+#include "./sha1/sha1.h"
 #include "mesa-sha1.h"
 #include <string.h>
 #include <inttypes.h>

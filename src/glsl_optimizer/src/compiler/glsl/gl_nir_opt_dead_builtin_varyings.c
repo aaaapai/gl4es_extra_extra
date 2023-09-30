@@ -45,14 +45,14 @@
 
 #include "gl_nir_link_varyings.h"
 #include "gl_nir_linker.h"
-#include "nir_builder.h"
-#include "nir_gl_types.h"
-#include "nir_types.h"
+#include "../nir/nir_builder.h"
+#include "../nir_gl_types.h"
+#include "../nir_types.h"
 
-#include "compiler/glsl_types.h"
-#include "main/consts_exts.h"
-#include "main/shader_types.h"
-#include "util/u_string.h"
+#include "../glsl_types.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../util/u_string.h"
 
 struct varying_info {
    bool lower_texcoord_array;

@@ -2651,7 +2651,7 @@ GL_APICALL void GL_APIENTRY glCopyBufferSubDataNV (GLenum readTarget, GLenum wri
 #define GL_COVERAGE_COMPONENT4_NV         0x8ED1
 #define GL_COVERAGE_ATTACHMENT_NV         0x8ED2
 #define GL_COVERAGE_BUFFERS_NV            0x8ED3
-#define GL_COVERAGE_SAMPLES_NV            0x8ED4
+//#define GL_COVERAGE_SAMPLES_NV            0x8ED4
 #define GL_COVERAGE_ALL_FRAGMENTS_NV      0x8ED5
 #define GL_COVERAGE_EDGE_FRAGMENTS_NV     0x8ED6
 #define GL_COVERAGE_AUTOMATIC_NV          0x8ED7

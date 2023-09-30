@@ -6,7 +6,7 @@
  *
  */
 
-#include "no_extern_c.h"
+#include "../../include/no_extern_c.h"
 
 #ifndef U_ATOMIC_H
 #define U_ATOMIC_H

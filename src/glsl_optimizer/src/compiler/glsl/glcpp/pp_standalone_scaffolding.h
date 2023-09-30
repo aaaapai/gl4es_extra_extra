@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Timothy Arceri
+ * Copyright Â© 2019 Timothy Arceri
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@
 #define PP_STANDALONE_SCAFFOLDING_H
 
 #include <stddef.h>
-#include "main/mtypes.h"
+#include "../../../mesa/main/mtypes.h"
 
 const char *
 _mesa_lookup_shader_include(struct gl_context *ctx, char *path,

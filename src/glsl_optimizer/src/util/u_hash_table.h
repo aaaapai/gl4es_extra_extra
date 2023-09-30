@@ -33,8 +33,8 @@
 #define U_HASH_TABLE_H_
 
 
-#include "pipe/p_defines.h"
-#include "util/hash_table.h"
+#include "../gallium/include/pipe/p_defines.h"
+#include "hash_table.h"
 
 
 #ifdef __cplusplus

@@ -31,9 +31,9 @@
 #ifndef __CONSTS_EXTS_H__
 #define __CONSTS_EXTS_H__
 
-#include "util/glheader.h"
-#include "compiler/shader_enums.h"
-#include "compiler/shader_info.h"
+#include "glheader.h"
+#include "../../compiler/shader_enums.h"
+#include "../../compiler/shader_info.h"
 
 struct nir_shader_compiler_options;
 

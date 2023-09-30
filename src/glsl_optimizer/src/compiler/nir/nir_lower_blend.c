@@ -31,9 +31,9 @@
  * fixed-function blending in part or in full.
  */
 
-#include "compiler/nir/nir.h"
-#include "compiler/nir/nir_builder.h"
-#include "compiler/nir/nir_format_convert.h"
+#include "nir.h"
+#include "nir_builder.h"
+#include "nir_format_convert.h"
 #include "nir_lower_blend.h"
 
 struct ctx {

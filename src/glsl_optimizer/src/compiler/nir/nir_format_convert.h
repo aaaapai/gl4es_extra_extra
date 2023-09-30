@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Intel Corporation
+ * Copyright Â© 2017 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 
 #include "nir_builder.h"
 
-#include "util/format_rgb9e5.h"
+#include "../../util/format_rgb9e5.h"
 
 static inline nir_ssa_def *
 nir_shift_imm(nir_builder *b, nir_ssa_def *value, int left_shift)

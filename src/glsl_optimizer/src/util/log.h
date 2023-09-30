@@ -27,7 +27,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "util/macros.h"
+#include "macros.h"
 
 #ifdef __cplusplus
 extern "C" {

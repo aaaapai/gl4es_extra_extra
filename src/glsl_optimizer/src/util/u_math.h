@@ -39,7 +39,7 @@
 #define U_MATH_H
 
 
-#include "c99_compat.h"
+#include "../../include/c99_compat.h"
 #include <assert.h>
 #include <float.h>
 #include <stdarg.h>
@@ -47,8 +47,8 @@
 
 #include "bitscan.h"
 #include "u_endian.h" /* for UTIL_ARCH_BIG_ENDIAN */
-#include "util/detect_cc.h"
-#include "util/detect_arch.h"
+#include "detect_cc.h"
+#include "detect_arch.h"
 
 #ifdef __HAIKU__
 #include <sys/param.h>

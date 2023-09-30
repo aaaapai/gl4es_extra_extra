@@ -26,7 +26,7 @@
 #ifndef SHADER_ENUMS_H
 #define SHADER_ENUMS_H
 
-#include "util/macros.h"
+#include "../util/macros.h"
 
 #include <stdbool.h>
 

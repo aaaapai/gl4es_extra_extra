@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Red Hat Inc.
+ * Copyright Â© 2019 Red Hat Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,11 +30,11 @@
  * variable in the backend wouldn't be needed anymore.
  */
 
-#include "compiler/nir/nir.h"
-#include "compiler/nir/nir_builder.h"
-#include "compiler/nir/nir_deref.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
+#include "../nir/nir_deref.h"
 
-#include "compiler/glsl/gl_nir.h"
+#include "gl_nir.h"
 
 static void
 type_size_align_1(const struct glsl_type *type, unsigned *size, unsigned *align)

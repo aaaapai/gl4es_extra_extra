@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 #ifndef GLSL_TO_NIR_H
 #define GLSL_TO_NIR_H
 
-#include "compiler/nir/nir.h"
+#include "../nir/nir.h"
 
 #ifdef __cplusplus
 extern "C" {

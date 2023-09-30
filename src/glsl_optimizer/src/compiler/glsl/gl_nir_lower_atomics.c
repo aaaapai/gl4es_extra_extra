@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,12 +25,12 @@
  *
  */
 
-#include "compiler/nir/nir.h"
-#include "compiler/nir/nir_builder.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
 #include "gl_nir.h"
 #include "ir_uniform.h"
-#include "main/config.h"
-#include "main/shader_types.h"
+#include "../../mesa/main/config.h"
+#include "../../mesa/main/shader_types.h"
 #include <assert.h>
 
 /*

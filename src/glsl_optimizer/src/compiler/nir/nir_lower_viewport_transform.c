@@ -37,8 +37,8 @@
  * still in place.
  */
 
-#include "nir/nir.h"
-#include "nir/nir_builder.h"
+#include "nir.h"
+#include "nir_builder.h"
 
 void
 nir_lower_viewport_transform(nir_shader *shader)

@@ -27,7 +27,7 @@
  *
  **************************************************************************/
 
-#include "util/format/u_format.h"
+#include "u_format.h"
 #include "u_format_bptc.h"
 #include "u_format_fxt1.h"
 #include "u_format_s3tc.h"
@@ -36,12 +36,12 @@
 #include "u_format_etc.h"
 
 
-#include "pipe/p_compiler.h"
-#include "util/u_math.h"
-#include "util/half_float.h"
+#include "../../gallium/include/pipe/p_compiler.h"
+#include "../u_math.h"
+#include "../half_float.h"
 #include "u_format.h"
 #include "u_format_other.h"
-#include "util/format_srgb.h"
+#include "../format_srgb.h"
 #include "format_utils.h"
 #include "u_format_yuv.h"
 #include "u_format_zs.h"

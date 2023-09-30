@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,10 +21,10 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "ir.h"
 #include "glsl_parser_extras.h"
-#include "main/errors.h"
+#include "../../mesa/main/errors.h"
 
 typedef enum {
    PARAMETER_LIST_NO_MATCH,

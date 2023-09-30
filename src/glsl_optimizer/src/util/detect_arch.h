@@ -40,7 +40,7 @@
  * - echo | gcc -dM -E - | sort
  * - http://msdn.microsoft.com/en-us/library/b0084kay.aspx
  * 
- * @author José Fonseca <jfonseca@vmware.com>
+ * @author Jos√© Fonseca <jfonseca@vmware.com>
  */
 
 #ifndef UTIL_DETECT_ARCH_H_
@@ -48,7 +48,7 @@
 
 #include <limits.h>
 
-#include "util/detect_cc.h"
+#include "detect_cc.h"
 
 /*
  * Processor architecture

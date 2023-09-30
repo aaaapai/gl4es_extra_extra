@@ -25,7 +25,7 @@
 #ifndef TEXCOMPRESS_S3TC_TMP_H
 #define TEXCOMPRESS_S3TC_TMP_H
 
-#include "util/glheader.h"
+#include "../glheader.h"
 
 typedef GLubyte GLchan;
 #define UBYTE_TO_CHAN(b)  (b)

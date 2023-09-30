@@ -29,9 +29,9 @@
  */
 
 
-#include "main/errors.h"
-#include "main/consts_exts.h"
-#include "main/shader_types.h"
+#include "../../mesa/main/errors.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shader_types.h"
 #include "glsl_symbol_table.h"
 #include "ir.h"
 #include "linker.h"

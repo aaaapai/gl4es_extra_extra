@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 
-#include "util/detect_os.h"
+#include "detect_os.h"
 
 #ifdef HAVE_LIBUNWIND
 #define UNW_LOCAL_ONLY

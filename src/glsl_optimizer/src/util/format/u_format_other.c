@@ -26,10 +26,10 @@
  **************************************************************************/
 
 
-#include "util/format/u_format_other.h"
-#include "util/u_math.h"
-#include "util/format_rgb9e5.h"
-#include "util/format_r11g11b10f.h"
+#include "u_format_other.h"
+#include "../u_math.h"
+#include "../format_rgb9e5.h"
+#include "../format_r11g11b10f.h"
 
 
 void

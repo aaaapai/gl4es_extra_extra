@@ -32,13 +32,13 @@
  * @author Based on the work of Eric Anholt <anholt@FreeBSD.org>
  */
 
-#include "util/detect.h"
-#include "pipe/p_compiler.h"
+#include "detect.h"
+#include "../gallium/include/pipe/p_compiler.h"
 
-#include "util/u_debug.h"
+#include "u_debug.h"
 #include "u_cpu_detect.h"
 #include "u_math.h"
-#include "c11/threads.h"
+#include "../../include/c11/threads.h"
 
 #include <stdio.h>
 #include <inttypes.h>

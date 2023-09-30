@@ -45,10 +45,10 @@
 #define U_FORMAT_YUV_H_
 
 
-#include "pipe/p_compiler.h"
-#include "util/u_math.h"
+#include "../../gallium/include/pipe/p_compiler.h"
+#include "../u_math.h"
 
-#include "c99_compat.h"
+#include "../../../include/c99_compat.h"
 
 /*
  * TODO: Ensure we use consistent and right floating formulas, with enough

@@ -24,7 +24,7 @@
 #include "nir_instr_set.h"
 #include "nir_search_helpers.h"
 #include "nir_builder.h"
-#include "util/u_vector.h"
+#include "../../util/u_vector.h"
 
 /* Partial redundancy elimination of compares
  *

@@ -30,17 +30,17 @@
 #include <stdio.h>
 
 #include "shader_enums.h"
-#include "c11/threads.h"
-#include "util/blob.h"
-#include "util/format/u_format.h"
-#include "util/macros.h"
-#include "util/simple_mtx.h"
+#include "../../include/c11/threads.h"
+#include "../util/blob.h"
+#include "../util/format/u_format.h"
+#include "../util/macros.h"
+#include "../util/simple_mtx.h"
 
 #ifdef __cplusplus
-#include "mesa/main/config.h"
-#include "mesa/main/menums.h" /* for gl_texture_index, C++'s enum rules are broken */
-#include "util/glheader.h"
-#include "util/ralloc.h"
+#include "../mesa/main/config.h"
+#include "../mesa/main/menums.h" /* for gl_texture_index, C++'s enum rules are broken */
+#include "../util/glheader.h"
+#include "../util/ralloc.h"
 #endif
 
 struct glsl_type;
@@ -387,7 +387,7 @@ public:
 #undef  STRUCT_TYPE
 #define STRUCT_TYPE(NAME) \
    static const glsl_type *const struct_##NAME##_type;
-#include "compiler/builtin_type_macros.h"
+#include "builtin_type_macros.h"
    /*@}*/
 
    /**
@@ -1358,7 +1358,7 @@ private:
 #define DECL_TYPE(NAME, ...) static const glsl_type _##NAME##_type;
 #undef  STRUCT_TYPE
 #define STRUCT_TYPE(NAME)        static const glsl_type _struct_##NAME##_type;
-#include "compiler/builtin_type_macros.h"
+#include "builtin_type_macros.h"
    /*@}*/
 
    /**

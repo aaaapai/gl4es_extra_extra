@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Connor Abbott
+ * Copyright Â© 2017 Connor Abbott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,8 +24,8 @@
 #include "nir_serialize.h"
 #include "nir_control_flow.h"
 #include "nir_xfb_info.h"
-#include "util/u_dynarray.h"
-#include "util/u_math.h"
+#include "../../util/u_dynarray.h"
+#include "../../util/u_math.h"
 
 #define NIR_SERIALIZE_FUNC_HAS_IMPL ((void *)(intptr_t)1)
 #define MAX_OBJECT_IDS (1 << 20)

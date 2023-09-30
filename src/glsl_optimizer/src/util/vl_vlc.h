@@ -1,6 +1,6 @@
 /**************************************************************************
  *
- * Copyright 2011 Christian König.
+ * Copyright 2011 Christian KÃ¶nig.
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -32,7 +32,7 @@
 #ifndef vl_vlc_h
 #define vl_vlc_h
 
-#include "util/u_math.h"
+#include "u_math.h"
 
 struct vl_vlc
 {

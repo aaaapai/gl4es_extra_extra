@@ -23,11 +23,11 @@
 
 #include "glsl_symbol_table.h"
 #include "ast.h"
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "ir.h"
-#include "main/shader_types.h"
-#include "main/consts_exts.h"
-#include "main/shaderobj.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shaderobj.h"
 #include "builtin_functions.h"
 
 static ir_rvalue *

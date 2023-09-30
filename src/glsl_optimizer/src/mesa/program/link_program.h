@@ -31,8 +31,6 @@ extern "C" {
 struct gl_context;
 struct gl_shader_program;
 
-void _mesa_glsl_link_shader(struct gl_context *ctx, struct gl_shader_program *prog);
-
 #ifdef __cplusplus
 }
 #endif

@@ -37,9 +37,9 @@
 
 #include <stdbool.h>
 
-#include "util/macros.h"
-#include "util/u_atomic.h"
-#include "util/u_thread.h"
+#include "macros.h"
+#include "u_atomic.h"
+#include "u_thread.h"
 
 
 /* Maximal cpu count for update affinity */

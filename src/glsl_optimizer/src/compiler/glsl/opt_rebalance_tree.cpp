@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -60,7 +60,7 @@
 #include "ir_visitor.h"
 #include "ir_rvalue_visitor.h"
 #include "ir_optimization.h"
-#include "main/macros.h" /* for MAX2 */
+#include "../../util/macros.h" /* for MAX2 */
 
 /* The DSW algorithm generates a degenerate tree (really, a linked list) in
  * tree_to_vine(). We'd rather not leave a binary expression with only one

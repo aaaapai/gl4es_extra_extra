@@ -35,7 +35,7 @@ static locale_t loc;
 #endif
 
 #include "strtod.h"
-#include "util/u_call_once.h"
+#include "u_call_once.h"
 
 static void
 _mesa_locale_init_once(void)

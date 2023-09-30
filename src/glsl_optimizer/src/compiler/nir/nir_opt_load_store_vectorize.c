@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Valve Corporation
+ * Copyright Â© 2019 Valve Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -46,7 +46,7 @@
 #include "nir_deref.h"
 #include "nir_builder.h"
 #include "nir_worklist.h"
-#include "util/u_dynarray.h"
+#include "../../util/u_dynarray.h"
 
 #include <stdlib.h>
 

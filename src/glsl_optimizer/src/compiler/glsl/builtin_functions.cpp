@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 Intel Corporation
+ * Copyright Â© 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -67,7 +67,7 @@
  * MinGW 7.3.0 (in Ubuntu 18.04) does not have this bug.  Assume versions before 7.3.x are buggy
  */
 
-#include "util/detect_cc.h"
+#include "../../util/detect_cc.h"
 
 #if defined(__MINGW32__) && (DETECT_CC_GCC_VERSION < 703)
 #warning "disabling optimizations for this file to work around compiler bug"
@@ -77,16 +77,16 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include "util/simple_mtx.h"
-#include "main/consts_exts.h"
-#include "main/shader_types.h"
-#include "main/shaderobj.h"
+#include "../../util/simple_mtx.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../mesa/main/shaderobj.h"
 #include "ir_builder.h"
 #include "glsl_parser_extras.h"
-#include "program/prog_instruction.h"
+#include "../../mesa/program/prog_instruction.h"
 #include <math.h>
 #include "builtin_functions.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 
 #ifndef M_PIf
 #define M_PIf   ((float) M_PI)

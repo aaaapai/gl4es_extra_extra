@@ -27,20 +27,20 @@
  * stages.
  */
 
-#include "main/errors.h"
-#include "main/macros.h"
-#include "main/menums.h"
-#include "main/mtypes.h"
-#include "util/hash_table.h"
-#include "util/u_math.h"
+#include "../../mesa/main/errors.h"
+#include "../../util/macros.h"
+#include "../../mesa/main/menums.h"
+#include "../../mesa/main/mtypes.h"
+#include "../../util/hash_table.h"
+#include "../../util/u_math.h"
 
-#include "nir.h"
-#include "nir_builder.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
 #include "gl_nir.h"
 #include "gl_nir_link_varyings.h"
 #include "gl_nir_linker.h"
 #include "linker_util.h"
-#include "nir_gl_types.h"
+#include "../nir_gl_types.h"
 
 
 /**

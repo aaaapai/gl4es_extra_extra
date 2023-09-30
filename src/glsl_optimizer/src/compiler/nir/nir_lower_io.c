@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@
 #include "nir_deref.h"
 #include "nir_xfb_info.h"
 
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 
 struct lower_io_state {
    void *dead_ctx;

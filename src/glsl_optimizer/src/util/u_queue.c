@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Advanced Micro Devices, Inc.
+ * Copyright Â© 2016 Advanced Micro Devices, Inc.
  * All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,11 +26,11 @@
 
 #include "u_queue.h"
 
-#include "c11/threads.h"
-#include "util/u_cpu_detect.h"
-#include "util/os_time.h"
-#include "util/u_string.h"
-#include "util/u_thread.h"
+#include "../../include/c11/threads.h"
+#include "u_cpu_detect.h"
+#include "os_time.h"
+#include "u_string.h"
+#include "u_thread.h"
 #include "u_process.h"
 
 #if defined(__linux__)

@@ -41,12 +41,12 @@
 #ifndef APIENTRY
 #define APIENTRY GLAPIENTRY
 #endif
-#include "GL/gl.h"
-#include "GL/glext.h"
+#include "../../include/GL/gl.h"
+#include "../../include/GL/glext.h"
 #pragma pop_macro("APIENTRY")
 #else /* !(defined(_WIN32) && !defined(__CYGWIN__)) */
-#include "GL/gl.h"
-#include "GL/glext.h"
+#include "../../include/GL/gl.h"
+#include "../../include/GL/glext.h"
 #endif /* defined(_WIN32) && !defined(__CYGWIN__) */
 
 /**
@@ -75,8 +75,8 @@
 #include "GLES3/gl3ext.h"
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
-#include "GLES/gl.h"
-#include "GLES/glext.h"
+#include "../../include/GL/gl.h"
+#include "../../include/GL/glext.h"
 
 #ifdef __cplusplus
 extern "C" {

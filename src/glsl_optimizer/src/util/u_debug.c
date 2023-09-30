@@ -26,10 +26,10 @@
  *
  **************************************************************************/
 
-#include "util/u_atomic.h"
-#include "util/u_debug.h"
-#include "util/u_string.h"
-#include "util/u_math.h"
+#include "u_atomic.h"
+#include "u_debug.h"
+#include "u_string.h"
+#include "u_math.h"
 #include <inttypes.h>
 
 #include <stdio.h>

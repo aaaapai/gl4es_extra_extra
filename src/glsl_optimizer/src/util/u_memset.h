@@ -25,7 +25,7 @@
  *
  **************************************************************************/
 
-#include "util/detect.h"
+#include "detect.h"
 
 static inline void *
 util_memset32(void *s, uint32_t ui, size_t n)

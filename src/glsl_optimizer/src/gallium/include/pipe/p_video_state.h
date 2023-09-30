@@ -32,8 +32,6 @@
 #include "p_format.h"
 #include "p_state.h"
 #include "p_screen.h"
-#include "DUMMY"
-#include "DUMMY"
 
 #ifdef __cplusplus
 extern "C" {

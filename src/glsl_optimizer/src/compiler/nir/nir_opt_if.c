@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  */
 
 #include "nir.h"
-#include "nir/nir_builder.h"
+#include "nir_builder.h"
 #include "nir_constant_expressions.h"
 #include "nir_control_flow.h"
 #include "nir_loop_analyze.h"

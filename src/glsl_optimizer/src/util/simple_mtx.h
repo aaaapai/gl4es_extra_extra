@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Intel
+ * Copyright Â© 2015 Intel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
 #ifndef _SIMPLE_MTX_H
 #define _SIMPLE_MTX_H
 
-#include "util/futex.h"
-#include "util/macros.h"
-#include "util/u_call_once.h"
+#include "futex.h"
+#include "macros.h"
+#include "u_call_once.h"
 #include "u_atomic.h"
 
 #if UTIL_FUTEX_SUPPORTED

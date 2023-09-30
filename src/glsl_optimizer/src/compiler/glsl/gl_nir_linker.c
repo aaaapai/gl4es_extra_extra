@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,15 +21,15 @@
  * IN THE SOFTWARE.
  */
 
-#include "nir.h"
+#include "../nir/nir.h"
 #include "gl_nir.h"
 #include "gl_nir_linker.h"
 #include "linker_util.h"
-#include "main/shader_types.h"
-#include "main/consts_exts.h"
-#include "main/shaderobj.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shaderobj.h"
 #include "ir_uniform.h" /* for gl_uniform_storage */
-#include "util/glheader.h"
+#include "../../util/glheader.h"
 
 /**
  * This file included general link methods, using NIR, instead of IR as

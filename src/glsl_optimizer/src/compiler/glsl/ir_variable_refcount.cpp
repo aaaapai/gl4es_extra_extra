@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,8 +32,8 @@
 #include "ir.h"
 #include "ir_visitor.h"
 #include "ir_variable_refcount.h"
-#include "compiler/glsl_types.h"
-#include "util/hash_table.h"
+#include "../glsl_types.h"
+#include "../../util/hash_table.h"
 
 ir_variable_refcount_visitor::ir_variable_refcount_visitor()
 {

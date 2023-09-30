@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Collabora Ltc.
+ * Copyright Â© 2022 Collabora Ltc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #include "nir.h"
 #include "nir_xfb_info.h"
 #include "nir_builder.h"
-#include "util/u_memory.h"
+#include "../../util/u_memory.h"
 
 static unsigned int
 gs_in_prim_for_topology(enum shader_prim prim)

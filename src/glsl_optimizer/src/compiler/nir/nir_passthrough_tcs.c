@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Google, Inc.
+ * Copyright Â© 2022 Google, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

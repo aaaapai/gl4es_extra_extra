@@ -23,13 +23,13 @@
  *
  **************************************************************************/
 
-#include "util/format/u_format.h"
-#include "util/format/u_format_bptc.h"
+#include "u_format.h"
+#include "u_format_bptc.h"
 #include "u_format_pack.h"
-#include "util/format_srgb.h"
-#include "util/u_math.h"
+#include "../format_srgb.h"
+#include "../u_math.h"
 
-#include "util/format/texcompress_bptc_tmp.h"
+#include "texcompress_bptc_tmp.h"
 
 void
 util_format_bptc_rgba_unorm_unpack_rgba_8unorm(uint8_t *restrict dst_row, unsigned dst_stride,

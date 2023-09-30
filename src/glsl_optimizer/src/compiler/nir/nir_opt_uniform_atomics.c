@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Valve Corporation
+ * Copyright Â© 2020 Valve Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -36,8 +36,8 @@
  * This pass requires and preserves LCSSA and divergence information.
  */
 
-#include "nir/nir.h"
-#include "nir/nir_builder.h"
+#include "nir.h"
+#include "nir_builder.h"
 
 static nir_op
 parse_atomic_op(nir_intrinsic_op op, unsigned *offset_src, unsigned *data_src,

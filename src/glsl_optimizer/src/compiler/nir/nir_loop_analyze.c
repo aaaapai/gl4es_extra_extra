@@ -24,7 +24,7 @@
 #include "nir.h"
 #include "nir_constant_expressions.h"
 #include "nir_loop_analyze.h"
-#include "util/bitset.h"
+#include "../../util/bitset.h"
 
 typedef enum {
    undefined,

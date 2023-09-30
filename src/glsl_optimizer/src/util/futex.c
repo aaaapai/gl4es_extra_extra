@@ -22,7 +22,7 @@
  * IN THE SOFTWARE.
  */
 
-#include "util/futex.h"
+#include "futex.h"
 
 #if UTIL_FUTEX_SUPPORTED
 

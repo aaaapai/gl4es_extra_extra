@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 
 #include "nir.h"
 #include "nir_worklist.h"
-#include "util/u_dynarray.h"
+#include "../../util/u_dynarray.h"
 
 #define NIR_SEARCH_MAX_VARIABLES 16
 

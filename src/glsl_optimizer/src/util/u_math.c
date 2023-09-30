@@ -27,9 +27,9 @@
 
 
 
-#include "util/detect.h"
-#include "util/u_math.h"
-#include "util/u_cpu_detect.h"
+#include "detect.h"
+#include "u_math.h"
+#include "u_cpu_detect.h"
 
 #if DETECT_ARCH_SSE
 #include <xmmintrin.h>

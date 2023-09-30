@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 
 #include "nir_xfb_info.h"
 
-#include "util/u_dynarray.h"
+#include "../../util/u_dynarray.h"
 #include <util/u_math.h>
 
 static void

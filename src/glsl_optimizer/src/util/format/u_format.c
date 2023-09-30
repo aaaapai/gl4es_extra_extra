@@ -32,14 +32,14 @@
  * @author Jose Fonseca <jfonseca@vmware.com>
  */
 
-#include "c11/threads.h"
-#include "util/detect_arch.h"
-#include "util/format/u_format.h"
-#include "util/format/u_format_s3tc.h"
-#include "util/u_math.h"
+#include "../../../include/c11/threads.h"
+#include "../detect_arch.h"
+#include "u_format.h"
+#include "u_format_s3tc.h"
+#include "../u_math.h"
 
-#include "pipe/p_defines.h"
-#include "pipe/p_screen.h"
+#include "../../gallium/include/pipe/p_defines.h"
+#include "../../gallium/include/pipe/p_screen.h"
 
 
 /**

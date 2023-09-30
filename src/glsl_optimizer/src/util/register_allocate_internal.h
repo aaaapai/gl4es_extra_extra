@@ -29,8 +29,8 @@
 #define REGISTER_ALLOCATE_INTERNAL_H
 
 #include <stdbool.h>
-#include "util/bitset.h"
-#include "util/u_dynarray.h"
+#include "bitset.h"
+#include "u_dynarray.h"
 
 #ifdef __cplusplus
 extern "C" {

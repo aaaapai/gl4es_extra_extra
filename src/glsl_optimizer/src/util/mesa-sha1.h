@@ -1,4 +1,4 @@
-/* Copyright © 2014 Intel Corporation
+/* Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "sha1/sha1.h"
+#include "./sha1/sha1.h"
 
 #ifdef __cplusplus
 extern "C" {

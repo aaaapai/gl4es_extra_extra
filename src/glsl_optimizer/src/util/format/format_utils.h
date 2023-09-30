@@ -31,8 +31,8 @@
 #ifndef UTIL_FORMAT_UTILS_H
 #define UTIL_FORMAT_UTILS_H
 
-#include "util/half_float.h"
-#include "util/rounding.h"
+#include "../half_float.h"
+#include "../rounding.h"
 
 /* Extends an integer of size SRC_BITS to one of size DST_BITS linearly */
 #define EXTEND_NORMALIZED_INT(X, SRC_BITS, DST_BITS) \

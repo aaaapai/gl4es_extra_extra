@@ -27,10 +27,10 @@
 
 #include <backtrace/Backtrace.h>
 
-#include "util/simple_mtx.h"
-#include "util/u_debug.h"
-#include "util/hash_table.h"
-#include "util/u_thread.h"
+#include "simple_mtx.h"
+#include "u_debug.h"
+#include "hash_table.h"
+#include "u_thread.h"
 
 static hash_table *symbol_table;
 static simple_mtx_t table_mutex = SIMPLE_MTX_INITIALIZER;

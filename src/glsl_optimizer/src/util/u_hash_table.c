@@ -26,8 +26,8 @@
  **************************************************************************/
 
 
-#include "util/u_pointer.h"
-#include "util/u_hash_table.h"
+#include "u_pointer.h"
+#include "u_hash_table.h"
 
 #if DETECT_OS_UNIX
 #include <sys/stat.h>

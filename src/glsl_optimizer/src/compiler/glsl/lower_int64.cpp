@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -36,13 +36,13 @@
  *     packUint2x32(__builtin_udiv64(unpackUint2x32(x), unpackUint2x32(y)));
  */
 
-#include "main/macros.h"
-#include "compiler/glsl_types.h"
+#include "../../util/macros.h"
+#include "../glsl_types.h"
 #include "ir.h"
 #include "ir_rvalue_visitor.h"
 #include "ir_builder.h"
 #include "ir_optimization.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 #include "builtin_functions.h"
 
 typedef ir_function_signature *(*function_generator)(void *mem_ctx,

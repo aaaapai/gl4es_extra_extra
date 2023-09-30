@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Broadcom
+ * Copyright Â© 2017 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,8 +32,8 @@
  * rather silly to use with alpha test, but the spec permits).
  */
 
-#include "nir/nir.h"
-#include "nir/nir_builder.h"
+#include "nir.h"
+#include "nir_builder.h"
 
 void
 nir_lower_alpha_test(nir_shader *shader, enum compare_func func,

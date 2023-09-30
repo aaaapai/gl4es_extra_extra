@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 
 #include "nir_types.h"
 #include "nir_gl_types.h"
-#include "compiler/glsl/ir.h"
+#include "./glsl/ir.h"
 
 const char *
 glsl_get_type_name(const glsl_type *type)

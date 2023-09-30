@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,12 +23,12 @@
 
 #include <inttypes.h> /* for PRIx64 macro */
 #include "ir_print_visitor.h"
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 #include "glsl_parser_extras.h"
-#include "main/macros.h"
-#include "util/hash_table.h"
-#include "util/u_string.h"
-#include "util/half_float.h"
+#include "../../util/macros.h"
+#include "../../util/hash_table.h"
+#include "../../util/u_string.h"
+#include "../../util/half_float.h"
 
 void
 ir_instruction::print(void) const

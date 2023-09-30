@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Connor Abbott
+ * Copyright Â© 2014 Connor Abbott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,28 +28,27 @@
 #ifndef NIR_H
 #define NIR_H
 
-#include "util/hash_table.h"
-#include "compiler/glsl/list.h"
-#include "util/list.h"
-#include "util/log.h"
-#include "util/ralloc.h"
-#include "util/set.h"
-#include "util/bitscan.h"
-#include "util/bitset.h"
-#include "util/compiler.h"
-#include "util/enum_operators.h"
-#include "util/macros.h"
-#include "util/u_printf.h"
-#include "util/format/u_format.h"
-#include "compiler/nir_types.h"
-#include "compiler/shader_enums.h"
-#include "compiler/shader_info.h"
+#include "../../util/hash_table.h"
+#include "../glsl/list.h"
+#include "../../util/log.h"
+#include "../../util/ralloc.h"
+#include "../../util/set.h"
+#include "../../util/bitscan.h"
+#include "../../util/bitset.h"
+#include "../../util/compiler.h"
+#include "../../util/enum_operators.h"
+#include "../../util/macros.h"
+#include "../../util/u_printf.h"
+#include "../../util/format/u_format.h"
+#include "../nir_types.h"
+#include "../shader_enums.h"
+#include "../shader_info.h"
 #define XXH_INLINE_ALL
-#include "util/xxhash.h"
+#include "../../util/xxhash.h"
 #include <stdio.h>
 
 #ifndef NDEBUG
-#include "util/u_debug.h"
+#include "../../util/u_debug.h"
 #endif /* NDEBUG */
 
 #include "nir_opcodes.h"
@@ -1976,6 +1975,7 @@ nir_intrinsic_dest_components(nir_intrinsic_instr *intr);
 void nir_intrinsic_copy_const_indices(nir_intrinsic_instr *dst, nir_intrinsic_instr *src);
 
 #include "nir_intrinsics_indices.h"
+#include "vma.h"
 
 static inline void
 nir_intrinsic_set_align(nir_intrinsic_instr *intrin,

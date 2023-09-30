@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,8 +26,8 @@
 #include "nir_deref.h"
 #include "nir_vla.h"
 
-#include "util/set.h"
-#include "util/u_math.h"
+#include "../../util/set.h"
+#include "../../util/u_math.h"
 
 static struct set *
 get_complex_used_vars(nir_shader *shader, void *mem_ctx)

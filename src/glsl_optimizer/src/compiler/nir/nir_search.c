@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #include "nir_search.h"
 #include "nir_builder.h"
 #include "nir_worklist.h"
-#include "util/half_float.h"
+#include "../../util/half_float.h"
 
 /* This should be the same as nir_search_max_comm_ops in nir_algebraic.py. */
 #define NIR_SEARCH_MAX_COMM_OPS 8

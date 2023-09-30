@@ -31,15 +31,15 @@
 #ifndef SHADER_TYPES_H
 #define SHADER_TYPES_H
 
-#include "main/config.h" /* for MAX_FEEDBACK_BUFFERS */
-#include "util/glheader.h"
-#include "main/menums.h"
-#include "util/mesa-sha1.h"
-#include "compiler/shader_info.h"
-#include "compiler/glsl/list.h"
-#include "compiler/glsl/ir_uniform.h"
+#include "config.h" /* for MAX_FEEDBACK_BUFFERS */
+#include "glheader.h"
+#include "menums.h"
+#include "../../util/mesa-sha1.h"
+#include "../../compiler/shader_info.h"
+#include "../../util/list.h"
+#include "../../compiler/glsl/ir_uniform.h"
 
-#include "pipe/p_state.h"
+#include "../../gallium/include/pipe/p_state.h"
 
 /**
  * Shader information needed by both gl_shader and gl_linked shader.

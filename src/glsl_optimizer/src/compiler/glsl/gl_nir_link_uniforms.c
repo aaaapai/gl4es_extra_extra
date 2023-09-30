@@ -21,15 +21,15 @@
  * IN THE SOFTWARE.
  */
 
-#include "nir.h"
-#include "nir_gl_types.h"
-#include "nir_deref.h"
+#include "../nir/nir.h"
+#include "../nir_gl_types.h"
+#include "../nir/nir_deref.h"
 #include "gl_nir_linker.h"
-#include "compiler/glsl/ir_uniform.h" /* for gl_uniform_storage */
+#include "ir_uniform.h" /* for gl_uniform_storage */
 #include "linker_util.h"
-#include "util/u_dynarray.h"
-#include "main/consts_exts.h"
-#include "main/shader_types.h"
+#include "../../util/u_dynarray.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../../mesa/main/shader_types.h"
 
 /**
  * This file do the common link for GLSL uniforms, using NIR, instead of IR as

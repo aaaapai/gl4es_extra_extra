@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,10 +22,10 @@
  */
 
 #include <string.h>
-#include "util/compiler.h"
+#include "../../util/compiler.h"
 #include "ir.h"
-#include "compiler/glsl_types.h"
-#include "util/hash_table.h"
+#include "../glsl_types.h"
+#include "../../util/hash_table.h"
 
 ir_rvalue *
 ir_rvalue::clone(void *mem_ctx, struct hash_table *) const

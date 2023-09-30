@@ -29,21 +29,21 @@
  * @file
  * Memory debugging.
  *
- * @author José Fonseca <jfonseca@vmware.com>
+ * @author Jos√© Fonseca <jfonseca@vmware.com>
  */
 
-#include "util/detect.h"
+#include "detect.h"
 
 #define DEBUG_MEMORY_IMPLEMENTATION
 
-#include "util/u_thread.h"
+#include "u_thread.h"
 
-#include "util/simple_mtx.h"
-#include "util/u_debug.h"
-#include "util/u_debug_stack.h"
-#include "util/list.h"
-#include "util/os_memory.h"
-#include "util/os_memory_debug.h"
+#include "simple_mtx.h"
+#include "u_debug.h"
+#include "u_debug_stack.h"
+#include "list.h"
+#include "os_memory.h"
+#include "os_memory_debug.h"
 
 
 #define DEBUG_MEMORY_MAGIC 0x6e34090aU

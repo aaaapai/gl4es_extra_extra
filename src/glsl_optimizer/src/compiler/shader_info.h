@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,8 @@
 #ifndef SHADER_INFO_H
 #define SHADER_INFO_H
 
-#include "util/bitset.h"
-#include "util/sha1/sha1.h"
+#include "../util/bitset.h"
+#include "../util/sha1/sha1.h"
 #include "shader_enums.h"
 #include <stdint.h>
 

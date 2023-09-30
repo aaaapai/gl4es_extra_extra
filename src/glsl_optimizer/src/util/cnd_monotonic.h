@@ -28,8 +28,8 @@
 #ifndef CND_MONOTONIC_H
 #define CND_MONOTONIC_H
 
-#include "c11/threads.h"
-#include "util/os_time.h"
+#include "../../include/c11/threads.h"
+#include "os_time.h"
 
 #ifdef __cplusplus
 extern "C" {

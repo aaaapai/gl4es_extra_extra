@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Valve Corporation
+ * Copyright Â© 2021 Valve Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,7 @@
 #include "zstd.h"
 #endif
 
-#include "util/compress.h"
+#include "compress.h"
 #include "macros.h"
 
 /* 3 is the recomended level, with 22 as the absolute maximum */

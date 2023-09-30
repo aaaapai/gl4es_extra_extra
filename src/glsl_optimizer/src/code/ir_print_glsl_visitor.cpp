@@ -220,6 +220,8 @@ char * IR_TO_GLSL::Convert(
 	print_texlod_workarounds(uses_texlod_impl, uses_texlodproj_impl, res);
     res.append("\n\n");
 
+
+
     // DANGER, A NEW STRING IS ALLOCATED !
     // YOUR PROGRAM HAS TO FREE IT !
 	return res.c_str_take_ownership();
@@ -377,11 +379,13 @@ IR_TO_GLSL::visit(ir_rvalue*)
 void
 IR_TO_GLSL::visit(ir_variable* ir)
 {
+    // TODO restore uniform blocks
+    /*
 	if ( ir->is_in_uniform_block()) // only supporting uniform blocks for now, might add SSBOs later
 	{
 		visit_uniform_block( ir );
 		return;
-	}
+	}*/
 	char binding[32] = { 0 };
 	if (ir->data.binding)
 		snprintf(binding, sizeof(binding), "binding=%i ", ir->data.binding);
@@ -484,7 +488,7 @@ IR_TO_GLSL::visit(ir_variable* ir)
 		{ "", "uniform ", "shader_storage", "shader_shared", "attribute ", "varying ", "in ", "out ", "inout ", "const_in ", "sys ", "" },
 		{ "", "uniform ", "shader_storage", "shader_shared", "varying ",   "out ",     "in ", "out ", "inout ", "const_in ", "sys ", "" }
 	};
-	const char* const interp[] = { "", "smooth ", "flat ", "noperspective " };
+	const char* const interp[] = { "", "smooth ", "flat ", "noperspective ", "EXPLICIT ", "COLOR " };
 	STATIC_ASSERT(ARRAY_SIZE(interp) == INTERP_MODE_COUNT);
 
 	// keep invariant declaration for builtin variables
@@ -1541,8 +1545,8 @@ IR_TO_GLSL::emit_assignment_part(ir_dereference* lhs, ir_rvalue* rhs, unsigned w
 // OpenGL ES 2.0 loop syntax restrictions.
 static bool try_print_increment(IR_TO_GLSL* vis, ir_assignment* ir)
 {
-	if (ir->condition)
-		return false;
+	//if (ir->condition)
+	//	return false;
 
 	// Needs to be + on rhs
 	ir_expression* rhsOp = ir->rhs->as_expression();
@@ -1599,7 +1603,7 @@ IR_TO_GLSL::visit(ir_assignment* ir)
 	if (!inside_loop_body)
 	{
 		ir_variable* whole_var = ir->whole_variable_written();
-		if (!ir->condition && whole_var)
+		if (/*!ir->condition &&*/ whole_var)
 		{
 			ir_loop* lo = whole_var->as_loop();
 			if (lo)
@@ -1657,12 +1661,14 @@ IR_TO_GLSL::visit(ir_assignment* ir)
 	if (try_print_array_assignment(ir->lhs, ir->rhs))
 		return;
 
+    /*
 	if (ir->condition)
 	{
 		generated_source.append("if (");
 		ir->condition->accept(this);
 		generated_source.append(") ");
 	}
+     */
 
 	emit_assignment_part(ir->lhs, ir->rhs, ir->write_mask, NULL);
 }

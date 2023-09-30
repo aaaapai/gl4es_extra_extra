@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #ifndef DISK_CACHE_OS_H
 #define DISK_CACHE_OS_H
 
-#include "util/u_queue.h"
+#include "u_queue.h"
 
 #if DETECT_OS_WINDOWS
 
@@ -32,9 +32,9 @@
 
 #else
 
-#include "util/fossilize_db.h"
-#include "util/mesa_cache_db.h"
-#include "util/mesa_cache_db_multipart.h"
+#include "fossilize_db.h"
+#include "mesa_cache_db.h"
+#include "mesa_cache_db_multipart.h"
 
 #ifdef __cplusplus
 extern "C" {

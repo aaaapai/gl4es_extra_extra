@@ -32,11 +32,11 @@
  * @author Jose Fonseca <jfonseca@vmware.com>
  */
 
-#include "util/simple_mtx.h"
-#include "util/u_debug.h"
+#include "simple_mtx.h"
+#include "u_debug.h"
 #include "u_debug_symbol.h"
 #include "u_debug_stack.h"
-#include "util/detect.h"
+#include "detect.h"
 
 #if defined(HAVE_LIBUNWIND)
 
@@ -45,8 +45,8 @@
 #endif
 #include <dlfcn.h>
 
-#include "util/u_thread.h"
-#include "util/hash_table.h"
+#include "u_thread.h"
+#include "hash_table.h"
 
 static struct hash_table* symbols_hash;
 static simple_mtx_t symbols_mutex = SIMPLE_MTX_INITIALIZER;

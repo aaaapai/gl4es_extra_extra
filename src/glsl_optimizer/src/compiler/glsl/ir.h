@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,10 +28,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "util/ralloc.h"
-#include "util/format/u_format.h"
-#include "util/half_float.h"
-#include "compiler/glsl_types.h"
+#include "../../util/ralloc.h"
+#include "../../util/format/u_format.h"
+#include "../../util/half_float.h"
+#include "../glsl_types.h"
 #include "list.h"
 #include "ir_visitor.h"
 #include "ir_hierarchical_visitor.h"
@@ -1517,7 +1517,7 @@ public:
    unsigned write_mask:4;
 };
 
-#include "ir_expression_operation.h"
+#include "../ir_expression_operation.h"
 
 extern const char *const ir_expression_operation_strings[ir_last_opcode + 1];
 extern const char *const ir_expression_operation_enum_strings[ir_last_opcode + 1];

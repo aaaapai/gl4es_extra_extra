@@ -36,31 +36,30 @@
 
 #include <stdint.h>             /* uint32_t */
 #include <stdbool.h>
-#include "c11/threads.h"
+#include "../../../include/c11/threads.h"
 
-#include "util/glheader.h"
-#include "main/glthread.h"
-#include "main/consts_exts.h"
-#include "main/shader_types.h"
-#include "main/glconfig.h"
-#include "main/menums.h"
-#include "main/config.h"
-#include "glapi/glapi.h"
-#include "math/m_matrix.h"	/* GLmatrix */
-#include "compiler/shader_enums.h"
-#include "compiler/shader_info.h"
-#include "main/formats.h"       /* MESA_FORMAT_COUNT */
-#include "compiler/glsl/list.h"
-#include "compiler/glsl/ir_uniform.h"
-#include "util/u_idalloc.h"
-#include "util/simple_mtx.h"
-#include "util/u_dynarray.h"
-#include "util/mesa-sha1.h"
-#include "vbo/vbo.h"
+#include "glheader.h"
+#include "consts_exts.h"
+#include "shader_types.h"
+#include "glconfig.h"
+#include "menums.h"
+#include "config.h"
+#include "../../mapi/glapi/glapi.h"
+#include "../math/m_matrix.h"	/* GLmatrix */
+#include "../../compiler/shader_enums.h"
+#include "../../compiler/shader_info.h"
+#include "formats.h"       /* MESA_FORMAT_COUNT */
+#include "../../util/list.h"
+#include "../../compiler/glsl/ir_uniform.h"
+#include "../../util/u_idalloc.h"
+#include "../../util/simple_mtx.h"
+#include "../../util/u_dynarray.h"
+#include "../../util/mesa-sha1.h"
+#include "../vbo/vbo.h"
 
-#include "pipe/p_state.h"
+#include "../../gallium/include/pipe/p_state.h"
 
-#include "frontend/api.h"
+#include "../../gallium/include/frontend/api.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -324,7 +323,7 @@ struct gl_colorbuffer_attrib
  */
 struct gl_vertex_format
 {
-    union gl_vertex_format_user User;
+    //union gl_vertex_format_user User;
     enum pipe_format _PipeFormat:16; /**< pipe_format for Gallium */
     GLushort _ElementSize; /**< Size of each element in bytes */
 };
@@ -2850,6 +2849,7 @@ struct gl_matrix_stack
 
 /* This has to be included here. */
 #include "dd.h"
+#include "dlist.h"
 
 
 /** Opaque declaration of display list payload data type */
@@ -3061,17 +3061,6 @@ struct gl_client_attrib_node
     struct gl_pixelstore_attrib Unpack;
 };
 
-/**
- * The VBO module implemented in src/vbo.
- */
-struct vbo_context {
-    struct gl_array_attributes current[VBO_ATTRIB_MAX];
-
-    struct gl_vertex_array_object *VAO;
-
-    struct vbo_exec_context exec;
-    struct vbo_save_context save;
-};
 
 /**
  * glEnable node for the attribute stack. (glPushAttrib/glPopAttrib)
@@ -3305,7 +3294,7 @@ struct gl_context
 
     /*@}*/
 
-    struct glthread_state GLThread;
+
 
     struct gl_config Visual;
     struct gl_framebuffer *DrawBuffer;	/**< buffer for writing */
@@ -3617,7 +3606,7 @@ struct gl_context
      * These will eventually live in the driver or elsewhere.
      */
     /*@{*/
-    struct vbo_context vbo_context;
+    //struct vbo_context vbo_context;
     struct st_context *st;
     struct pipe_screen *screen;
     struct pipe_context *pipe;

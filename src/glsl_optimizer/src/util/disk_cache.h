@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,14 +27,14 @@
 #ifdef HAVE_DLFCN_H
 #include <dlfcn.h>
 #include <stdio.h>
-#include "util/build_id.h"
+#include "build_id.h"
 #endif
 #include <assert.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <sys/stat.h>
-#include "util/mesa-sha1.h"
-#include "util/detect_os.h"
+#include "mesa-sha1.h"
+#include "detect_os.h"
 
 #ifdef __cplusplus
 extern "C" {

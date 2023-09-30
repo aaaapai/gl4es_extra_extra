@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2022 Collabora Ltd.
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 #ifndef _U_WORKLIST_
 #define _U_WORKLIST_
 
-#include "util/bitset.h"
+#include "bitset.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -32,7 +32,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "c11/threads.h"
+#include "../../include/c11/threads.h"
 #include "detect_os.h"
 
 /* Some highly performance-sensitive thread-local variables like the current GL

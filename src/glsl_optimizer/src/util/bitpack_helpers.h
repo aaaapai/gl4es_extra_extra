@@ -27,8 +27,8 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "util/macros.h"
-#include "util/u_math.h"
+#include "macros.h"
+#include "u_math.h"
 
 #ifdef HAVE_VALGRIND
 #include <valgrind.h>

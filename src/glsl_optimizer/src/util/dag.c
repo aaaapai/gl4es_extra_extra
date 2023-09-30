@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Broadcom
+ * Copyright Â© 2019 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,8 @@
  * IN THE SOFTWARE.
  */
 
-#include "util/set.h"
-#include "util/dag.h"
+#include "set.h"
+#include "dag.h"
 #include <stdio.h>
 
 static void

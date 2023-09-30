@@ -1397,7 +1397,7 @@ static const flex_int16_t yy_chk[1684] =
 #line 1 "../src/compiler/glsl/glsl_lexer.ll"
 #line 2 "../src/compiler/glsl/glsl_lexer.ll"
 /*
- * Copyright © 2008, 2009 Intel Corporation
+ * Copyright Â© 2008, 2009 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -1420,11 +1420,11 @@ static const flex_int16_t yy_chk[1684] =
  */
 #include <ctype.h>
 #include <limits.h>
-#include "util/strtod.h"
+#include "../../util/strtod.h"
 #include "ast.h"
 #include "glsl_parser_extras.h"
 #include "glsl_parser.h"
-#include "main/consts_exts.h"
+#include "../../mesa/main/consts_exts.h"
 
 static int classify_identifier(struct _mesa_glsl_parse_state *, const char *,
 			       unsigned name_len, YYSTYPE *output);

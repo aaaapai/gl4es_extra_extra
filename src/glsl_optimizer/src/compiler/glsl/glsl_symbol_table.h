@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@
 
 #include <new>
 
-#include "program/symbol_table.h"
+#include "../../mesa/program/symbol_table.h"
 #include "ir.h"
 
 class symbol_table_entry;

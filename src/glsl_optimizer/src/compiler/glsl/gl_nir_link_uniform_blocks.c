@@ -21,11 +21,11 @@
  * IN THE SOFTWARE.
  */
 
-#include "nir.h"
+#include "../nir/nir.h"
 #include "gl_nir_linker.h"
 #include "ir_uniform.h" /* for gl_uniform_storage */
 #include "linker_util.h"
-#include "main/shader_types.h"
+#include "../../mesa/main/shader_types.h"
 
 /**
  * This file contains code to do a nir-based linking for uniform blocks. This

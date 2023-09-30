@@ -143,12 +143,12 @@
  *   }
  */
 
-#include "nir.h"
-#include "nir_builder.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
 #include "gl_nir.h"
 #include "gl_nir_linker.h"
-#include "program/prog_instruction.h"
-#include "main/mtypes.h"
+#include "../../mesa/program/prog_instruction.h"
+#include "../../mesa/main/mtypes.h"
 
 /**
  * Visitor that performs varying packing.  For each varying declared in the

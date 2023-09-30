@@ -29,9 +29,9 @@
 #include <math.h>
 #include <float.h>
 
-#include "util/detect.h"
-#include "util/u_memory.h"
-#include "util/format/u_format_tests.h"
+#include "../detect.h"
+#include "../u_memory.h"
+#include "u_format_tests.h"
 
 
 /*

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 #include "ir.h"
 #include "ir_visitor.h"
 
-#include "program/symbol_table.h"
+#include "../../mesa/program/symbol_table.h"
 
 /**
  * Abstract base class of visitors of IR instruction trees

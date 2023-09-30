@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Igalia
+ * Copyright Â© 2017 Igalia
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 #ifndef NIR_GL_TYPES_H
 #define NIR_GL_TYPES_H
 
-#include "util/glheader.h"
+#include "../util/glheader.h"
 
 #ifdef __cplusplus
 extern "C" {

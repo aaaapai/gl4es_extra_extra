@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Broadcom
+ * Copyright Â© 2019 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,8 @@
  */
 
 #include "nir_schedule.h"
-#include "util/dag.h"
-#include "util/u_dynarray.h"
+#include "../../util/dag.h"
+#include "../../util/u_dynarray.h"
 
 /** @file
  *

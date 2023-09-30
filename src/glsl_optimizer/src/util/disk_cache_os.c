@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,10 +31,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "util/compress.h"
-#include "util/crc32.h"
-#include "util/disk_cache.h"
-#include "util/disk_cache_os.h"
+#include "compress.h"
+#include "crc32.h"
+#include "disk_cache.h"
+#include "disk_cache_os.h"
 
 #if DETECT_OS_WINDOWS
 
@@ -95,11 +95,11 @@ disk_cache_get_function_identifier(void *ptr, struct mesa_sha1 *ctx)
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "util/blob.h"
-#include "util/crc32.h"
-#include "util/u_debug.h"
-#include "util/ralloc.h"
-#include "util/rand_xor.h"
+#include "blob.h"
+#include "crc32.h"
+#include "u_debug.h"
+#include "ralloc.h"
+#include "rand_xor.h"
 
 /* Create a directory named 'path' if it does not already exist.
  *

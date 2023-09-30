@@ -27,8 +27,8 @@
 
 #include "list.h"
 #include "glsl_parser_extras.h"
-#include "compiler/glsl_types.h"
-#include "util/bitset.h"
+#include "../glsl_types.h"
+#include "../../util/bitset.h"
 
 struct _mesa_glsl_parse_state;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2021 Google LLC
+ * Copyright Â© 2021 Google LLC
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,8 @@
  * IN THE SOFTWARE.
  */
 
-#include "util/detect_arch.h"
-#include "util/format/u_format.h"
+#include "../detect_arch.h"
+#include "u_format.h"
 
 #if (DETECT_ARCH_AARCH64 || DETECT_ARCH_ARM) && !defined(NO_FORMAT_ASM) && !defined(__SOFTFP__)
 
@@ -35,7 +35,7 @@
 
 #include <arm_neon.h>
 #include "u_format_pack.h"
-#include "util/u_cpu_detect.h"
+#include "../u_cpu_detect.h"
 
 static void
 util_format_b8g8r8a8_unorm_unpack_rgba_8unorm_neon(uint8_t *restrict dst, const uint8_t *restrict src, unsigned width)

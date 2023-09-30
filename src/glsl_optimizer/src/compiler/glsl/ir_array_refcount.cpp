@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,8 +30,8 @@
 #include "ir.h"
 #include "ir_visitor.h"
 #include "ir_array_refcount.h"
-#include "compiler/glsl_types.h"
-#include "util/hash_table.h"
+#include "../glsl_types.h"
+#include "../../util/hash_table.h"
 
 ir_array_refcount_visitor::ir_array_refcount_visitor()
    : last_array_deref(0), derefs(0), num_derefs(0), derefs_size(0)

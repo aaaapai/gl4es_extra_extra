@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,12 +37,12 @@
  * Converts double trunc, ceil, floor, round to fract
  */
 
-#include "program/prog_instruction.h" /* for swizzle */
-#include "compiler/glsl_types.h"
+#include "../../mesa/program/prog_instruction.h" /* for swizzle */
+#include "../glsl_types.h"
 #include "ir.h"
 #include "ir_builder.h"
 #include "ir_optimization.h"
-#include "util/half_float.h"
+#include "../../util/half_float.h"
 
 #include <math.h>
 

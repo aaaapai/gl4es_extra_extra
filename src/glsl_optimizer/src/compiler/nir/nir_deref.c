@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #include "nir.h"
 #include "nir_builder.h"
 #include "nir_deref.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 
 static bool
 is_trivial_deref_cast(nir_deref_instr *cast)

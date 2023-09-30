@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,9 +27,9 @@
 #include <getopt.h>
 
 #include "glcpp.h"
-#include "main/mtypes.h"
-#include "main/shaderobj.h"
-#include "util/strtod.h"
+#include "../../../mesa/main/mtypes.h"
+#include "../../../mesa/main/shaderobj.h"
+#include "../../../util/strtod.h"
 
 extern int glcpp_parser_debug;
 

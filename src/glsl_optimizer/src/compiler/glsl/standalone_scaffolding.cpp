@@ -1,5 +1,5 @@
 /*
- * Copyright © 2011 Intel Corporation
+ * Copyright Â© 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,9 +32,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "util/ralloc.h"
-#include "util/strtod.h"
-#include "main/mtypes.h"
+#include "../../util/ralloc.h"
+#include "../../util/strtod.h"
+#include "../../mesa/main/mtypes.h"
 #include "string_to_uint_map.h"
 
 void

@@ -23,8 +23,8 @@
  */
 
 #include "nir_builder.h"
-#include "util/u_math.h"
-#include "util/bitscan.h"
+#include "../../util/u_math.h"
+#include "../../util/bitscan.h"
 
 static nir_intrinsic_instr *
 dup_mem_intrinsic(nir_builder *b, nir_intrinsic_instr *intrin,

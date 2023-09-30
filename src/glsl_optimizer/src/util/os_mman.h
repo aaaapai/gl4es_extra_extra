@@ -38,7 +38,7 @@
 #include <assert.h>
 #include <stddef.h>
 
-#include "util/detect_os.h"
+#include "detect_os.h"
 
 #if DETECT_OS_UNIX
 #  include <sys/mman.h>

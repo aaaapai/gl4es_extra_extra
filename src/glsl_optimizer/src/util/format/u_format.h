@@ -30,11 +30,11 @@
 #define U_FORMAT_H
 
 
-#include "util/format/u_formats.h"
-#include "pipe/p_defines.h"
-#include "util/u_debug.h"
+#include "u_formats.h"
+#include "../../gallium/include/pipe/p_defines.h"
+#include "../u_debug.h"
 
-#include "c99_compat.h"
+#include "../../../include/c99_compat.h"
 
 union pipe_color_union;
 struct pipe_screen;

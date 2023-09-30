@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Collabora Ltd.
+ * Copyright Â© 2020 Collabora Ltd.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #ifndef NIR_CONVERSION_BUILDER_H
 #define NIR_CONVERSION_BUILDER_H
 
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 #include "nir_builder.h"
 #include "nir_builtin_builder.h"
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 Intel Corporation
+ * Copyright Â© 2013 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #define LINK_UNIFORM_BLOCK_ACTIVE_VISITOR_H
 
 #include "ir.h"
-#include "util/hash_table.h"
+#include "../../util/hash_table.h"
 
 struct uniform_block_array_elements {
    unsigned *array_elements;

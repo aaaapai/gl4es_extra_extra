@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #ifndef S_EXPRESSION_H
 #define S_EXPRESSION_H
 
-#include "util/strtod.h"
+#include "../../util/strtod.h"
 #include "list.h"
 
 /* Type-safe downcasting macros (also safe to pass NULL) */

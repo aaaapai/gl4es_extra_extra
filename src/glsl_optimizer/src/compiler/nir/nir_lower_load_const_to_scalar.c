@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Broadcom
+ * Copyright Â© 2015 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
  * IN THE SOFTWARE.
  */
 
-#include "util/macros.h"
+#include "../../util/macros.h"
 #include "nir.h"
 #include "nir_builder.h"
 

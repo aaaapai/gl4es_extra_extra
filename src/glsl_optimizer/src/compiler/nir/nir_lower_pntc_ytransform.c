@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Igalia S.L.
+ * Copyright Â© 2020 Igalia S.L.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "program/prog_instruction.h"
+#include "../../mesa/program/prog_instruction.h"
 
 /* Lower gl_PointCoord to account for user requested point-coord origin
  * and for whether draw buffer is flipped.

@@ -27,7 +27,7 @@
  *
  **************************************************************************/
 
-#include "util/format/u_format.h"
+#include "u_format.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

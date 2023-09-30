@@ -1,5 +1,5 @@
 /*
- * Copyright © 2008, 2009 Intel Corporation
+ * Copyright Â© 2008, 2009 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -35,14 +35,14 @@
 #include "program.h"
 #include "standalone_scaffolding.h"
 #include "standalone.h"
-#include "util/set.h"
+#include "../../util/set.h"
 #include "linker.h"
 #include "glsl_parser_extras.h"
 #include "ir_builder_print_visitor.h"
 #include "builtin_functions.h"
 #include "opt_add_neg_to_sub.h"
-#include "main/mtypes.h"
-#include "program/program.h"
+#include "../../mesa/main/mtypes.h"
+#include "program.h"
 
 class dead_variable_visitor : public ir_hierarchical_visitor {
 public:

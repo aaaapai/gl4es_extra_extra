@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,14 +32,14 @@
 #include "ir.h"
 #include "ir_optimization.h"
 #include "program.h"
-#include "compiler/nir/nir_control_flow.h"
-#include "compiler/nir/nir_builder.h"
-#include "compiler/nir/nir_builtin_builder.h"
-#include "compiler/nir/nir_deref.h"
-#include "main/errors.h"
-#include "main/mtypes.h"
-#include "main/shaderobj.h"
-#include "util/u_math.h"
+#include "../nir/nir_control_flow.h"
+#include "../nir/nir_builder.h"
+#include "../nir/nir_builtin_builder.h"
+#include "../nir/nir_deref.h"
+#include "../../mesa/main/errors.h"
+#include "../../mesa/main/mtypes.h"
+#include "../../mesa/main/shaderobj.h"
+#include "../../util/u_math.h"
 
 /*
  * pass to lower GLSL IR to NIR

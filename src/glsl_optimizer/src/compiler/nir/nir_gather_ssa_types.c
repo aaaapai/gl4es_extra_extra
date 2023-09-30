@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Intel Corporation
+ * Copyright Â© 2019 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  */
 
 #include "nir.h"
-#include "util/bitset.h"
+#include "../../util/bitset.h"
 
 static void
 set_type(unsigned idx, nir_alu_type type, BITSET_WORD *float_types,

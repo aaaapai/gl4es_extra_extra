@@ -23,7 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "main/extensions.h"
+#include "extensions.h"
 
 /**
  * Given a member \c x of struct gl_extensions, return offset of

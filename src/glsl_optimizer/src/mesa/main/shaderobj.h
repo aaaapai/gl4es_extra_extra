@@ -27,10 +27,10 @@
 #define SHADEROBJ_H
 
 
-#include "util/glheader.h"
-#include "compiler/shader_enums.h"
-#include "link_program.h"
-#include "util/macros.h"
+#include "glheader.h"
+#include "../../compiler/shader_enums.h"
+#include "../program/link_program.h"
+#include "macros.h"
 
 
 #ifdef __cplusplus

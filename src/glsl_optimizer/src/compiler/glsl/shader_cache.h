@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #ifndef SHADER_CACHE_H
 #define SHADER_CACHE_H
 
-#include "util/disk_cache.h"
+#include "../../util/disk_cache.h"
 
 struct gl_context;
 struct gl_shader_program;

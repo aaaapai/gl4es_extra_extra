@@ -32,6 +32,7 @@
 #include "os_file.h"
 #include "ralloc.h"
 #include "simple_mtx.h"
+#include "android/log.h"
 
 #include <stdarg.h>
 
@@ -55,8 +56,7 @@
 #if DETECT_OS_ANDROID
 #  define LOG_TAG "MESA"
 #  include <unistd.h>
-#  include <log/log.h>
-#  include <cutils/properties.h>
+//#  include <log/log.h>
 #elif DETECT_OS_LINUX || DETECT_OS_CYGWIN || DETECT_OS_SOLARIS || DETECT_OS_HURD
 #  include <unistd.h>
 #elif DETECT_OS_OPENBSD || DETECT_OS_FREEBSD
@@ -123,7 +123,8 @@ os_log_message(const char *message)
    fputs(message, fout);
    fflush(fout);
 #  if DETECT_OS_ANDROID
-   LOG_PRI(ANDROID_LOG_ERROR, LOG_TAG, "%s", message);
+   //LOG_PRI(ANDROID_LOG_ERROR, LOG_TAG, "%s", message);
+    printf("%s", message);
 #  endif
 #endif
 }

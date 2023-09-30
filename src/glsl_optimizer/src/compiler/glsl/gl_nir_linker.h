@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Intel Corporation
+ * Copyright Â© 2017 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,9 +26,9 @@
 
 #include <stdbool.h>
 
-#include "nir.h"
-#include "util/glheader.h"
-#include "main/menums.h"
+#include "../nir/nir.h"
+#include "../../util/glheader.h"
+#include "../../mesa/main/menums.h"
 
 #ifdef __cplusplus
 extern "C" {

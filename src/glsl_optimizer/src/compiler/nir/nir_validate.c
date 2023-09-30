@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,8 +27,8 @@
 
 #include "nir.h"
 #include "nir_xfb_info.h"
-#include "c11/threads.h"
-#include "util/simple_mtx.h"
+#include "../../../include/c11/threads.h"
+#include "../../util/simple_mtx.h"
 #include <assert.h>
 
 /*

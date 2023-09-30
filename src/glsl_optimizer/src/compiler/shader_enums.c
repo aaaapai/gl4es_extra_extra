@@ -1,7 +1,7 @@
 /*
  * Mesa 3-D graphics library
  *
- * Copyright © 2015 Red Hat
+ * Copyright Â© 2015 Red Hat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,8 +27,8 @@
  */
 
 #include "shader_enums.h"
-#include "util/macros.h"
-#include "mesa/main/config.h"
+#include "../util/macros.h"
+#include "../mesa/main/config.h"
 
 #define ENUM(x) [x] = #x
 #define NAME(val) ((((val) < ARRAY_SIZE(names)) && names[(val)]) ? names[(val)] : "UNKNOWN")

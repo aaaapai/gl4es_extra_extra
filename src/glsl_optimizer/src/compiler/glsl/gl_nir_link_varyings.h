@@ -31,11 +31,11 @@
  */
 
 
-#include "util/glheader.h"
-#include "program/prog_parameter.h"
-#include "util/bitset.h"
+#include "../../util/glheader.h"
+#include "../../mesa/program/prog_parameter.h"
+#include "../../util/bitset.h"
 
-#include "nir.h"
+#include "../nir/nir.h"
 
 struct gl_shader_program;
 struct gl_shader_stage;

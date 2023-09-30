@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Red Hat
+ * Copyright Â© 2016 Red Hat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@
 #define _NIR_SEARCH_HELPERS_
 
 #include "nir.h"
-#include "util/bitscan.h"
+#include "../../util/bitscan.h"
 #include "nir_range_analysis.h"
 #include <math.h>
 

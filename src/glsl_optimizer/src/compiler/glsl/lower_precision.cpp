@@ -25,16 +25,16 @@
  * \file lower_precision.cpp
  */
 
-#include "main/macros.h"
-#include "main/consts_exts.h"
-#include "compiler/glsl_types.h"
+#include "../../util/macros.h"
+#include "../../mesa/main/consts_exts.h"
+#include "../glsl_types.h"
 #include "ir.h"
 #include "ir_builder.h"
 #include "ir_optimization.h"
 #include "ir_rvalue_visitor.h"
-#include "util/half_float.h"
-#include "util/set.h"
-#include "util/hash_table.h"
+#include "../../util/half_float.h"
+#include "../../util/set.h"
+#include "../../util/hash_table.h"
 #include <vector>
 
 namespace {

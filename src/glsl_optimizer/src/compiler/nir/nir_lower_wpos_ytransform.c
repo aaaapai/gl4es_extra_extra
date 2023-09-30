@@ -1,5 +1,5 @@
 /*
- * Copyright © 2015 Red Hat
+ * Copyright Â© 2015 Red Hat
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 
 #include "nir.h"
 #include "nir_builder.h"
-#include "program/prog_instruction.h"
+#include "../../mesa/program/prog_instruction.h"
 
 /* Lower gl_FragCoord (and fddy) to account for driver's requested coordinate-
  * origin and pixel-center vs. shader.  If transformation is required, a

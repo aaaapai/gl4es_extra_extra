@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Connor Abbott
+ * Copyright Â© 2017 Connor Abbott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #define _NIR_SERIALIZE_H
 
 #include "nir.h"
-#include "util/blob.h"
+#include "../../util/blob.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -38,6 +38,7 @@
 
 #include "../compiler/glsl/string_to_uint_map.h"
 #include "../compiler/glsl/linker.h"
+#include "../compiler/glsl/glsl_parser_extras.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,90 +54,7 @@ GlslConvert::~GlslConvert()
 
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
-bool GlslConvert::CreateGraph(
-	std::string vShaderSource,
-	ShaderStage vShaderType,
-	ApiTarget vTarget,
-	int vGLSLVersion,
-	std::function<void(struct _mesa_glsl_parse_state*)> vFinishFunc)
-{
-	bool res = false;
-	if (vShaderSource.empty()) return res;
-
-	struct gl_shader* shader = rzalloc(NULL, struct gl_shader);
-
-	shader->Stage = (gl_shader_stage)vShaderType;
-	switch (shader->Stage)
-	{
-	case gl_shader_stage::MESA_SHADER_VERTEX:
-		shader->Type = GL_VERTEX_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_TESS_CTRL:
-		shader->Type = GL_TESS_CONTROL_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_TESS_EVAL:
-		shader->Type = GL_TESS_EVALUATION_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_GEOMETRY:
-		shader->Type = GL_GEOMETRY_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_FRAGMENT:
-		shader->Type = GL_FRAGMENT_SHADER;
-		break;
-	case gl_shader_stage::MESA_SHADER_KERNEL:
-		// todo : opencl kernel target to generate after the others
-		//shader->Type = GL_KERNEL_SHADER;
-		break;
-	default:
-		break;
-	}
-
-	struct gl_context local_ctx;
-	struct gl_context* ctx = &local_ctx;
-	InitContext(ctx, vTarget, vGLSLVersion);
-
-	ir_variable::temporaries_allocate_names = true;
-
-	const std::string& input = vShaderSource;
-
-	struct _mesa_glsl_parse_state* state
-		= new(shader) _mesa_glsl_parse_state(ctx, shader->Stage, shader);
-
-	shader->Source = input.c_str();
-	const char* source = shader->Source;
-
-	state->error = glcpp_preprocess(state, &source, &state->info_log, add_builtin_defines, state, ctx) != 0;
-
-	if (!state->error)
-	{
-		_mesa_glsl_lexer_ctor(state, source);
-		_mesa_glsl_parse(state);
-		_mesa_glsl_lexer_dtor(state);
-	}
-
-	if (!state->error)
-	{
-		if (vFinishFunc)
-		{
-			vFinishFunc(state);
-		}
-	}
-	else if (state->error)
-	{
-		res = state->info_log;
-	}
-
-	ralloc_free(state);
-	ralloc_free(shader);
-
-	ClearContext(ctx);
-
-	return res;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -210,7 +128,7 @@ char * GlslConvert::Optimize(
 
 	if (!(vOptimizationStruct.controlFlags & ControlFlags::CONTROL_SKIP_PREPROCESSING))
 	{
-		state->error = glcpp_preprocess(state, &source, &state->info_log, add_builtin_defines, state, ctx) != 0;
+        state->error = glcpp_preprocess(state, &source, &state->info_log, add_builtin_defines, state, ctx) != 0;
 	}
 
 	if (!state->error)
@@ -425,55 +343,57 @@ void GlslConvert::DO_Optimization_Pass(
 
 		if (vCompilerFlags && vOptimizationStruct)
 		{
-			OPT(OPT_lower_instructions, lower_instructions,
-				vIr, vOptimizationStruct->instructionToLowerFlags);
+			//OPT(OPT_lower_instructions, lower_instructions,vIr, vOptimizationStruct->instructionToLowerFlags);
 			if (linked)
 			{
 				OPT(OPT_function_inlining, do_function_inlining, vIr);
-				OPT(OPT_dead_functions, do_dead_functions, vIr,
-					vOptimizationStruct->deadFunctionOptions.entryFunc.c_str());
-				OPT(OPT_structure_splitting, do_structure_splitting, vIr);
+				//OPT(OPT_dead_functions, do_dead_functions, vIr, vOptimizationStruct->deadFunctionOptions.entryFunc.c_str());
+				//OPT(OPT_structure_splitting, do_structure_splitting, vIr);
 			}
 			propagate_invariance(vIr);
 			OPT(OPT_if_simplification, do_if_simplification, vIr);
 			OPT(OPT_flatten_nested_if_blocks, opt_flatten_nested_if_blocks, vIr);
-			OPT(OPT_conditional_discard, opt_conditional_discard, vIr);
-			OPT(OPT_copy_propagation_elements, do_copy_propagation_elements, vIr);
+			//OPT(OPT_conditional_discard, opt_conditional_discard, vIr);
+			//OPT(OPT_copy_propagation_elements, do_copy_propagation_elements, vIr);
 			if (vCompilerFlags->OptimizeForAOS && !linked)
 				OPT(OPT_flip_matrices, opt_flip_matrices, vIr);
 			if (linked && vCompilerFlags->OptimizeForAOS)
 			{
-				OPT(OPT_vectorize, do_vectorize, vIr);
+				//OPT(OPT_vectorize, do_vectorize, vIr);
 			}
 			if (linked)
-				OPT(OPT_dead_code, do_dead_code, vIr,
-					!vOptimizationStruct->deadCodeOptions.keep_only_assigned_uniforms);
+                printf("do");
+				//OPT(OPT_dead_code, do_dead_code, vIr, !vOptimizationStruct->deadCodeOptions.keep_only_assigned_uniforms);
 			else
 				OPT(OPT_dead_code_unlinked, do_dead_code_unlinked, vIr);
 			OPT(OPT_dead_code_local, do_dead_code_local, vIr);
 			OPT(OPT_tree_grafting, do_tree_grafting, vIr);
-			OPT(OPT_constant_propagation, do_constant_propagation, vIr);
-			if (linked)
-				OPT(OPT_constant_variable, do_constant_variable, vIr);
+			//OPT(OPT_constant_propagation, do_constant_propagation, vIr);
+			/*
+            if (linked)
+                OPT(OPT_constant_variable, do_constant_variable, vIr);
 			else
 				OPT(OPT_constant_variable_unlinked, do_constant_variable_unlinked, vIr);
-			OPT(OPT_constant_folding, do_constant_folding, vIr);
+			 */
+			//OPT(OPT_constant_folding, do_constant_folding, vIr);
 			OPT_BIS(OPT_minmax_prune, do_minmax_prune, vIr);
 			OPT_BIS(OPT_rebalance_tree, do_rebalance_tree, vIr);
 			OPT(OPT_algebraic, do_algebraic, vIr,
 				vOptimizationStruct->algebraicOptions.native_integers, vCompilerFlags);
-			OPT(OPT_lower_jumps, do_lower_jumps, vIr,
+			/*
+            OPT(OPT_lower_jumps, do_lower_jumps, vIr,
 				vOptimizationStruct->lowerJumpsOptions.pull_out_jumps,
 				vOptimizationStruct->lowerJumpsOptions.lower_sub_return,
 				vOptimizationStruct->lowerJumpsOptions.lower_main_return,
 				vOptimizationStruct->lowerJumpsOptions.lower_continue,
 				vOptimizationStruct->lowerJumpsOptions.lower_break);
-			OPT(OPT_vec_index_to_swizzle, do_vec_index_to_swizzle, vIr);
-			OPT_BIS(OPT_lower_vector_insert, lower_vector_insert, vIr,
-				vOptimizationStruct->lowerVectorInsertOptions.lower_nonconstant_index);
-			OPT(OPT_optimize_swizzles, optimize_swizzles, vIr);
-			OPT_BIS(OPT_optimize_split_arrays, optimize_split_arrays, vIr, linked);
-			OPT(OPT_optimize_redundant_jumps, optimize_redundant_jumps, vIr);
+			 */
+			//OPT(OPT_vec_index_to_swizzle, do_vec_index_to_swizzle, vIr);
+			//OPT_BIS(OPT_lower_vector_insert, lower_vector_insert, vIr, vOptimizationStruct->lowerVectorInsertOptions.lower_nonconstant_index);
+			//OPT(OPT_optimize_swizzles, optimize_swizzles, vIr);
+			//OPT_BIS(OPT_optimize_split_arrays, optimize_split_arrays, vIr, linked);
+			//OPT(OPT_optimize_redundant_jumps, optimize_redundant_jumps, vIr);
+            /*
 			if (OPT_BIS_FLAGS(vOptimizationStruct->optimizationFlags_Bis, OPT_set_unroll_Loops))
 			{
 				if (vCompilerFlags->MaxUnrollIterations)
@@ -500,7 +420,6 @@ void GlslConvert::DO_Optimization_Pass(
 							 *   (assign  (x) (var_ref v124)  (expression int + (var_ref v124)
 							 *      (constant int (1)) ) )
 							 *   ))
-							 */
 							loop_progress |= do_lower_jumps(vIr,
 								true,
 								true,
@@ -512,20 +431,22 @@ void GlslConvert::DO_Optimization_Pass(
 					}
 					delete ls;
 				}
-			}
-			OPT(OPT_lower_texture_projection, do_lower_texture_projection, vIr);
-			if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_if_to_cond_assign))
+			}*/
+			//OPT(OPT_lower_texture_projection, do_lower_texture_projection, vIr);
+			/*
+            if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_if_to_cond_assign))
 			{
 				gl_shader_stage stage = (gl_shader_stage)vOptimizationStruct->stage;
 				progress |= lower_if_to_cond_assign(stage, vIr,
 					vOptimizationStruct->lowerIfToCondAssignOptions.max_depth,
 					vOptimizationStruct->lowerIfToCondAssignOptions.min_branch_cost);
-			}
+			}*/
 			OPT(OPT_mat_op_to_vec, do_mat_op_to_vec, vIr);
 			OPT(OPT_vec_index_to_cond_assign, do_vec_index_to_cond_assign, vIr);
 			OPT(OPT_lower_discard, lower_discard, vIr);
-			OPT(OPT_lower_noise, lower_noise, vIr);
-			if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_variable_index_to_cond_assign))
+			//OPT(OPT_lower_noise, lower_noise, vIr);
+			/*
+            if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_variable_index_to_cond_assign))
 			{
 				gl_shader_stage stage = (gl_shader_stage)vOptimizationStruct->stage;
 				progress |= lower_variable_index_to_cond_assign(
@@ -534,8 +455,8 @@ void GlslConvert::DO_Optimization_Pass(
 					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_output,
 					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_temp,
 					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_uniform);
-			}
-			OPT(OPT_lower_quadop_vector, lower_quadop_vector, vIr, vOptimizationStruct->lowerQuadopVector.dont_lower_swz);
+			}*/
+			//OPT(OPT_lower_quadop_vector, lower_quadop_vector, vIr, vOptimizationStruct->lowerQuadopVector.dont_lower_swz);
 
 			validate_ir_tree(vIr);
 		}
@@ -551,28 +472,16 @@ static void init_gl_program(struct gl_program* prog, bool is_arb_asm, GLenum tar
 {
 	prog->RefCount = 1;
 	prog->Format = GL_PROGRAM_FORMAT_ASCII_ARB;
-	prog->is_arb_asm = is_arb_asm;
+	//prog->is_arb_asm = is_arb_asm;
 	prog->info.stage = (gl_shader_stage)_mesa_program_enum_to_shader_stage(target);
 }
 
-static struct gl_program* new_program(UNUSED struct gl_context* ctx, GLenum target,
+static struct gl_program* new_program(UNUSED struct gl_context* ctx, gl_shader_stage target,
 	UNUSED GLuint id, bool is_arb_asm)
 {
-	switch (target) {
-	case GL_VERTEX_PROGRAM_ARB: /* == GL_VERTEX_PROGRAM_NV */
-	case GL_GEOMETRY_PROGRAM_NV:
-	case GL_TESS_CONTROL_PROGRAM_NV:
-	case GL_TESS_EVALUATION_PROGRAM_NV:
-	case GL_FRAGMENT_PROGRAM_ARB:
-	case GL_COMPUTE_PROGRAM_NV: {
-		struct gl_program* prog = rzalloc(NULL, struct gl_program);
-		init_gl_program(prog, is_arb_asm, target);
-		return prog;
-	}
-	default:
-		printf("bad target in new_program\n");
-		return NULL;
-	}
+    struct gl_program* prog = rzalloc(NULL, struct gl_program);
+    init_gl_program(prog, is_arb_asm, target);
+    return prog;
 }
 
 void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVersion)
@@ -881,21 +790,21 @@ void GlslConvert::FillCompilerOptions(gl_shader_compiler_options* vCompileOption
 	if (vCompileOptions && vOptimizationStruct)
 	{
 #define COND(FLAG) (&vOptimizationStruct->compilerFlags && GlslConvert::CompilerFlags::FLAG)
-		vCompileOptions->EmitNoLoops = COND(COMPILER_EmitNoLoops);
+		//vCompileOptions->EmitNoLoops = COND(COMPILER_EmitNoLoops);
 		vCompileOptions->EmitNoCont = COND(COMPILER_EmitNoCont);
 		vCompileOptions->EmitNoMainReturn = COND(COMPILER_EmitNoMainReturn);
-		vCompileOptions->EmitNoPow = COND(COMPILER_EmitNoPow);
-		vCompileOptions->EmitNoSat = COND(COMPILER_EmitNoSat);
+		//vCompileOptions->EmitNoPow = COND(COMPILER_EmitNoPow);
+		//vCompileOptions->EmitNoSat = COND(COMPILER_EmitNoSat);
 		vCompileOptions->LowerCombinedClipCullDistance = COND(COMPILER_LowerCombinedClipCullDistance);
 		vCompileOptions->EmitNoIndirectInput = COND(COMPILER_EmitNoIndirectInput);
 		vCompileOptions->EmitNoIndirectOutput = COND(COMPILER_EmitNoIndirectOutput);
 		vCompileOptions->EmitNoIndirectTemp = COND(COMPILER_EmitNoIndirectTemp);
 		vCompileOptions->EmitNoIndirectUniform = COND(COMPILER_EmitNoIndirectUniform);
-		vCompileOptions->EmitNoIndirectSampler = COND(COMPILER_EmitNoIndirectSampler);
+		//vCompileOptions->EmitNoIndirectSampler = COND(COMPILER_EmitNoIndirectSampler);
 		vCompileOptions->MaxIfDepth = vOptimizationStruct->instructionToLower.MaxIfDepth;
-		vCompileOptions->MaxUnrollIterations = vOptimizationStruct->instructionToLower.MaxUnrollIterations;
+		//vCompileOptions->MaxUnrollIterations = vOptimizationStruct->instructionToLower.MaxUnrollIterations;
 		vCompileOptions->OptimizeForAOS = COND(COMPILER_OptimizeForAOS);
-		vCompileOptions->LowerBufferInterfaceBlocks = COND(COMPILER_LowerBufferInterfaceBlocks);
+		//vCompileOptions->LowerBufferInterfaceBlocks = COND(COMPILER_LowerBufferInterfaceBlocks);
 		vCompileOptions->ClampBlockIndicesToArrayBounds = COND(COMPILER_ClampBlockIndicesToArrayBounds);
 		vCompileOptions->PositionAlwaysInvariant = COND(COMPILER_PositionAlwaysInvariant);
 #undef COND

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Intel Corporation
+ * Copyright Â© 2018 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,9 @@
 #ifndef GLSL_LINKER_UTIL_H
 #define GLSL_LINKER_UTIL_H
 
-#include "util/bitset.h"
-#include "util/glheader.h"
-#include "compiler/glsl/list.h"
+#include "../../util/bitset.h"
+#include "../../util/glheader.h"
+#include "list.h"
 
 struct gl_constants;
 struct gl_shader_program;

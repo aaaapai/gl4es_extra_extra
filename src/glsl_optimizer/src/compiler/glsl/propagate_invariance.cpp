@@ -1,5 +1,5 @@
 /*
- * Copyright © 2016 Intel Corporation
+ * Copyright Â© 2016 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@
 #include "ir_visitor.h"
 #include "ir_rvalue_visitor.h"
 #include "ir_optimization.h"
-#include "compiler/glsl_types.h"
+#include "../glsl_types.h"
 
 namespace {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Advanced Micro Devices, Inc.
+ * Copyright Â© 2018 Advanced Micro Devices, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -39,7 +39,7 @@
 
 #include "fast_idiv_by_const.h"
 #include "u_math.h"
-#include "util/macros.h"
+#include "macros.h"
 #include <limits.h>
 #include <assert.h>
 

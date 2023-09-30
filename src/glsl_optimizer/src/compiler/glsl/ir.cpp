@@ -22,9 +22,9 @@
  */
 #include <string.h>
 #include "ir.h"
-#include "util/half_float.h"
-#include "util/bitscan.h"
-#include "compiler/glsl_types.h"
+#include "../../util/half_float.h"
+#include "../../util/bitscan.h"
+#include "../glsl_types.h"
 #include "glsl_parser_extras.h"
 
 

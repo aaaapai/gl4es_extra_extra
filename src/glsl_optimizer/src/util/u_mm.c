@@ -23,11 +23,11 @@
  **************************************************************************/
 
 
-#include "util/u_debug.h"
+#include "u_debug.h"
 
-#include "util/u_memory.h"
-#include "util/u_mm.h"
-#include "util/macros.h"
+#include "u_memory.h"
+#include "u_mm.h"
+#include "macros.h"
 
 
 void

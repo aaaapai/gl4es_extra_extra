@@ -32,8 +32,8 @@
  * @author Samuel Pitoiset <samuel.pitoiset@gmail.com>
  */
 
-#include "util/u_idalloc.h"
-#include "util/u_math.h"
+#include "u_idalloc.h"
+#include "u_math.h"
 #include <stdlib.h>
 
 static void

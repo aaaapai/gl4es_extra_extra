@@ -29,7 +29,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include "util/u_cpu_detect.h"
+#include "u_cpu_detect.h"
 
 #if defined(USE_X86_64_ASM)
 #include <immintrin.h>

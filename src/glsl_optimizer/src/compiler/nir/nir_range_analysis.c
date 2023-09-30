@@ -24,10 +24,10 @@
 #include <float.h>
 #include "nir.h"
 #include "nir_range_analysis.h"
-#include "util/hash_table.h"
-#include "util/u_math.h"
-#include "util/u_dynarray.h"
-#include "c99_alloca.h"
+#include "../../util/hash_table.h"
+#include "../../util/u_math.h"
+#include "../../util/u_dynarray.h"
+#include "../../../include/c99_alloca.h"
 
 /**
  * Analyzes a sequence of operations to determine some aspects of the range of

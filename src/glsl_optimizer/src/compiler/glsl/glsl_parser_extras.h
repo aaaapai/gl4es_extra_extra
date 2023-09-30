@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Intel Corporation
+ * Copyright Â© 2010 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,6 +32,18 @@
 
 #include <stdlib.h>
 #include "glsl_symbol_table.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern void add_builtin_defines(struct _mesa_glsl_parse_state *state,
+                                void(*add_builtin_define)(struct glcpp_parser *, const char *, int),
+                                struct glcpp_parser *data,
+                                unsigned version,
+                                bool es);
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 /* THIS is a macro defined somewhere deep in the Windows MSVC header files.
  * Undefine it here to avoid collision with the lexer's THIS token.
@@ -399,6 +411,7 @@ struct _mesa_glsl_parse_state {
    bool compat_shader;
    unsigned language_version;
    unsigned forced_language_version;
+   unsigned original_language_version;
    /* Bitfield of ir_variable_mode to zero init */
    uint32_t zero_init;
    unsigned gl_version;

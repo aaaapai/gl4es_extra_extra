@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Microsoft Corporation
+ * Copyright Â© 2020 Microsoft Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 #include "nir_builder.h"
 #include "nir_builder_opcodes.h"
 
-#include "util/u_math.h"
+#include "../../util/u_math.h"
 
 static bool
 lower_printf_instr(nir_builder *b, nir_instr *instr, void *_options)

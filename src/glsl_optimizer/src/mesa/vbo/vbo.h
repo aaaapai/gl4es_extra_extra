@@ -32,14 +32,74 @@
 #define _VBO_H
 
 #include <stdbool.h>
-#include "../main/glheader.h"
-#include "../main/draw.h"
+#include "util/glheader.h"
+#include "vbo_attrib.h"
+#include "gallium/include/pipe/p_state.h"
+#include "dlist.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 struct gl_context;
+struct pipe_draw_info;
+struct pipe_draw_start_count_bias;
+
+/**
+ * Max number of primitives (number of glBegin/End pairs) per VBO.
+ */
+#define VBO_MAX_PRIM 64
+
+
+/**
+ * Current vertex processing mode: fixed function vs. shader.
+ * In reality, fixed function is probably implemented by a shader but that's
+ * not what we care about here.
+ */
+typedef enum
+{
+    VP_MODE_FF,     /**< legacy / fixed function */
+    VP_MODE_SHADER, /**< ARB vertex program or GLSL vertex shader */
+    VP_MODE_MAX     /**< for sizing arrays */
+} gl_vertex_processing_mode;
+
+
+struct vbo_exec_eval1_map {
+    struct gl_1d_map *map;
+    GLuint sz;
+};
+
+struct vbo_exec_eval2_map {
+    struct gl_2d_map *map;
+    GLuint sz;
+};
+
+struct vbo_exec_copied_vtx {
+    fi_type buffer[VBO_ATTRIB_MAX * 4 * VBO_MAX_COPIED_VERTS];
+    GLuint nr;
+};
+
+struct vbo_markers
+{
+    /**
+     * If false and the primitive is a line loop, the first vertex is
+     * the beginning of the line loop and it won't be drawn.
+     * Instead, it will be moved to the end.
+     *
+     * Drivers shouldn't reset the line stipple pattern walker if begin is
+     * false and mode is a line strip.
+     */
+    bool begin;
+
+    /**
+     * If true and the primitive is a line loop, it will be closed.
+     */
+    bool end;
+};
+
+
+GLboolean
+_mesa_using_noop_vtxfmt(const struct _glapi_table *dispatch);
 
 GLboolean
 _vbo_CreateContext(struct gl_context *ctx);
@@ -48,18 +108,19 @@ void
 _vbo_DestroyContext(struct gl_context *ctx);
 
 void
-vbo_exec_invalidate_state(struct gl_context *ctx);
+vbo_init_dispatch_begin_end(struct gl_context *ctx);
 
 void
-_vbo_install_exec_vtxfmt(struct gl_context *ctx);
+vbo_init_dispatch_hw_select_begin_end(struct gl_context *ctx);
 
 void
-vbo_initialize_exec_dispatch(const struct gl_context *ctx,
-                             struct _glapi_table *exec);
+vbo_install_exec_vtxfmt_noop(struct gl_context *ctx);
 
 void
-vbo_initialize_save_dispatch(const struct gl_context *ctx,
-                             struct _glapi_table *exec);
+vbo_install_save_vtxfmt_noop(struct gl_context *ctx);
+
+void
+vbo_exec_update_eval_maps(struct gl_context *ctx);
 
 void
 vbo_exec_FlushVertices(struct gl_context *ctx, GLuint flags);
@@ -78,41 +139,29 @@ void
 vbo_save_EndList(struct gl_context *ctx);
 
 void
-vbo_save_BeginCallList(struct gl_context *ctx, struct gl_display_list *list);
-
-void
-vbo_save_EndCallList(struct gl_context *ctx);
-
-
-void
 vbo_delete_minmax_cache(struct gl_buffer_object *bufferObj);
 
 void
-vbo_get_minmax_indices(struct gl_context *ctx, const struct _mesa_prim *prim,
-                       const struct _mesa_index_buffer *ib,
-                       GLuint *min_index, GLuint *max_index, GLuint nr_prims);
+vbo_get_minmax_index_mapped(unsigned count, unsigned index_size,
+                            unsigned restartIndex, bool restart,
+                            const void *indices,
+                            unsigned *min_index, unsigned *max_index);
 
 void
-vbo_use_buffer_objects(struct gl_context *ctx);
+vbo_get_minmax_index(struct gl_context *ctx, struct gl_buffer_object *obj,
+                     const void *ptr, GLintptr offset, unsigned count,
+                     unsigned index_size, bool primitive_restart,
+                     unsigned restart_index, GLuint *min_index,
+                     GLuint *max_index);
 
-void
-vbo_always_unmap_buffers(struct gl_context *ctx);
-
-void
-vbo_sw_primitive_restart(struct gl_context *ctx,
-                         const struct _mesa_prim *prim,
-                         GLuint nr_prims,
-                         const struct _mesa_index_buffer *ib,
-                         struct gl_buffer_object *indirect);
-
+bool
+vbo_get_minmax_indices_gallium(struct gl_context *ctx,
+                               struct pipe_draw_info *info,
+                               const struct pipe_draw_start_count_bias *draws,
+                               unsigned num_draws);
 
 const struct gl_array_attributes*
 _vbo_current_attrib(const struct gl_context *ctx, gl_vert_attrib attr);
-
-
-const struct gl_vertex_buffer_binding*
-_vbo_current_binding(const struct gl_context *ctx);
-
 
 void GLAPIENTRY
 _es_Color4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
@@ -128,30 +177,6 @@ _es_Materialfv(GLenum face, GLenum pname, const GLfloat *params);
 
 void GLAPIENTRY
 _es_Materialf(GLenum face, GLenum pname, GLfloat param);
-
-void GLAPIENTRY
-_es_VertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-
-void GLAPIENTRY
-_es_VertexAttrib1f(GLuint indx, GLfloat x);
-
-void GLAPIENTRY
-_es_VertexAttrib1fv(GLuint indx, const GLfloat* values);
-
-void GLAPIENTRY
-_es_VertexAttrib2f(GLuint indx, GLfloat x, GLfloat y);
-
-void GLAPIENTRY
-_es_VertexAttrib2fv(GLuint indx, const GLfloat* values);
-
-void GLAPIENTRY
-_es_VertexAttrib3f(GLuint indx, GLfloat x, GLfloat y, GLfloat z);
-
-void GLAPIENTRY
-_es_VertexAttrib3fv(GLuint indx, const GLfloat* values);
-
-void GLAPIENTRY
-_es_VertexAttrib4fv(GLuint indx, const GLfloat* values);
 
 #ifdef __cplusplus
 } // extern "C"

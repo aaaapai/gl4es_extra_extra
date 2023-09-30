@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014-2015 Broadcom
+ * Copyright Â© 2014-2015 Broadcom
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,8 +25,8 @@
 #define NIR_BUILDER_H
 
 #include "nir_control_flow.h"
-#include "util/bitscan.h"
-#include "util/half_float.h"
+#include "../../util/bitscan.h"
+#include "../../util/half_float.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -1640,7 +1640,7 @@ static inline nir_ssa_def *
 nir_tex_deref(nir_builder *b, nir_deref_instr *t, nir_deref_instr *s,
               nir_ssa_def *coord)
 {
-   nir_tex_src srcs[] = {{
+   nir_tex_src srcs[1] = {{
       nir_src_for_ssa(coord),
       nir_tex_src_coord,
    }};
@@ -1653,7 +1653,7 @@ static inline nir_ssa_def *
 nir_txl_deref(nir_builder *b, nir_deref_instr *t, nir_deref_instr *s,
               nir_ssa_def *coord, nir_ssa_def *lod)
 {
-   nir_tex_src srcs[] = {{
+   nir_tex_src srcs[2] = {{
       nir_src_for_ssa(coord),
       nir_tex_src_coord,
    }, {
@@ -1710,7 +1710,7 @@ static inline nir_ssa_def *
 nir_txf_ms_deref(nir_builder *b, nir_deref_instr *t,
                  nir_ssa_def *coord, nir_ssa_def *ms_index)
 {
-   nir_tex_src srcs[] = {{
+   nir_tex_src srcs[2] = {{
       nir_src_for_ssa(coord),
       nir_tex_src_coord,
    }, {
@@ -1726,7 +1726,7 @@ static inline nir_ssa_def *
 nir_samples_identical_deref(nir_builder *b, nir_deref_instr *t,
                             nir_ssa_def *coord)
 {
-   nir_tex_src srcs[] = {{
+   nir_tex_src srcs[1] = {{
       nir_src_for_ssa(coord),
       nir_tex_src_coord,
    }};

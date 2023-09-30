@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@
 #include "nir.h"
 #include "nir_builder.h"
 #include "nir_deref.h"
-#include "compiler/nir_types.h"
+#include "../nir_types.h"
 
 /*
  * Lowers all copy intrinsics to sequences of load/store intrinsics.

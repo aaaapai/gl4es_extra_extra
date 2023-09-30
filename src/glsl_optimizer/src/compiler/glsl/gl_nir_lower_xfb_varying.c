@@ -22,11 +22,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "nir.h"
-#include "nir_builder.h"
+#include "../nir/nir.h"
+#include "../nir/nir_builder.h"
 #include "gl_nir_linker.h"
-#include "main/shader_types.h"
-#include "util/strndup.h"
+#include "../../mesa/main/shader_types.h"
+#include "../../util/strndup.h"
 
 static char*
 get_field_name(const char *name)

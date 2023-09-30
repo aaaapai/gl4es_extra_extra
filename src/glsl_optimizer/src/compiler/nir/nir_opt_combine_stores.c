@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 Intel Corporation
+ * Copyright Â© 2019 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,9 +25,9 @@
 #include "nir_builder.h"
 #include "nir_deref.h"
 
-#include "util/bitscan.h"
-#include "util/list.h"
-#include "util/u_math.h"
+#include "../../util/bitscan.h"
+#include "../glsl/list.h"
+#include "../../util/u_math.h"
 
 /* Combine stores of vectors to the same deref into a single store.
  *

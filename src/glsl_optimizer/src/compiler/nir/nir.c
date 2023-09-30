@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,14 +29,14 @@
 #include "nir_builder.h"
 #include "nir_control_flow_private.h"
 #include "nir_worklist.h"
-#include "util/half_float.h"
+#include "../../util/half_float.h"
 #include <limits.h>
 #include <assert.h>
 #include <math.h>
-#include "util/u_math.h"
-#include "util/u_qsort.h"
+#include "../../util/u_math.h"
+#include "../../util/u_qsort.h"
 
-#include "main/menums.h" /* BITFIELD64_MASK */
+#include "../../mesa/main/menums.h" /* BITFIELD64_MASK */
 
 #ifndef NDEBUG
 uint32_t nir_debug = 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Intel Corporation
+ * Copyright Â© 2014 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,9 +25,9 @@
 #define _NIR_WORKLIST_
 
 #include "nir.h"
-#include "util/set.h"
-#include "util/u_vector.h"
-#include "util/u_worklist.h"
+#include "../../util/set.h"
+#include "../../util/u_vector.h"
+#include "../../util/u_worklist.h"
 
 #ifdef __cplusplus
 extern "C" {
