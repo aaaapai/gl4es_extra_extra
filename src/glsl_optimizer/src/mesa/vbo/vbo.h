@@ -32,10 +32,10 @@
 #define _VBO_H
 
 #include <stdbool.h>
-#include "util/glheader.h"
+#include "../util/glheader.h"
 #include "vbo_attrib.h"
-#include "gallium/include/pipe/p_state.h"
-#include "dlist.h"
+#include "../../gallium/include/pipe/p_state.h"
+#include "../main/dlist.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -28,10 +28,10 @@
  * \author Brian Paul
  */
 
-#include "util/glheader.h"
+#include "../util/glheader.h"
 #include "../main/macros.h"
 #include "../main/errors.h"
-#include "util/u_memory.h"
+#include "../../util/u_memory.h"
 #include "prog_instruction.h"
 #include "prog_parameter.h"
 #include "prog_statevars.h"

@@ -28,9 +28,9 @@
 #ifndef PIPE_DEFINES_H
 #define PIPE_DEFINES_H
 
-#include "p_compiler.h"
+#include "../src/gallium/include/pipe/p_compiler.h"
 
-#include "compiler/shader_enums.h"
+#include "../src/compiler/shader_enums.h"
 
 #ifdef __cplusplus
 extern "C" {

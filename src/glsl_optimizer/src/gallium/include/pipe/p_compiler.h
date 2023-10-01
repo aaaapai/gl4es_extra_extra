@@ -29,9 +29,9 @@
 #define P_COMPILER_H
 
 
-#include "util/compiler.h"
-#include "util/detect.h"
-#include "util/macros.h"
+#include "../../../util/compiler.h"
+#include "../../../util/detect.h"
+#include "../../../util/macros.h"
 
 #include <limits.h>
 #include <stdarg.h>

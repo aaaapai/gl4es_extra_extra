@@ -29,10 +29,10 @@
 #define PIPE_CONTEXT_H
 
 #include "p_compiler.h"
-#include "util/format/u_formats.h"
+#include "../../../util/format/u_formats.h"
 #include "p_video_enums.h"
 #include "p_defines.h"
-#include "util/u_debug.h"
+#include "../../../util/u_debug.h"
 #include <stdio.h>
 //#include "frontend/winsys_handle.h"
 

@@ -31,10 +31,10 @@
 #ifndef DD_INCLUDED
 #define DD_INCLUDED
 
-#include "util/glheader.h"
+#include "../util/glheader.h"
 #include "formats.h"
 #include "menums.h"
-#include "compiler/shader_enums.h"
+#include "../../compiler/shader_enums.h"
 
 #if defined(_WIN32) && defined(_WINDOWS_)
 #error "Should not include <windows.h> here"

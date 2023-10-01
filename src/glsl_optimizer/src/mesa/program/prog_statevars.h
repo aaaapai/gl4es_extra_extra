@@ -26,8 +26,8 @@
 #define PROG_STATEVARS_H
 
 
-#include "util/glheader.h"
-#include "compiler/shader_enums.h"
+#include "../util/glheader.h"
+#include "../../compiler/shader_enums.h"
 #include <stdint.h>
 
 

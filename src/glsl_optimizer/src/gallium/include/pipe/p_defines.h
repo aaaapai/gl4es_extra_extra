@@ -30,7 +30,7 @@
 
 #include "p_compiler.h"
 
-#include "compiler/shader_enums.h"
+#include "../../../compiler/shader_enums.h"
 
 #ifdef __cplusplus
 extern "C" {

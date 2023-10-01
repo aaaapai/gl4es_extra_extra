@@ -38,10 +38,10 @@
 #define P_SCREEN_H
 
 
-#include "pipe/p_compiler.h"
-#include "util/format/u_formats.h"
-#include "pipe/p_defines.h"
-#include "pipe/p_video_enums.h"
+#include "p_compiler.h"
+#include "../../../util/format/u_formats.h"
+#include "p_defines.h"
+#include "p_video_enums.h"
 
 
 

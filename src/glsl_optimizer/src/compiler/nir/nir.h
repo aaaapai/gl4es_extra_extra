@@ -1976,7 +1976,7 @@ nir_intrinsic_dest_components(nir_intrinsic_instr *intr);
 void nir_intrinsic_copy_const_indices(nir_intrinsic_instr *dst, nir_intrinsic_instr *src);
 
 #include "nir_intrinsics_indices.h"
-#include "vma.h"
+#include "../../util/vma.h"
 
 static inline void
 nir_intrinsic_set_align(nir_intrinsic_instr *intrin,

@@ -60,7 +60,7 @@
 #include "ir.h"
 #include "ir_builder.h"
 #include "builtin_functions.h"
-#include "compiler.h"
+#include "../../util/compiler.h"
 
 using namespace ir_builder;
 
