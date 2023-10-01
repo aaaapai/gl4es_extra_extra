@@ -38,8 +38,9 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include "glheader.h"
+#include "../../util/glheader.h"
 #include "menums.h"
+
 
 
 #ifdef __cplusplus
@@ -49,22 +50,26 @@ extern "C" {
 struct gl_context;
 
 extern void
-_mesa_warning( struct gl_context *gc, const char *fmtString, ... );
+_mesa_warning( struct gl_context *gc, const char *fmtString, ... ) ;
 
 extern void
-_mesa_problem( const struct gl_context *ctx, const char *fmtString, ... );
+_mesa_problem( const struct gl_context *ctx, const char *fmtString, ... ) ;
 
 extern void
-_mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... );
+_mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... ) ;
 
 extern void
 _mesa_error_no_memory(const char *caller);
 
 extern void
-_mesa_debug( const struct gl_context *ctx, const char *fmtString, ... );
+_mesa_debug( const struct gl_context *ctx, const char *fmtString, ... ) ;
 
 extern void
-_mesa_log(const char *fmtString, ...);
+_mesa_log(const char *fmtString, ...) ;
+
+extern void
+_mesa_log_direct(const char *string);
+
 
 extern FILE *
 _mesa_get_log_file(void);
@@ -88,7 +93,7 @@ _mesa_gl_debugf(struct gl_context *ctx,
                 enum mesa_debug_source source,
                 enum mesa_debug_type type,
                 enum mesa_debug_severity severity,
-                const char *fmtString, ...);
+                const char *fmtString, ...) ;
 
 extern size_t
 _mesa_gl_debug(struct gl_context *ctx,
@@ -108,7 +113,6 @@ _mesa_gl_debug(struct gl_context *ctx,
                       __VA_ARGS__);                                       \
    }                                                                      \
 } while (0)
-
 
 #ifdef __cplusplus
 }

@@ -368,7 +368,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/compiler/glsl/lower_subroutine.cpp
         src/glsl_optimizer/src/compiler/glsl/lower_vec_index_to_cond_assign.cpp
         src/glsl_optimizer/src/compiler/glsl/lower_vector_derefs.cpp
-        src/glsl_optimizer/src/compiler/glsl/main.cpp
         src/glsl_optimizer/src/compiler/glsl/opt_add_neg_to_sub.h
         src/glsl_optimizer/src/compiler/glsl/opt_algebraic.cpp
         src/glsl_optimizer/src/compiler/glsl/opt_dead_builtin_variables.cpp
@@ -386,8 +385,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/compiler/glsl/propagate_invariance.cpp
         src/glsl_optimizer/src/compiler/glsl/s_expression.cpp
         src/glsl_optimizer/src/compiler/glsl/s_expression.h
-        src/glsl_optimizer/src/compiler/glsl/standalone.cpp
-        src/glsl_optimizer/src/compiler/glsl/standalone.h
         src/glsl_optimizer/src/compiler/glsl/standalone_scaffolding.cpp
         src/glsl_optimizer/src/compiler/glsl/standalone_scaffolding.h
         src/glsl_optimizer/src/compiler/glsl/string_to_uint_map.cpp
@@ -689,7 +686,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/util/format/u_formats.h
         src/glsl_optimizer/src/util/sha1/sha1.c
         src/glsl_optimizer/src/util/sha1/sha1.h
-        src/glsl_optimizer/src/util/tools/find_hash_func.c
         src/glsl_optimizer/src/util/anon_file.c
         src/glsl_optimizer/src/util/anon_file.h
         src/glsl_optimizer/src/util/bigmath.h
@@ -886,4 +882,7 @@ add_executable(gl4es_extra
         src/glsl_optimizer/include/p_state.h
         src/glsl_optimizer/include/p_defines.h
         src/glsl_optimizer/include/android/log.h
+        src/glsl_optimizer/src/mesa/main/errors.c
+        src/glsl_optimizer/src/mesa/main/errors.c
+        src/glsl_optimizer/src/mesa/main/debug_output.c
 )

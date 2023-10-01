@@ -84,7 +84,7 @@ static void
 flush_delayed_errors( struct gl_context *ctx )
 {
     char s[MAX_DEBUG_MESSAGE_LENGTH];
-
+    /*
     if (ctx->ErrorDebugCount) {
         snprintf(s, MAX_DEBUG_MESSAGE_LENGTH, "%d similar %s errors",
                  ctx->ErrorDebugCount,
@@ -94,6 +94,7 @@ flush_delayed_errors( struct gl_context *ctx )
 
         ctx->ErrorDebugCount = 0;
     }
+    */
 }
 
 
@@ -306,8 +307,7 @@ _mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... )
             return;
         }
 
-        len = snprintf(s2, MAX_DEBUG_MESSAGE_LENGTH, "%s in %s",
-                       _mesa_enum_to_string(error), s);
+        len = snprintf(s2, MAX_DEBUG_MESSAGE_LENGTH, "... in %s ", s);
         if (len >= MAX_DEBUG_MESSAGE_LENGTH) {
             /* Same as above. */
             assert(0);
@@ -334,8 +334,8 @@ _mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... )
 void
 _mesa_error_no_memory(const char *caller)
 {
-    GET_CURRENT_CONTEXT(ctx);
-    _mesa_error(ctx, GL_OUT_OF_MEMORY, "out of memory in %s", caller);
+    //GET_CURRENT_CONTEXT(ctx);
+    //_mesa_error(ctx, GL_OUT_OF_MEMORY, "out of memory in %s", caller);
 }
 
 /**
@@ -411,6 +411,6 @@ _mesa_shader_debug(struct gl_context *ctx, GLenum type, GLuint *id,
 void GLAPIENTRY
 _mesa_InternalSetError(GLenum error)
 {
-    GET_CURRENT_CONTEXT(ctx);
-    _mesa_error(ctx, error, "glthread");
+    //GET_CURRENT_CONTEXT(ctx);
+    //_mesa_error(ctx, error, "glthread");
 }

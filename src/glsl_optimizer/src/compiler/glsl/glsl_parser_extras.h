@@ -36,7 +36,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-static void add_builtin_defines(struct _mesa_glsl_parse_state *state,
+extern void add_builtin_defines(struct _mesa_glsl_parse_state *state,
                                 void(*add_builtin_define)(struct glcpp_parser *, const char *, int),
                                 struct glcpp_parser *data,
                                 unsigned version,

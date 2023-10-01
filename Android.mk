@@ -94,7 +94,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/compiler/glsl/string_to_uint_map.cpp \
     src/glsl_optimizer/src/compiler/glsl/ast_function.cpp \
     src/glsl_optimizer/src/compiler/glsl/ast_expr.cpp \
-    src/glsl_optimizer/src/compiler/glsl/standalone.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_print_visitor.cpp \
     src/glsl_optimizer/src/compiler/glsl/opt_minmax.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_basic_block.cpp \
@@ -174,6 +173,7 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/u_debug_refcnt.c \
     src/glsl_optimizer/src/util/u_debug_symbol.c \
     src/glsl_optimizer/src/util/streaming-load-memcpy.c \
+    src/glsl_optimizer/src/mesa/main/debug_output.c \
     src/glsl_optimizer/src/mesa/main/errors.c \
     src/glsl_optimizer/src/mesa/main/extensions_table.c \
     src/glsl_optimizer/src/mesa/main/imports.c \
