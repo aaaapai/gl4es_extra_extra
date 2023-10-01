@@ -29,6 +29,7 @@
 #define NIR_H
 
 #include "../../util/hash_table.h"
+#include "../../util/list.h"
 #include "../glsl/list.h"
 #include "../../util/log.h"
 #include "../../util/ralloc.h"

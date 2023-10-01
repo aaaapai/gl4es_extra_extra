@@ -1,8 +1,8 @@
 /**************************************************************************
- * 
+ *
  * Copyright 2007 VMware, Inc.
  * All Rights Reserved.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -10,11 +10,11 @@
  * distribute, sub license, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice (including the
  * next paragraph) shall be included in all copies or substantial portions
  * of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
@@ -22,13 +22,15 @@
  * ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  **************************************************************************/
 
 #ifndef PIPE_DEFINES_H
 #define PIPE_DEFINES_H
 
 #include "p_compiler.h"
+
+#include "compiler/shader_enums.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -210,6 +212,12 @@ enum pipe_tex_compare {
    PIPE_TEX_COMPARE_R_TO_TEXTURE,
 };
 
+enum pipe_tex_reduction_mode {
+   PIPE_TEX_REDUCTION_WEIGHTED_AVERAGE,
+   PIPE_TEX_REDUCTION_MIN,
+   PIPE_TEX_REDUCTION_MAX,
+};
+
 /**
  * Clear buffer bits
  */
@@ -232,49 +240,49 @@ enum pipe_tex_compare {
 #define PIPE_CLEAR_DEPTHSTENCIL (PIPE_CLEAR_DEPTH | PIPE_CLEAR_STENCIL)
 
 /**
- * Transfer object usage flags
+ * CPU access map flags
  */
-enum pipe_transfer_usage
+enum pipe_map_flags
 {
    /**
     * Resource contents read back (or accessed directly) at transfer
     * create time.
     */
-   PIPE_TRANSFER_READ = (1 << 0),
-   
+   PIPE_MAP_READ = 1 << 0,
+
    /**
-    * Resource contents will be written back at transfer_unmap
+    * Resource contents will be written back at buffer/texture_unmap
     * time (or modified as a result of being accessed directly).
     */
-   PIPE_TRANSFER_WRITE = (1 << 1),
+   PIPE_MAP_WRITE = 1 << 1,
 
    /**
     * Read/modify/write
     */
-   PIPE_TRANSFER_READ_WRITE = PIPE_TRANSFER_READ | PIPE_TRANSFER_WRITE,
+   PIPE_MAP_READ_WRITE = PIPE_MAP_READ | PIPE_MAP_WRITE,
 
-   /** 
+   /**
     * The transfer should map the texture storage directly. The driver may
-    * return NULL if that isn't possible, and the state tracker needs to cope
+    * return NULL if that isn't possible, and the gallium frontend needs to cope
     * with that and use an alternative path without this flag.
     *
-    * E.g. the state tracker could have a simpler path which maps textures and
+    * E.g. the gallium frontend could have a simpler path which maps textures and
     * does read/modify/write cycles on them directly, and a more complicated
     * path which uses minimal read and write transfers.
     *
     * This flag supresses implicit "DISCARD" for buffer_subdata.
     */
-   PIPE_TRANSFER_MAP_DIRECTLY = (1 << 2),
+   PIPE_MAP_DIRECTLY = 1 << 2,
 
    /**
     * Discards the memory within the mapped region.
     *
-    * It should not be used with PIPE_TRANSFER_READ.
+    * It should not be used with PIPE_MAP_READ.
     *
     * See also:
     * - OpenGL's ARB_map_buffer_range extension, MAP_INVALIDATE_RANGE_BIT flag.
     */
-   PIPE_TRANSFER_DISCARD_RANGE = (1 << 8),
+   PIPE_MAP_DISCARD_RANGE = 1 << 3,
 
    /**
     * Fail if the resource cannot be mapped immediately.
@@ -284,36 +292,36 @@ enum pipe_transfer_usage
     * - Mesa's MESA_MAP_NOWAIT_BIT flag.
     * - WDDM's D3DDDICB_LOCKFLAGS.DonotWait flag.
     */
-   PIPE_TRANSFER_DONTBLOCK = (1 << 9),
+   PIPE_MAP_DONTBLOCK = 1 << 4,
 
    /**
     * Do not attempt to synchronize pending operations on the resource when mapping.
     *
-    * It should not be used with PIPE_TRANSFER_READ.
+    * It should not be used with PIPE_MAP_READ.
     *
     * See also:
     * - OpenGL's ARB_map_buffer_range extension, MAP_UNSYNCHRONIZED_BIT flag.
     * - Direct3D's D3DLOCK_NOOVERWRITE flag.
     * - WDDM's D3DDDICB_LOCKFLAGS.IgnoreSync flag.
     */
-   PIPE_TRANSFER_UNSYNCHRONIZED = (1 << 10),
+   PIPE_MAP_UNSYNCHRONIZED = 1 << 5,
 
    /**
     * Written ranges will be notified later with
     * pipe_context::transfer_flush_region.
     *
-    * It should not be used with PIPE_TRANSFER_READ.
+    * It should not be used with PIPE_MAP_READ.
     *
     * See also:
     * - pipe_context::transfer_flush_region
     * - OpenGL's ARB_map_buffer_range extension, MAP_FLUSH_EXPLICIT_BIT flag.
     */
-   PIPE_TRANSFER_FLUSH_EXPLICIT = (1 << 11),
+   PIPE_MAP_FLUSH_EXPLICIT = 1 << 6,
 
    /**
     * Discards all memory backing the resource.
     *
-    * It should not be used with PIPE_TRANSFER_READ.
+    * It should not be used with PIPE_MAP_READ.
     *
     * This is equivalent to:
     * - OpenGL's ARB_map_buffer_range extension, MAP_INVALIDATE_BUFFER_BIT
@@ -323,7 +331,7 @@ enum pipe_transfer_usage
     * - D3D10 DDI's D3D10_DDI_MAP_WRITE_DISCARD flag
     * - D3D10's D3D10_MAP_WRITE_DISCARD flag.
     */
-   PIPE_TRANSFER_DISCARD_WHOLE_RESOURCE = (1 << 12),
+   PIPE_MAP_DISCARD_WHOLE_RESOURCE = 1 << 7,
 
    /**
     * Allows the resource to be used for rendering while mapped.
@@ -334,7 +342,7 @@ enum pipe_transfer_usage
     * If COHERENT is not set, memory_barrier(PIPE_BARRIER_MAPPED_BUFFER)
     * must be called to ensure the device can see what the CPU has written.
     */
-   PIPE_TRANSFER_PERSISTENT = (1 << 13),
+   PIPE_MAP_PERSISTENT = 1 << 8,
 
    /**
     * If PERSISTENT is set, this ensures any writes done by the device are
@@ -343,13 +351,35 @@ enum pipe_transfer_usage
     * PIPE_RESOURCE_FLAG_MAP_COHERENT must be set when creating
     * the resource.
     */
-   PIPE_TRANSFER_COHERENT = (1 << 14),
+   PIPE_MAP_COHERENT = 1 << 9,
+
+   /**
+    * Map a resource in a thread-safe manner, because the calling thread can
+    * be any thread. It can only be used if both WRITE and UNSYNCHRONIZED are
+    * set.
+    */
+   PIPE_MAP_THREAD_SAFE = 1 << 10,
+
+   /**
+    * Map only the depth aspect of a resource
+    */
+   PIPE_MAP_DEPTH_ONLY = 1 << 11,
+
+   /**
+    * Map only the stencil aspect of a resource
+    */
+   PIPE_MAP_STENCIL_ONLY = 1 << 12,
+
+   /**
+    * Mapping will be used only once (never remapped).
+    */
+   PIPE_MAP_ONCE = 1 << 13,
 
    /**
     * This and higher bits are reserved for private use by drivers. Drivers
-    * should use this as (PIPE_TRANSFER_DRV_PRV << i).
+    * should use this as (PIPE_MAP_DRV_PRV << i).
     */
-   PIPE_TRANSFER_DRV_PRV = (1 << 24)
+   PIPE_MAP_DRV_PRV = 1 << 14,
 };
 
 /**
@@ -413,6 +443,15 @@ enum pipe_flush_flags
 #define PIPE_CONTEXT_LOSE_CONTEXT_ON_RESET (1 << 6)
 
 /**
+ * Create a protected context to access protected content (surfaces,
+ * textures, ...)
+ *
+ * This is required to access protected images and surfaces if
+ * EGL_EXT_protected_surface is not supported.
+ */
+#define PIPE_CONTEXT_PROTECTED         (1 << 7)
+
+/**
  * Flags for pipe_context::memory_barrier.
  */
 #define PIPE_BARRIER_MAPPED_BUFFER     (1 << 0)
@@ -441,7 +480,7 @@ enum pipe_flush_flags
 #define PIPE_TEXTURE_BARRIER_FRAMEBUFFER  (1 << 1)
 
 /**
- * Resource binding flags -- state tracker must specify in advance all
+ * Resource binding flags -- gallium frontends must specify in advance all
  * the ways a resource might be used.
  */
 #define PIPE_BIND_DEPTH_STENCIL        (1 << 0) /* create_surface */
@@ -452,10 +491,11 @@ enum pipe_flush_flags
 #define PIPE_BIND_INDEX_BUFFER         (1 << 5) /* draw_elements */
 #define PIPE_BIND_CONSTANT_BUFFER      (1 << 6) /* set_constant_buffer */
 #define PIPE_BIND_DISPLAY_TARGET       (1 << 7) /* flush_front_buffer */
+#define PIPE_BIND_VERTEX_STATE         (1 << 8) /* create_vertex_state */
 /* gap */
 #define PIPE_BIND_STREAM_OUTPUT        (1 << 10) /* set_stream_output_buffers */
 #define PIPE_BIND_CURSOR               (1 << 11) /* mouse cursor */
-#define PIPE_BIND_CUSTOM               (1 << 12) /* state-tracker/winsys usages */
+#define PIPE_BIND_CUSTOM               (1 << 12) /* gallium frontend/winsys usages */
 #define PIPE_BIND_GLOBAL               (1 << 13) /* set_global_binding */
 #define PIPE_BIND_SHADER_BUFFER        (1 << 14) /* set_shader_buffers */
 #define PIPE_BIND_SHADER_IMAGE         (1 << 15) /* set_shader_images */
@@ -470,21 +510,25 @@ enum pipe_flush_flags
  * below do not fit within that and probably need to be migrated to some
  * other place.
  *
- * It seems like scanout is used by the Xorg state tracker to ask for
- * a texture suitable for actual scanout (hence the name), which
- * implies extra layout constraints on some hardware.  It may also
- * have some special meaning regarding mouse cursor images.
+ * Scanout is used to ask for a texture suitable for actual scanout (hence
+ * the name), which implies extra layout constraints on some hardware.
+ * It may also have some special meaning regarding mouse cursor images.
  *
  * The shared flag is quite underspecified, but certainly isn't a
  * binding flag - it seems more like a message to the winsys to create
  * a shareable allocation.
- * 
+ *
  * The third flag has been added to be able to force textures to be created
  * in linear mode (no tiling).
  */
 #define PIPE_BIND_SCANOUT     (1 << 19) /*  */
 #define PIPE_BIND_SHARED      (1 << 20) /* get_texture_handle ??? */
 #define PIPE_BIND_LINEAR      (1 << 21)
+#define PIPE_BIND_PROTECTED   (1 << 22) /* Resource will be protected/encrypted */
+#define PIPE_BIND_SAMPLER_REDUCTION_MINMAX (1 << 23) /* PIPE_CAP_SAMPLER_REDUCTION_MINMAX */
+/* Resource is the DRI_PRIME blit destination. Only set on on the render GPU. */
+#define PIPE_BIND_PRIME_BLIT_DST (1 << 24)
+#define PIPE_BIND_USE_FRONT_RENDERING (1 << 25) /* Resource may be used for frontbuffer rendering */
 
 
 /**
@@ -495,8 +539,12 @@ enum pipe_flush_flags
 #define PIPE_RESOURCE_FLAG_TEXTURING_MORE_LIKELY (1 << 2)
 #define PIPE_RESOURCE_FLAG_SPARSE                (1 << 3)
 #define PIPE_RESOURCE_FLAG_SINGLE_THREAD_USE     (1 << 4)
-#define PIPE_RESOURCE_FLAG_DRV_PRIV    (1 << 8) /* driver/winsys private */
-#define PIPE_RESOURCE_FLAG_ST_PRIV     (1 << 24) /* state-tracker/winsys private */
+#define PIPE_RESOURCE_FLAG_ENCRYPTED             (1 << 5)
+#define PIPE_RESOURCE_FLAG_DONT_OVER_ALLOCATE    (1 << 6)
+#define PIPE_RESOURCE_FLAG_DONT_MAP_DIRECTLY     (1 << 7) /* for small visible VRAM */
+#define PIPE_RESOURCE_FLAG_UNMAPPABLE            (1 << 8) /* implies staging transfers due to VK interop */
+#define PIPE_RESOURCE_FLAG_DRV_PRIV              (1 << 9) /* driver/winsys private */
+#define PIPE_RESOURCE_FLAG_FRONTEND_PRIV         (1 << 24) /* gallium frontend private */
 
 /**
  * Hint about the expected lifecycle of a resource.
@@ -511,33 +559,9 @@ enum pipe_resource_usage {
 };
 
 /**
- * Shaders
- */
-enum pipe_shader_type {
-   PIPE_SHADER_VERTEX,
-   PIPE_SHADER_FRAGMENT,
-   PIPE_SHADER_GEOMETRY,
-   PIPE_SHADER_TESS_CTRL,
-   PIPE_SHADER_TESS_EVAL,
-   PIPE_SHADER_COMPUTE,
-   PIPE_SHADER_TYPES,
-};
-
-// Added by Mathias Boulay so CLION stops being annoying
-enum mesa_shader_type {
-    MESA_SHADER_VERTEX = 0,
-    MESA_SHADER_FRAGMENT,
-    MESA_SHADER_GEOMETRY,
-    MESA_SHADER_TESS_CTRL,
-    MESA_SHADER_TESS_EVAL,
-    MESA_SHADER_COMPUTE,
-    MESA_SHADER_TYPES,
-};
-
-/**
  * Primitive types:
  */
-enum pipe_prim_type {
+enum PACKED pipe_prim_type {
    PIPE_PRIM_POINTS,
    PIPE_PRIM_LINES,
    PIPE_PRIM_LINE_LOOP,
@@ -637,6 +661,20 @@ enum pipe_swizzle {
    PIPE_SWIZZLE_MAX, /**< Number of enums counter (must be last) */
 };
 
+/**
+ * Viewport swizzles
+ */
+enum pipe_viewport_swizzle {
+   PIPE_VIEWPORT_SWIZZLE_POSITIVE_X,
+   PIPE_VIEWPORT_SWIZZLE_NEGATIVE_X,
+   PIPE_VIEWPORT_SWIZZLE_POSITIVE_Y,
+   PIPE_VIEWPORT_SWIZZLE_NEGATIVE_Y,
+   PIPE_VIEWPORT_SWIZZLE_POSITIVE_Z,
+   PIPE_VIEWPORT_SWIZZLE_NEGATIVE_Z,
+   PIPE_VIEWPORT_SWIZZLE_POSITIVE_W,
+   PIPE_VIEWPORT_SWIZZLE_NEGATIVE_W,
+};
+
 #define PIPE_TIMEOUT_INFINITE 0xffffffffffffffffull
 
 
@@ -686,10 +724,13 @@ enum pipe_conservative_raster_mode
 /**
  * pipe_image_view access flags.
  */
-#define PIPE_IMAGE_ACCESS_READ       (1 << 0)
-#define PIPE_IMAGE_ACCESS_WRITE      (1 << 1)
-#define PIPE_IMAGE_ACCESS_READ_WRITE (PIPE_IMAGE_ACCESS_READ | \
-                                      PIPE_IMAGE_ACCESS_WRITE)
+#define PIPE_IMAGE_ACCESS_READ               (1 << 0)
+#define PIPE_IMAGE_ACCESS_WRITE              (1 << 1)
+#define PIPE_IMAGE_ACCESS_READ_WRITE         (PIPE_IMAGE_ACCESS_READ | \
+                                              PIPE_IMAGE_ACCESS_WRITE)
+#define PIPE_IMAGE_ACCESS_COHERENT           (1 << 2)
+#define PIPE_IMAGE_ACCESS_VOLATILE           (1 << 3)
+#define PIPE_IMAGE_ACCESS_TEX2D_FROM_BUFFER  (1 << 4)
 
 /**
  * Implementation capabilities/limits which are queried through
@@ -701,7 +742,6 @@ enum pipe_cap
    PIPE_CAP_NPOT_TEXTURES,
    PIPE_CAP_MAX_DUAL_SOURCE_RENDER_TARGETS,
    PIPE_CAP_ANISOTROPIC_FILTER,
-   PIPE_CAP_POINT_SPRITE,
    PIPE_CAP_MAX_RENDER_TARGETS,
    PIPE_CAP_OCCLUSION_QUERY,
    PIPE_CAP_QUERY_TIME_ELAPSED,
@@ -714,19 +754,24 @@ enum pipe_cap
    PIPE_CAP_BLEND_EQUATION_SEPARATE,
    PIPE_CAP_MAX_STREAM_OUTPUT_BUFFERS,
    PIPE_CAP_PRIMITIVE_RESTART,
+   /** subset of PRIMITIVE_RESTART where the restart index is always the fixed
+    * maximum value for the index type
+    */
+   PIPE_CAP_PRIMITIVE_RESTART_FIXED_INDEX,
    /** blend enables and write masks per rendertarget */
    PIPE_CAP_INDEP_BLEND_ENABLE,
    /** different blend funcs per rendertarget */
    PIPE_CAP_INDEP_BLEND_FUNC,
    PIPE_CAP_MAX_TEXTURE_ARRAY_LAYERS,
-   PIPE_CAP_TGSI_FS_COORD_ORIGIN_UPPER_LEFT,
-   PIPE_CAP_TGSI_FS_COORD_ORIGIN_LOWER_LEFT,
-   PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_HALF_INTEGER,
-   PIPE_CAP_TGSI_FS_COORD_PIXEL_CENTER_INTEGER,
+   PIPE_CAP_FS_COORD_ORIGIN_UPPER_LEFT,
+   PIPE_CAP_FS_COORD_ORIGIN_LOWER_LEFT,
+   PIPE_CAP_FS_COORD_PIXEL_CENTER_HALF_INTEGER,
+   PIPE_CAP_FS_COORD_PIXEL_CENTER_INTEGER,
    PIPE_CAP_DEPTH_CLIP_DISABLE,
    PIPE_CAP_DEPTH_CLIP_DISABLE_SEPARATE,
+   PIPE_CAP_DEPTH_CLAMP_ENABLE,
    PIPE_CAP_SHADER_STENCIL_EXPORT,
-   PIPE_CAP_TGSI_INSTANCEID,
+   PIPE_CAP_VS_INSTANCEID,
    PIPE_CAP_VERTEX_ELEMENT_INSTANCE_DIVISOR,
    PIPE_CAP_FRAGMENT_COLOR_CLAMPED,
    PIPE_CAP_MIXED_COLORBUFFER_FORMATS,
@@ -750,6 +795,7 @@ enum pipe_cap
    PIPE_CAP_VERTEX_BUFFER_OFFSET_4BYTE_ALIGNED_ONLY,
    PIPE_CAP_VERTEX_BUFFER_STRIDE_4BYTE_ALIGNED_ONLY,
    PIPE_CAP_VERTEX_ELEMENT_SRC_OFFSET_4BYTE_ALIGNED_ONLY,
+   PIPE_CAP_VERTEX_ATTRIB_ELEMENT_ALIGNED_ONLY,
    PIPE_CAP_COMPUTE,
    PIPE_CAP_CONSTANT_BUFFER_OFFSET_ALIGNMENT,
    PIPE_CAP_START_INSTANCE,
@@ -761,14 +807,16 @@ enum pipe_cap
    PIPE_CAP_TEXTURE_BUFFER_OFFSET_ALIGNMENT,
    PIPE_CAP_BUFFER_SAMPLER_VIEW_RGBA_ONLY,
    PIPE_CAP_TGSI_TEXCOORD,
-   PIPE_CAP_PREFER_BLIT_BASED_TEXTURE_TRANSFER,
+   PIPE_CAP_LINEAR_IMAGE_PITCH_ALIGNMENT,
+   PIPE_CAP_LINEAR_IMAGE_BASE_ADDRESS_ALIGNMENT,
+   PIPE_CAP_TEXTURE_TRANSFER_MODES,
    PIPE_CAP_QUERY_PIPELINE_STATISTICS,
    PIPE_CAP_TEXTURE_BORDER_COLOR_QUIRK,
-   PIPE_CAP_MAX_TEXTURE_BUFFER_SIZE,
+   PIPE_CAP_MAX_TEXEL_BUFFER_ELEMENTS_UINT,
    PIPE_CAP_MAX_VIEWPORTS,
    PIPE_CAP_ENDIANNESS,
    PIPE_CAP_MIXED_FRAMEBUFFER_SIZES,
-   PIPE_CAP_TGSI_VS_LAYER_VIEWPORT,
+   PIPE_CAP_VS_LAYER_VIEWPORT,
    PIPE_CAP_MAX_GEOMETRY_OUTPUT_VERTICES,
    PIPE_CAP_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS,
    PIPE_CAP_MAX_TEXTURE_GATHER_COMPONENTS,
@@ -780,10 +828,10 @@ enum pipe_cap
    PIPE_CAP_MAX_TEXTURE_GATHER_OFFSET,
    PIPE_CAP_SAMPLE_SHADING,
    PIPE_CAP_TEXTURE_GATHER_OFFSETS,
-   PIPE_CAP_TGSI_VS_WINDOW_SPACE_POSITION,
+   PIPE_CAP_VS_WINDOW_SPACE_POSITION,
    PIPE_CAP_MAX_VERTEX_STREAMS,
    PIPE_CAP_DRAW_INDIRECT,
-   PIPE_CAP_TGSI_FS_FINE_DERIVATIVE,
+   PIPE_CAP_FS_FINE_DERIVATIVE,
    PIPE_CAP_VENDOR_ID,
    PIPE_CAP_DEVICE_ID,
    PIPE_CAP_ACCELERATED,
@@ -793,27 +841,29 @@ enum pipe_cap
    PIPE_CAP_MAX_VERTEX_ATTRIB_STRIDE,
    PIPE_CAP_SAMPLER_VIEW_TARGET,
    PIPE_CAP_CLIP_HALFZ,
-   PIPE_CAP_VERTEXID_NOBASE,
    PIPE_CAP_POLYGON_OFFSET_CLAMP,
    PIPE_CAP_MULTISAMPLE_Z_RESOLVE,
    PIPE_CAP_RESOURCE_FROM_USER_MEMORY,
+   PIPE_CAP_RESOURCE_FROM_USER_MEMORY_COMPUTE_ONLY,
    PIPE_CAP_DEVICE_RESET_STATUS_QUERY,
    PIPE_CAP_MAX_SHADER_PATCH_VARYINGS,
    PIPE_CAP_TEXTURE_FLOAT_LINEAR,
    PIPE_CAP_TEXTURE_HALF_FLOAT_LINEAR,
    PIPE_CAP_DEPTH_BOUNDS_TEST,
-   PIPE_CAP_TGSI_TXQS,
+   PIPE_CAP_TEXTURE_QUERY_SAMPLES,
    PIPE_CAP_FORCE_PERSAMPLE_INTERP,
    PIPE_CAP_SHAREABLE_SHADERS,
    PIPE_CAP_COPY_BETWEEN_COMPRESSED_AND_PLAIN_FORMATS,
    PIPE_CAP_CLEAR_TEXTURE,
+   PIPE_CAP_CLEAR_SCISSORED,
    PIPE_CAP_DRAW_PARAMETERS,
-   PIPE_CAP_TGSI_PACK_HALF_FLOAT,
+   PIPE_CAP_SHADER_PACK_HALF_FLOAT,
    PIPE_CAP_MULTI_DRAW_INDIRECT,
    PIPE_CAP_MULTI_DRAW_INDIRECT_PARAMS,
-   PIPE_CAP_TGSI_FS_POSITION_IS_SYSVAL,
-   PIPE_CAP_TGSI_FS_POINT_IS_SYSVAL,
-   PIPE_CAP_TGSI_FS_FACE_IS_INTEGER_SYSVAL,
+   PIPE_CAP_MULTI_DRAW_INDIRECT_PARTIAL_STRIDE,
+   PIPE_CAP_FS_POSITION_IS_SYSVAL,
+   PIPE_CAP_FS_POINT_IS_SYSVAL,
+   PIPE_CAP_FS_FACE_IS_INTEGER_SYSVAL,
    PIPE_CAP_SHADER_BUFFER_OFFSET_ALIGNMENT,
    PIPE_CAP_INVALIDATE_BUFFER,
    PIPE_CAP_GENERATE_MIPMAP,
@@ -828,30 +878,29 @@ enum pipe_cap
    PIPE_CAP_FRAMEBUFFER_NO_ATTACHMENT,
    PIPE_CAP_ROBUST_BUFFER_ACCESS_BEHAVIOR,
    PIPE_CAP_CULL_DISTANCE,
-   PIPE_CAP_PRIMITIVE_RESTART_FOR_PATCHES,
-   PIPE_CAP_TGSI_VOTE,
+   PIPE_CAP_CULL_DISTANCE_NOCOMBINE,
+   PIPE_CAP_SHADER_GROUP_VOTE,
    PIPE_CAP_MAX_WINDOW_RECTANGLES,
    PIPE_CAP_POLYGON_OFFSET_UNITS_UNSCALED,
    PIPE_CAP_VIEWPORT_SUBPIXEL_BITS,
    PIPE_CAP_RASTERIZER_SUBPIXEL_BITS,
    PIPE_CAP_MIXED_COLOR_DEPTH_BITS,
-   PIPE_CAP_TGSI_ARRAY_COMPONENTS,
+   PIPE_CAP_SHADER_ARRAY_COMPONENTS,
    PIPE_CAP_STREAM_OUTPUT_INTERLEAVE_BUFFERS,
-   PIPE_CAP_TGSI_CAN_READ_OUTPUTS,
+   PIPE_CAP_SHADER_CAN_READ_OUTPUTS,
    PIPE_CAP_NATIVE_FENCE_FD,
-   PIPE_CAP_GLSL_OPTIMIZE_CONSERVATIVELY,
    PIPE_CAP_GLSL_TESS_LEVELS_AS_INPUTS,
    PIPE_CAP_FBFETCH,
-   PIPE_CAP_TGSI_MUL_ZERO_WINS,
+   PIPE_CAP_LEGACY_MATH_RULES,
    PIPE_CAP_DOUBLES,
    PIPE_CAP_INT64,
    PIPE_CAP_INT64_DIVMOD,
    PIPE_CAP_TGSI_TEX_TXF_LZ,
-   PIPE_CAP_TGSI_CLOCK,
+   PIPE_CAP_SHADER_CLOCK,
    PIPE_CAP_POLYGON_MODE_FILL_RECTANGLE,
    PIPE_CAP_SPARSE_BUFFER_PAGE_SIZE,
-   PIPE_CAP_TGSI_BALLOT,
-   PIPE_CAP_TGSI_TES_LAYER_VIEWPORT,
+   PIPE_CAP_SHADER_BALLOT,
+   PIPE_CAP_TES_LAYER_VIEWPORT,
    PIPE_CAP_CAN_BIND_CONST_BUFFER_AS_VERTEX,
    PIPE_CAP_ALLOW_MAPPED_BUFFERS_DURING_EXECUTION,
    PIPE_CAP_POST_DEPTH_COVERAGE,
@@ -860,7 +909,6 @@ enum pipe_cap
    PIPE_CAP_QUERY_SO_OVERFLOW,
    PIPE_CAP_MEMOBJ,
    PIPE_CAP_LOAD_CONSTBUF,
-   PIPE_CAP_TGSI_ANY_REG_AS_ADDRESS,
    PIPE_CAP_TILE_RASTER_ORDER,
    PIPE_CAP_MAX_COMBINED_SHADER_OUTPUT_RESOURCES,
    PIPE_CAP_FRAMEBUFFER_MSAA_CONSTRAINTS,
@@ -878,7 +926,7 @@ enum pipe_cap
    PIPE_CAP_CONSERVATIVE_RASTER_INNER_COVERAGE,
    PIPE_CAP_PROGRAMMABLE_SAMPLE_LOCATIONS,
    PIPE_CAP_MAX_GS_INVOCATIONS,
-   PIPE_CAP_MAX_SHADER_BUFFER_SIZE,
+   PIPE_CAP_MAX_SHADER_BUFFER_SIZE_UINT,
    PIPE_CAP_TEXTURE_MIRROR_CLAMP_TO_EDGE,
    PIPE_CAP_MAX_COMBINED_SHADER_BUFFERS,
    PIPE_CAP_MAX_COMBINED_HW_ATOMIC_COUNTERS,
@@ -886,7 +934,7 @@ enum pipe_cap
    PIPE_CAP_MAX_TEXTURE_UPLOAD_MEMORY_BUDGET,
    PIPE_CAP_MAX_VERTEX_ELEMENT_SRC_OFFSET,
    PIPE_CAP_SURFACE_SAMPLE_COUNT,
-   PIPE_CAP_TGSI_ATOMFADD,
+   PIPE_CAP_IMAGE_ATOMIC_FLOAT_ADD,
    PIPE_CAP_QUERY_PIPELINE_STATISTICS_SINGLE,
    PIPE_CAP_RGB_OVERRIDE_DST_ALPHA_BLEND,
    PIPE_CAP_DEST_SURFACE_SRGB_CONTROL,
@@ -894,22 +942,20 @@ enum pipe_cap
    PIPE_CAP_MAX_VARYINGS,
    PIPE_CAP_COMPUTE_GRID_INFO_LAST_BLOCK,
    PIPE_CAP_COMPUTE_SHADER_DERIVATIVES,
-   PIPE_CAP_TGSI_SKIP_SHRINK_IO_ARRAYS,
    PIPE_CAP_IMAGE_LOAD_FORMATTED,
+   PIPE_CAP_IMAGE_STORE_FORMATTED,
    PIPE_CAP_THROTTLE,
    PIPE_CAP_DMABUF,
    PIPE_CAP_PREFER_COMPUTE_FOR_MULTIMEDIA,
    PIPE_CAP_FRAGMENT_SHADER_INTERLOCK,
    PIPE_CAP_FBFETCH_COHERENT,
-   PIPE_CAP_CS_DERIVED_SYSTEM_VALUES_SUPPORTED,
    PIPE_CAP_ATOMIC_FLOAT_MINMAX,
    PIPE_CAP_TGSI_DIV,
    PIPE_CAP_FRAGMENT_SHADER_TEXTURE_LOD,
    PIPE_CAP_FRAGMENT_SHADER_DERIVATIVES,
-   PIPE_CAP_VERTEX_SHADER_SATURATE,
    PIPE_CAP_TEXTURE_SHADOW_LOD,
    PIPE_CAP_SHADER_SAMPLES_IDENTICAL,
-   PIPE_CAP_TGSI_ATOMINC_WRAP,
+   PIPE_CAP_IMAGE_ATOMIC_INC_WRAP,
    PIPE_CAP_PREFER_IMM_ARRAYS_AS_CONSTBUF,
    PIPE_CAP_GL_SPIRV,
    PIPE_CAP_GL_SPIRV_VARIABLE_POINTERS,
@@ -921,6 +967,68 @@ enum pipe_cap
    PIPE_CAP_TWO_SIDED_COLOR,
    PIPE_CAP_CLIP_PLANES,
    PIPE_CAP_MAX_VERTEX_BUFFERS,
+   PIPE_CAP_OPENCL_INTEGER_FUNCTIONS,
+   PIPE_CAP_INTEGER_MULTIPLY_32X16,
+   /* Turn draw, dispatch, blit into NOOP */
+   PIPE_CAP_FRONTEND_NOOP,
+   PIPE_CAP_NIR_IMAGES_AS_DEREF,
+   PIPE_CAP_PACKED_STREAM_OUTPUT,
+   PIPE_CAP_VIEWPORT_TRANSFORM_LOWERED,
+   PIPE_CAP_PSIZ_CLAMPED,
+   PIPE_CAP_GL_BEGIN_END_BUFFER_SIZE,
+   PIPE_CAP_VIEWPORT_SWIZZLE,
+   PIPE_CAP_SYSTEM_SVM,
+   PIPE_CAP_VIEWPORT_MASK,
+   PIPE_CAP_ALPHA_TO_COVERAGE_DITHER_CONTROL,
+   PIPE_CAP_MAP_UNSYNCHRONIZED_THREAD_SAFE,
+   PIPE_CAP_GLSL_ZERO_INIT,
+   PIPE_CAP_BLEND_EQUATION_ADVANCED,
+   PIPE_CAP_NIR_ATOMICS_AS_DEREF,
+   PIPE_CAP_NO_CLIP_ON_COPY_TEX,
+   PIPE_CAP_MAX_TEXTURE_MB,
+   PIPE_CAP_SHADER_ATOMIC_INT64,
+   /** For EGL_EXT_protected_surface */
+   PIPE_CAP_DEVICE_PROTECTED_SURFACE,
+   PIPE_CAP_PREFER_REAL_BUFFER_IN_CONSTBUF0,
+   PIPE_CAP_GL_CLAMP,
+   PIPE_CAP_TEXRECT,
+   PIPE_CAP_SAMPLER_REDUCTION_MINMAX,
+   PIPE_CAP_SAMPLER_REDUCTION_MINMAX_ARB,
+   PIPE_CAP_ALLOW_DYNAMIC_VAO_FASTPATH,
+   PIPE_CAP_EMULATE_NONFIXED_PRIMITIVE_RESTART,
+   PIPE_CAP_SUPPORTED_PRIM_MODES,
+   PIPE_CAP_SUPPORTED_PRIM_MODES_WITH_RESTART,
+   PIPE_CAP_PREFER_BACK_BUFFER_REUSE,
+   PIPE_CAP_DRAW_VERTEX_STATE,
+   PIPE_CAP_PREFER_POT_ALIGNED_VARYINGS,
+   PIPE_CAP_MAX_SPARSE_TEXTURE_SIZE,
+   PIPE_CAP_MAX_SPARSE_3D_TEXTURE_SIZE,
+   PIPE_CAP_MAX_SPARSE_ARRAY_TEXTURE_LAYERS,
+   PIPE_CAP_SPARSE_TEXTURE_FULL_ARRAY_CUBE_MIPMAPS,
+   PIPE_CAP_QUERY_SPARSE_TEXTURE_RESIDENCY,
+   PIPE_CAP_CLAMP_SPARSE_TEXTURE_LOD,
+   PIPE_CAP_ALLOW_DRAW_OUT_OF_ORDER,
+   PIPE_CAP_MAX_CONSTANT_BUFFER_SIZE_UINT,
+   PIPE_CAP_HARDWARE_GL_SELECT,
+   PIPE_CAP_DITHERING,
+   PIPE_CAP_FBFETCH_ZS,
+   PIPE_CAP_TIMELINE_SEMAPHORE_IMPORT,
+   PIPE_CAP_QUERY_TIMESTAMP_BITS,
+   /** For EGL_EXT_protected_content */
+   PIPE_CAP_DEVICE_PROTECTED_CONTEXT,
+   PIPE_CAP_ALLOW_GLTHREAD_BUFFER_SUBDATA_OPT,
+   PIPE_CAP_NULL_TEXTURES,
+   PIPE_CAP_ASTC_VOID_EXTENTS_NEED_DENORM_FLUSH,
+
+   PIPE_CAP_VALIDATE_ALL_DIRTY_STATES,
+   PIPE_CAP_LAST,
+   /* XXX do not add caps after PIPE_CAP_LAST! */
+};
+
+enum pipe_texture_transfer_mode {
+   PIPE_TEXTURE_TRANSFER_DEFAULT = 0,
+   PIPE_TEXTURE_TRANSFER_BLIT = (1 << 0),
+   PIPE_TEXTURE_TRANSFER_COMPUTE = (1 << 1),
 };
 
 /**
@@ -928,14 +1036,18 @@ enum pipe_cap
  * return a bitmask of the supported priorities.  If the driver does not
  * support prioritized contexts, it can return 0.
  *
- * Note that these match __DRI2_RENDERER_HAS_CONTEXT_PRIORITY_*
+ * Note that these match __EGL_CONTEXT_PRIORITY_*_BIT.
  */
 #define PIPE_CONTEXT_PRIORITY_LOW     (1 << 0)
 #define PIPE_CONTEXT_PRIORITY_MEDIUM  (1 << 1)
 #define PIPE_CONTEXT_PRIORITY_HIGH    (1 << 2)
 
-#define PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_NV50 (1 << 0)
-#define PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_R600 (1 << 1)
+enum pipe_quirk_texture_border_color_swizzle {
+   PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_NV50 = (1 << 0),
+   PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_R600 = (1 << 1),
+   PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_FREEDRENO = (1 << 2),
+   PIPE_QUIRK_TEXTURE_BORDER_COLOR_SWIZZLE_ALPHA_NOT_W = (1 << 3),
+};
 
 enum pipe_endian
 {
@@ -954,10 +1066,16 @@ enum pipe_endian
  */
 enum pipe_capf
 {
+   PIPE_CAPF_MIN_LINE_WIDTH,
+   PIPE_CAPF_MIN_LINE_WIDTH_AA,
    PIPE_CAPF_MAX_LINE_WIDTH,
    PIPE_CAPF_MAX_LINE_WIDTH_AA,
-   PIPE_CAPF_MAX_POINT_WIDTH,
-   PIPE_CAPF_MAX_POINT_WIDTH_AA,
+   PIPE_CAPF_LINE_WIDTH_GRANULARITY,
+   PIPE_CAPF_MIN_POINT_SIZE,
+   PIPE_CAPF_MIN_POINT_SIZE_AA,
+   PIPE_CAPF_MAX_POINT_SIZE,
+   PIPE_CAPF_MAX_POINT_SIZE_AA,
+   PIPE_CAPF_POINT_SIZE_GRANULARITY,
    PIPE_CAPF_MAX_TEXTURE_ANISOTROPY,
    PIPE_CAPF_MAX_TEXTURE_LOD_BIAS,
    PIPE_CAPF_MIN_CONSERVATIVE_RASTER_DILATE,
@@ -975,11 +1093,11 @@ enum pipe_shader_cap
    PIPE_SHADER_CAP_MAX_CONTROL_FLOW_DEPTH,
    PIPE_SHADER_CAP_MAX_INPUTS,
    PIPE_SHADER_CAP_MAX_OUTPUTS,
-   PIPE_SHADER_CAP_MAX_CONST_BUFFER_SIZE,
+   PIPE_SHADER_CAP_MAX_CONST_BUFFER0_SIZE,
    PIPE_SHADER_CAP_MAX_CONST_BUFFERS,
    PIPE_SHADER_CAP_MAX_TEMPS,
    /* boolean caps */
-   PIPE_SHADER_CAP_TGSI_CONT_SUPPORTED,
+   PIPE_SHADER_CAP_CONT_SUPPORTED,
    PIPE_SHADER_CAP_INDIRECT_INPUT_ADDR,
    PIPE_SHADER_CAP_INDIRECT_OUTPUT_ADDR,
    PIPE_SHADER_CAP_INDIRECT_TEMP_ADDR,
@@ -988,21 +1106,19 @@ enum pipe_shader_cap
    PIPE_SHADER_CAP_INTEGERS,
    PIPE_SHADER_CAP_INT64_ATOMICS,
    PIPE_SHADER_CAP_FP16,
+   PIPE_SHADER_CAP_FP16_DERIVATIVES,
+   PIPE_SHADER_CAP_FP16_CONST_BUFFERS,
+   PIPE_SHADER_CAP_INT16,
+   PIPE_SHADER_CAP_GLSL_16BIT_CONSTS,
    PIPE_SHADER_CAP_MAX_TEXTURE_SAMPLERS,
    PIPE_SHADER_CAP_PREFERRED_IR,
    PIPE_SHADER_CAP_TGSI_SQRT_SUPPORTED,
    PIPE_SHADER_CAP_MAX_SAMPLER_VIEWS,
-   PIPE_SHADER_CAP_TGSI_DROUND_SUPPORTED, /* all rounding modes */
-   PIPE_SHADER_CAP_TGSI_DFRACEXP_DLDEXP_SUPPORTED,
-   PIPE_SHADER_CAP_TGSI_FMA_SUPPORTED,
+   PIPE_SHADER_CAP_DROUND_SUPPORTED, /* all rounding modes */
    PIPE_SHADER_CAP_TGSI_ANY_INOUT_DECL_RANGE,
-   PIPE_SHADER_CAP_MAX_UNROLL_ITERATIONS_HINT,
    PIPE_SHADER_CAP_MAX_SHADER_BUFFERS,
    PIPE_SHADER_CAP_SUPPORTED_IRS,
    PIPE_SHADER_CAP_MAX_SHADER_IMAGES,
-   PIPE_SHADER_CAP_LOWER_IF_THRESHOLD,
-   PIPE_SHADER_CAP_TGSI_SKIP_MERGE_REGISTERS,
-   PIPE_SHADER_CAP_TGSI_LDEXP_SUPPORTED,
    PIPE_SHADER_CAP_MAX_HW_ATOMIC_COUNTERS,
    PIPE_SHADER_CAP_MAX_HW_ATOMIC_COUNTER_BUFFERS,
 };
@@ -1016,7 +1132,7 @@ enum pipe_shader_cap
  * get TGSI.
  *
  * Note that PIPE_SHADER_IR_TGSI should be zero for backwards compat with
- * state trackers that only understand TGSI.
+ * gallium frontends that only understand TGSI.
  */
 enum pipe_shader_ir
 {
@@ -1063,6 +1179,7 @@ enum pipe_resource_param
    PIPE_RESOURCE_PARAM_HANDLE_TYPE_SHARED,
    PIPE_RESOURCE_PARAM_HANDLE_TYPE_KMS,
    PIPE_RESOURCE_PARAM_HANDLE_TYPE_FD,
+   PIPE_RESOURCE_PARAM_LAYER_STRIDE,
 };
 
 /**
@@ -1106,17 +1223,22 @@ struct pipe_query_data_timestamp_disjoint
  */
 struct pipe_query_data_pipeline_statistics
 {
-   uint64_t ia_vertices;    /**< Num vertices read by the vertex fetcher. */
-   uint64_t ia_primitives;  /**< Num primitives read by the vertex fetcher. */
-   uint64_t vs_invocations; /**< Num vertex shader invocations. */
-   uint64_t gs_invocations; /**< Num geometry shader invocations. */
-   uint64_t gs_primitives;  /**< Num primitives output by a geometry shader. */
-   uint64_t c_invocations;  /**< Num primitives sent to the rasterizer. */
-   uint64_t c_primitives;   /**< Num primitives that were rendered. */
-   uint64_t ps_invocations; /**< Num pixel shader invocations. */
-   uint64_t hs_invocations; /**< Num hull shader invocations. */
-   uint64_t ds_invocations; /**< Num domain shader invocations. */
-   uint64_t cs_invocations; /**< Num compute shader invocations. */
+   union {
+      struct {
+         uint64_t ia_vertices;    /**< Num vertices read by the vertex fetcher. */
+         uint64_t ia_primitives;  /**< Num primitives read by the vertex fetcher. */
+         uint64_t vs_invocations; /**< Num vertex shader invocations. */
+         uint64_t gs_invocations; /**< Num geometry shader invocations. */
+         uint64_t gs_primitives;  /**< Num primitives output by a geometry shader. */
+         uint64_t c_invocations;  /**< Num primitives sent to the rasterizer. */
+         uint64_t c_primitives;   /**< Num primitives that were rendered. */
+         uint64_t ps_invocations; /**< Num pixel shader invocations. */
+         uint64_t hs_invocations; /**< Num hull shader invocations. */
+         uint64_t ds_invocations; /**< Num domain shader invocations. */
+         uint64_t cs_invocations; /**< Num compute shader invocations. */
+      };
+      uint64_t counters[11];
+   };
 };
 
 /**
@@ -1178,6 +1300,12 @@ enum pipe_query_value_type
    PIPE_QUERY_TYPE_U32,
    PIPE_QUERY_TYPE_I64,
    PIPE_QUERY_TYPE_U64,
+};
+
+enum pipe_query_flags
+{
+   PIPE_QUERY_WAIT = (1 << 0),
+   PIPE_QUERY_PARTIAL = (1 << 1),
 };
 
 union pipe_color_union
@@ -1245,17 +1373,7 @@ enum pipe_fd_type
 {
    PIPE_FD_TYPE_NATIVE_SYNC,
    PIPE_FD_TYPE_SYNCOBJ,
-};
-
-enum pipe_debug_type
-{
-   PIPE_DEBUG_TYPE_OUT_OF_MEMORY = 1,
-   PIPE_DEBUG_TYPE_ERROR,
-   PIPE_DEBUG_TYPE_SHADER_INFO,
-   PIPE_DEBUG_TYPE_PERF_INFO,
-   PIPE_DEBUG_TYPE_INFO,
-   PIPE_DEBUG_TYPE_FALLBACK,
-   PIPE_DEBUG_TYPE_CONFORMANCE,
+   PIPE_FD_TYPE_TIMELINE_SEMAPHORE,
 };
 
 /**
@@ -1282,6 +1400,11 @@ enum pipe_perf_counter_data_type
 };
 
 #define PIPE_UUID_SIZE 16
+#define PIPE_LUID_SIZE 8
+
+#if DETECT_OS_UNIX
+#define PIPE_MEMORY_FD
+#endif
 
 #ifdef __cplusplus
 }
