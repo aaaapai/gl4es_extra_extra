@@ -37,41 +37,6 @@
 #include "../../mesa/main/mtypes.h"
 #include "string_to_uint_map.h"
 
-void
-_mesa_warning(struct gl_context *ctx, const char *fmt, ...)
-{
-    va_list vargs;
-    (void) ctx;
-
-    va_start(vargs, fmt);
-
-    /* This output is not thread-safe, but that's good enough for the
-     * standalone compiler.
-     */
-    fprintf(stderr, "Mesa warning: ");
-    vfprintf(stderr, fmt, vargs);
-    fprintf(stderr, "\n");
-
-    va_end(vargs);
-}
-
-void
-_mesa_problem(const struct gl_context *ctx, const char *fmt, ...)
-{
-    va_list vargs;
-    (void) ctx;
-
-    va_start(vargs, fmt);
-
-    /* This output is not thread-safe, but that's good enough for the
-     * standalone compiler.
-     */
-    fprintf(stderr, "Mesa problem: ");
-    vfprintf(stderr, fmt, vargs);
-    fprintf(stderr, "\n");
-
-    va_end(vargs);
-}
 
 void
 _mesa_reference_shader_program_data(struct gl_shader_program_data **ptr,
@@ -89,11 +54,7 @@ _mesa_reference_program_(struct gl_context *ctx, struct gl_program **ptr,
    *ptr = prog;
 }
 
-void
-_mesa_shader_debug(struct gl_context *, GLenum, GLuint *,
-                   const char *)
-{
-}
+
 
 struct gl_shader *
 _mesa_new_shader(GLuint name, gl_shader_stage stage)
