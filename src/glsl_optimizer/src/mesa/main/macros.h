@@ -35,6 +35,7 @@
 #include "../../util/u_math.h"
 #include "../../util/rounding.h"
 #include "imports.h"
+#include "../../../include/GL/gl.h"
 
 
 
@@ -174,26 +175,6 @@ extern GLfloat _mesa_ubyte_to_float_color_tab[256];
 	ub = ((GLubyte) _mesa_lroundevenf((f) * 255.0F))
 #endif
 
-static fi_type UINT_AS_UNION(GLuint u)
-{
-   fi_type tmp;
-   tmp.u = u;
-   return tmp;
-}
-
-static inline fi_type INT_AS_UNION(GLint i)
-{
-   fi_type tmp;
-   tmp.i = i;
-   return tmp;
-}
-
-static inline fi_type FLOAT_AS_UNION(GLfloat f)
-{
-   fi_type tmp;
-   tmp.f = f;
-   return tmp;
-}
 
 /**
  * Convert a floating point value to an unsigned fixed point value.
@@ -602,34 +583,6 @@ do {				\
 
 /*@}*/
 
-/** Copy \p sz elements into a homegeneous (4-element) vector, giving
- * default values to the remaining components.
- * The default values are chosen based on \p type.
- */
-static inline void
-COPY_CLEAN_4V_TYPE_AS_UNION(fi_type dst[4], int sz, const fi_type src[4],
-                            GLenum type)
-{
-   switch (type) {
-   case GL_FLOAT:
-      ASSIGN_4V(dst, FLOAT_AS_UNION(0), FLOAT_AS_UNION(0),
-                FLOAT_AS_UNION(0), FLOAT_AS_UNION(1));
-      break;
-   case GL_INT:
-      ASSIGN_4V(dst, INT_AS_UNION(0), INT_AS_UNION(0),
-                INT_AS_UNION(0), INT_AS_UNION(1));
-      break;
-   case GL_UNSIGNED_INT:
-      ASSIGN_4V(dst, UINT_AS_UNION(0), UINT_AS_UNION(0),
-                UINT_AS_UNION(0), UINT_AS_UNION(1));
-      break;
-   default:
-      ASSIGN_4V(dst, FLOAT_AS_UNION(0), FLOAT_AS_UNION(0),
-                FLOAT_AS_UNION(0), FLOAT_AS_UNION(1)); /* silence warnings */
-      assert(!"Unexpected type in COPY_CLEAN_4V_TYPE_AS_UNION macro");
-   }
-   COPY_SZ_4V(dst, sz, src);
-}
 
 /** \name Linear interpolation functions */
 /*@{*/

@@ -130,8 +130,8 @@ os_log_message(const char *message)
 }
 
 #if DETECT_OS_ANDROID
-#  include <ctype.h>
-#  include "c11/threads.h"
+//#  include <ctype.h>
+//#  include "../../include/c11/threads.h"
 
 /**
  * Get an option value from android's property system, as a fallback to
@@ -150,13 +150,13 @@ os_log_message(const char *message)
  *  - GALLIUM_HUD -> mesa.gallium.hud
  *
  */
+ /*
 static char *
 os_get_android_option(const char *name)
 {
    static thread_local char os_android_option_value[PROPERTY_VALUE_MAX];
    char key[PROPERTY_KEY_MAX];
    char *p = key, *end = key + PROPERTY_KEY_MAX;
-   /* add "mesa." prefix if necessary: */
    if (strstr(name, "MESA_") != name)
       p += strlcpy(p, "mesa.", end - p);
    p += strlcpy(p, name, end - p);
@@ -174,17 +174,20 @@ os_get_android_option(const char *name)
    }
    return NULL;
 }
+*/
 #endif
 
 const char *
 os_get_option(const char *name)
 {
    const char *opt = getenv(name);
+   /*
 #if DETECT_OS_ANDROID
    if (!opt) {
       opt = os_get_android_option(name);
    }
 #endif
+    */
    return opt;
 }
 

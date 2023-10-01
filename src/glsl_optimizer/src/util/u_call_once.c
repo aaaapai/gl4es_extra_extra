@@ -11,7 +11,7 @@ struct util_call_once_context_t
    util_call_once_data_func func;
 };
 
-static thread_local struct util_call_once_context_t call_once_context;
+static /*thread_local*/ struct util_call_once_context_t call_once_context;
 
 static void
 util_call_once_data_slow_once(void)

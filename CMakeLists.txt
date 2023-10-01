@@ -386,10 +386,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/compiler/glsl/propagate_invariance.cpp
         src/glsl_optimizer/src/compiler/glsl/s_expression.cpp
         src/glsl_optimizer/src/compiler/glsl/s_expression.h
-        src/glsl_optimizer/src/compiler/glsl/serialize.cpp
-        src/glsl_optimizer/src/compiler/glsl/serialize.h
-        src/glsl_optimizer/src/compiler/glsl/shader_cache.cpp
-        src/glsl_optimizer/src/compiler/glsl/shader_cache.h
         src/glsl_optimizer/src/compiler/glsl/standalone.cpp
         src/glsl_optimizer/src/compiler/glsl/standalone.h
         src/glsl_optimizer/src/compiler/glsl/standalone_scaffolding.cpp

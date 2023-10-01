@@ -28,7 +28,7 @@
  * \author Brian Paul
  */
 
-#include "../util/glheader.h"
+#include "../../util/glheader.h"
 #include "../main/macros.h"
 #include "../main/errors.h"
 #include "../../util/u_memory.h"

@@ -13,10 +13,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include <alloca.h>
-#include <GL/gl.h>
-#include <GL/glext.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include "../../../include/GL/gl.h"
+#include "../../../include/GLES2/gl2.h"
+#include "../../../include/GLES2/gl2ext.h"
 
 #define MAX_GLENUM_BITS 16
 
@@ -235,7 +234,7 @@ int main(int argc, char **argv)
       {2, S(GL_FLOAT)},
       {2, S(GL_FIXED)},
       {3, S(GL_DOUBLE)},
-      {3, S(GL_UNSIGNED_INT64_ARB)},
+      //{3, S(GL_UNSIGNED_INT64_ARB)},
       {0},
    };
    print_hash_code("GL_VERTEX_TYPE", "gl_vertex_type", vertex_types, false);

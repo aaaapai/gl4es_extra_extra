@@ -25,7 +25,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/u_debug_stack_android.cpp \
     src/glsl_optimizer/src/compiler/nir_types.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_validate.cpp \
-    src/glsl_optimizer/src/compiler/glsl/serialize.cpp \
     src/glsl_optimizer/src/compiler/glsl/hir_field_selection.cpp \
     src/glsl_optimizer/src/compiler/glsl/builtin_variables.cpp \
     src/glsl_optimizer/src/compiler/glsl/glsl_parser.cpp \
@@ -47,7 +46,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/compiler/glsl/ast_type.cpp \
     src/glsl_optimizer/src/compiler/glsl/lower_jumps.cpp \
     src/glsl_optimizer/src/compiler/glsl/opt_if_simplification.cpp \
-    src/glsl_optimizer/src/compiler/glsl/shader_cache.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_hierarchical_visitor.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_builder.cpp \
     src/glsl_optimizer/src/compiler/glsl/ast_array_index.cpp \
@@ -468,7 +466,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_CPP_FEATURES := exceptions
 
-LOCAL_CPPFLAGS = -std=gnu++20
+LOCAL_CPPFLAGS = -std=gnu++20 -DANDROID -DHAVE_STRUCT_TIMESPEC -DDETECT_OS_ANDROID
 
 LOCAL_CFLAGS += -g -funwind-tables -fvisibility=hidden -include include/android_debug.h
 LOCAL_CFLAGS += -Ofast -ffast-math -mllvm -polly -flto
@@ -487,6 +485,7 @@ LOCAL_CFLAGS += -D__STDC_FORMAT_MACROS
 LOCAL_CFLAGS += -D__STDC_CONSTANT_MACROS
 LOCAL_CFLAGS += -DUTIL_ARCH_LITTLE_ENDIAN
 LOCAL_CFLAGS += -DUNIX
+LOCAL_CFLAGS += -DANDROID -DHAVE_STRUCT_TIMESPEC -DDETECT_OS_ANDROID
 
 //TODO: maybe temporary?
 LOCAL_CFLAGS += -Wno-typedef-redefinition -Wno-dangling-else
