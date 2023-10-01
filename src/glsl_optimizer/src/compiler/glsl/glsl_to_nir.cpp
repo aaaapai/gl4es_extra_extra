@@ -1656,7 +1656,7 @@ nir_visitor::visit(ir_call *ir)
       }
       case nir_intrinsic_vote_ieq:
          instr->num_components = 1;
-         FALLTHROUGH;
+
       case nir_intrinsic_vote_any:
       case nir_intrinsic_vote_all: {
          nir_ssa_dest_init(&instr->instr, &instr->dest, 1, 1, NULL);

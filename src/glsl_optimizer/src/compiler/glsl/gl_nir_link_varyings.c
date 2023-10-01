@@ -1754,7 +1754,7 @@ tfeedback_candidate_generator(struct tfeedback_candidate_generator_state *state,
                                        named_ifc_member->type, NULL);
          return;
       }
-      FALLTHROUGH;
+
    case GLSL_TYPE_STRUCT:
       for (unsigned i = 0; i < glsl_get_length(type); i++) {
          size_t new_length = name_length;
@@ -1788,7 +1788,7 @@ tfeedback_candidate_generator(struct tfeedback_candidate_generator_state *state,
 
          return;
       }
-      FALLTHROUGH;
+
    default:
       assert(!glsl_type_is_struct(glsl_without_array(type)));
       assert(!glsl_type_is_interface(glsl_without_array(type)));

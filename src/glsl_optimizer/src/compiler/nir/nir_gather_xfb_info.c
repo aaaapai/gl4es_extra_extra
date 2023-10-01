@@ -24,7 +24,7 @@
 #include "nir_xfb_info.h"
 
 #include "../../util/u_dynarray.h"
-#include <util/u_math.h>
+#include "../../util/u_math.h"
 
 static void
 add_var_xfb_varying(nir_xfb_info *xfb,

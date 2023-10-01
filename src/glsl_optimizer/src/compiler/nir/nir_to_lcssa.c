@@ -181,7 +181,7 @@ instr_is_invariant(nir_instr *instr, nir_loop *loop)
       if (!(nir_intrinsic_infos[intrinsic->intrinsic].flags & NIR_INTRINSIC_CAN_REORDER))
          return not_invariant;
    }
-   FALLTHROUGH;
+
    default:
       return nir_foreach_src(instr, src_is_invariant, loop) ? invariant : not_invariant;
    }

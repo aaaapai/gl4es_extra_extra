@@ -78,7 +78,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/compiler/glsl/ir_function.cpp \
     src/glsl_optimizer/src/compiler/glsl/lower_precision.cpp \
     src/glsl_optimizer/src/compiler/glsl/ir_variable_refcount.cpp \
-    src/glsl_optimizer/src/compiler/glsl/main.cpp \
     src/glsl_optimizer/src/compiler/glsl/lower_vector_derefs.cpp \
     src/glsl_optimizer/src/compiler/glsl/builtin_functions.cpp \
     src/glsl_optimizer/src/compiler/glsl/linker_util.cpp \
@@ -123,7 +122,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/register_allocate.c \
     src/glsl_optimizer/src/util/fast_idiv_by_const.c \
     src/glsl_optimizer/src/util/disk_cache_os.c \
-    src/glsl_optimizer/src/util/tools/find_hash_func.c \
     src/glsl_optimizer/src/util/blob.c \
     src/glsl_optimizer/src/util/strtod.c \
     src/glsl_optimizer/src/util/os_misc.c \
@@ -176,6 +174,7 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/u_debug_refcnt.c \
     src/glsl_optimizer/src/util/u_debug_symbol.c \
     src/glsl_optimizer/src/util/streaming-load-memcpy.c \
+    src/glsl_optimizer/src/mesa/main/errors.c \
     src/glsl_optimizer/src/mesa/main/extensions_table.c \
     src/glsl_optimizer/src/mesa/main/imports.c \
     src/glsl_optimizer/src/mesa/program/symbol_table.c \

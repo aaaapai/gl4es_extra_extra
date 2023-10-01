@@ -420,7 +420,7 @@ add_shader_variable(const struct gl_constants *consts,
          return true;
       }
    }
-   FALLTHROUGH;
+
 
    default: {
       /* The ARB_program_interface_query spec says:

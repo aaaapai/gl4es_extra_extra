@@ -80,13 +80,6 @@ _mesa_reference_shader_program_data(struct gl_shader_program_data **ptr,
    *ptr = data;
 }
 
-void
-_mesa_reference_shader(struct gl_context *ctx, struct gl_shader **ptr,
-                       struct gl_shader *sh)
-{
-   (void) ctx;
-   *ptr = sh;
-}
 
 void
 _mesa_reference_program_(struct gl_context *ctx, struct gl_program **ptr,

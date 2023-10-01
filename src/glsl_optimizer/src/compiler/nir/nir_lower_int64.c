@@ -1132,7 +1132,7 @@ should_lower_int64_alu_instr(const nir_alu_instr *alu,
       break;
    case nir_op_f2u64:
    case nir_op_f2i64:
-      FALLTHROUGH;
+
    default:
       assert(alu->dest.dest.is_ssa);
       if (alu->dest.dest.ssa.bit_size != 64)

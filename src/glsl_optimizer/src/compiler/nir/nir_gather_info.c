@@ -539,7 +539,7 @@ gather_intrinsic_info(nir_intrinsic_instr *instr, nir_shader *shader,
    case nir_intrinsic_demote:
    case nir_intrinsic_demote_if:
       shader->info.fs.uses_demote = true;
-      FALLTHROUGH; /* quads with helper lanes only might be discarded entirely */
+       /* quads with helper lanes only might be discarded entirely */
    case nir_intrinsic_discard:
    case nir_intrinsic_discard_if:
    case nir_intrinsic_terminate:
@@ -690,7 +690,7 @@ gather_intrinsic_info(nir_intrinsic_instr *instr, nir_shader *shader,
       shader->info.inputs_read |=
          BITFIELD64_BIT(VARYING_SLOT_COL0 <<
                         (instr->intrinsic == nir_intrinsic_load_color1));
-      FALLTHROUGH;
+
    case nir_intrinsic_load_subgroup_size:
    case nir_intrinsic_load_subgroup_invocation:
    case nir_intrinsic_load_subgroup_eq_mask:
@@ -840,7 +840,7 @@ gather_intrinsic_info(nir_intrinsic_instr *instr, nir_shader *shader,
    case nir_intrinsic_end_primitive_with_counter:
       assert(shader->info.stage == MESA_SHADER_GEOMETRY);
       shader->info.gs.uses_end_primitive = 1;
-      FALLTHROUGH;
+
 
    case nir_intrinsic_emit_vertex:
    case nir_intrinsic_emit_vertex_with_counter:
@@ -934,7 +934,7 @@ gather_alu_info(nir_alu_instr *instr, nir_shader *shader)
    case nir_op_fddx:
    case nir_op_fddy:
       shader->info.uses_fddx_fddy = true;
-      FALLTHROUGH;
+
    case nir_op_fddx_fine:
    case nir_op_fddy_fine:
    case nir_op_fddx_coarse:
