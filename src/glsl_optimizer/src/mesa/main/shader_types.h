@@ -36,7 +36,7 @@
 #include "menums.h"
 #include "../../util/mesa-sha1.h"
 #include "../../compiler/shader_info.h"
-#include "../../util/list.h"
+#include "../../compiler/glsl/list.h"
 #include "../../compiler/glsl/ir_uniform.h"
 
 #include "../../gallium/include/pipe/p_state.h"

@@ -83,7 +83,7 @@
 #include "ir_rvalue_visitor.h"
 #include "ir_uniform.h"
 #include "builtin_functions.h"
-#include "shader_cache.h"
+
 #include "../../util/u_string.h"
 #include "../../util/u_math.h"
 

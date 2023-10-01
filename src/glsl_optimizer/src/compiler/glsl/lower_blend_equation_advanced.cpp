@@ -24,11 +24,7 @@
 #include "ir.h"
 #include "ir_builder.h"
 #include "ir_optimization.h"
-#include "ir_hierarchical_visitor.h"
 #include "../../mesa/program/prog_instruction.h"
-#include "../../mesa/program/prog_statevars.h"
-#include "../../util/bitscan.h"
-#include "builtin_functions.h"
 #include "../../mesa/main/shader_types.h"
 
 using namespace ir_builder;

@@ -14,7 +14,7 @@
 #include "../../include/c11/threads.h"
 #include "macros.h"
 #include "u_atomic.h"
-#include "../../include/c11/threads_posix.h"
+//#include "../../include/c11/threads_posix.h"
 
 #ifdef __cplusplus
 extern "C" {

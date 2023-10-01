@@ -38,7 +38,7 @@
 #  define HG(x)
 #endif
 #else /* !UTIL_FUTEX_SUPPORTED */
-#  include "c11/threads.h"
+#  include "../../include/c11/threads.h"
 #endif /* UTIL_FUTEX_SUPPORTED */
 
 #ifdef __cplusplus

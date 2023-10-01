@@ -43,10 +43,7 @@
 #include "glsl_symbol_table.h"
 #include "../../mesa/main/consts_exts.h"
 #include "../../mesa/main/uniforms.h"
-#include "../../mesa/program/prog_statevars.h"
 #include "../../mesa/program/prog_instruction.h"
-#include "../../util/compiler.h"
-#include "builtin_functions.h"
 
 using namespace ir_builder;
 
