@@ -59,9 +59,7 @@ output_if_debug(enum mesa_log_level level, const char *outputString)
 #endif
     }
 
-    /* Now only print the string if we're required to do so. */
-    if (debug)
-        mesa_log(level, "Mesa", "%s", outputString);
+    mesa_log(level, "Mesa", "%s", outputString);
 }
 
 
@@ -153,10 +151,10 @@ _mesa_problem( const struct gl_context *ctx, const char *fmtString, ... )
 static GLboolean
 should_output(struct gl_context *ctx, GLenum error, const char *fmtString)
 {
+    return GL_TRUE;
+    /*
     static GLint debug = -1;
 
-    /* Check debug environment variable only once:
-     */
     if (debug == -1) {
         const char *debugEnv = getenv("MESA_DEBUG");
 
@@ -184,6 +182,7 @@ should_output(struct gl_context *ctx, GLenum error, const char *fmtString)
         ctx->ErrorDebugCount++;
     }
     return GL_FALSE;
+     */
 }
 
 

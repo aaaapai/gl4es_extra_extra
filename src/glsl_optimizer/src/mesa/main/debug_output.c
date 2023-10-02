@@ -760,6 +760,8 @@ _mesa_update_debug_callback(struct gl_context *ctx)
 static struct gl_debug_state *
 _mesa_lock_debug_state(struct gl_context *ctx)
 {
+    return NULL;
+    /*
     simple_mtx_lock(&ctx->DebugMutex);
 
     if (!ctx->Debug) {
@@ -771,7 +773,7 @@ _mesa_lock_debug_state(struct gl_context *ctx)
             /*
              * This function may be called from other threads.  When that is the
              * case, we cannot record this OOM error.
-             */
+
             //if (ctx == cur) _mesa_error(ctx, GL_OUT_OF_MEMORY, "allocating debug state");
 
             return NULL;
@@ -779,12 +781,13 @@ _mesa_lock_debug_state(struct gl_context *ctx)
     }
 
     return ctx->Debug;
+    */
 }
 
 static void
 _mesa_unlock_debug_state(struct gl_context *ctx)
 {
-    simple_mtx_unlock(&ctx->DebugMutex);
+    //simple_mtx_unlock(&ctx->DebugMutex);
 }
 
 /**
@@ -899,6 +902,8 @@ log_msg_locked_and_unlock(struct gl_context *ctx,
                           enum mesa_debug_severity severity,
                           GLint len, const char *buf)
 {
+    _mesa_log_msg(ctx, source, type, id, severity, len, buf);
+    /*
     struct gl_debug_state *debug = ctx->Debug;
 
     if (!_mesa_debug_is_message_enabled(debug, source, type, id, severity)) {
@@ -907,7 +912,7 @@ log_msg_locked_and_unlock(struct gl_context *ctx,
     }
 
     if (ctx->Debug->Callback) {
-        /* Call the user's callback function */
+        // Call the user's callback function
         GLenum gl_source = debug_source_enums[source];
         GLenum gl_type = debug_type_enums[type];
         GLenum gl_severity = debug_severity_enums[severity];
@@ -918,15 +923,16 @@ log_msg_locked_and_unlock(struct gl_context *ctx,
          * When ctx->Debug->SyncOutput is GL_FALSE, the client is prepared for
          * unsynchronous calls.  When it is GL_TRUE, we will not spawn threads.
          * In either case, we can call the callback unlocked.
-         */
+
         _mesa_unlock_debug_state(ctx);
         callback(gl_source, gl_type, id, gl_severity, len, buf, data);
     }
     else {
-        /* add debug message to queue */
+        // add debug message to queue
         debug_log_message(ctx->Debug, source, type, id, severity, len, buf);
         _mesa_unlock_debug_state(ctx);
-    }
+    }*/
+
 }
 
 /**
@@ -937,12 +943,15 @@ _mesa_log_msg(struct gl_context *ctx, enum mesa_debug_source source,
               enum mesa_debug_type type, GLuint id,
               enum mesa_debug_severity severity, GLint len, const char *buf)
 {
+    printf("MESA: %s\n", buf);
+    /*
     struct gl_debug_state *debug = _mesa_lock_debug_state(ctx);
 
     if (!debug)
         return;
 
     log_msg_locked_and_unlock(ctx, source, type, id, severity, len, buf);
+     */
 }
 
 
