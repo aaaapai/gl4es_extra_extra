@@ -1988,5 +1988,5 @@ int GetShaderVersion(const char * source) {
     test_version_context(300, es)
 
     free(versionString);
-    return 100;
+    return 110;
 }
