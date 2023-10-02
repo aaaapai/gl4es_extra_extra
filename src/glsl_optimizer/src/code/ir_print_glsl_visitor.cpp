@@ -615,23 +615,24 @@ IR_TO_GLSL::visit(ir_function* ir)
 }
 
 const char* const operator_glsl_strs[] = {
-   "~",
-   "!",
+   "~", // bit not
+   "!", // logic not
    "-", //neg
-   "abs",
-   "sign",
+   "abs", // abs
+   "sign", //sign
    "1.0/", // rcp
    "1.0/sqrt", //rcq
-   "sqrt",
-   "exp",
-   "log",
-   "exp2",
-   "log2",
+   "sqrt", //sqrt
+   "exp", // exp
+   "log", // log
+   "exp2", //exp2
+   "log2", //log2
    "int", //f2i
    "uint", //f2u
    "float", // i2f
    "bool", // f2b
    "float", //b2f
+   "ir_unop_b2f16",
    "bool", //i2b
    "int",//"b2i",
    "float",// "u2f",
@@ -639,11 +640,19 @@ const char* const operator_glsl_strs[] = {
    "int",// "u2i",
    "float",// "d2f",
    "double",// "f2d",
+   "f2f16",
+   "f2fmp",
+   "f162f",
+   "i2i",
+   "i2imp",
+   "u2u",
+   "u2ump",
    "int", //"d2i",
    "double", // "i2d",
    "uint",//  "d2u",
    "double", //"u2d",
    "bool",// "d2b",
+   "f162b",
    "bitcast_i2f",
    "bitcast_f2i",
    "bitcast_u2f",
@@ -700,7 +709,8 @@ const char* const operator_glsl_strs[] = {
    "bit_count",
    "find_msb",
    "find_lsb",
-   "clamp",
+   "clamp", // clz ?
+   "saturate", // what does it mean though ?
    "packDouble2x32",
    "unpackDouble2x32",
    "packSampler2x32",
@@ -709,18 +719,24 @@ const char* const operator_glsl_strs[] = {
    "unpackImage2x32",
    "frexp_sig",
    "frexp_exp",
-   "noise",
    "subroutine_to_int",
    "interpolate_at_centroid",
    "get_buffer_size",
    "ssbo_unsized_array_length",
+   "implicitly_sized_array_length",
    "packInt2x32",
    "packUint2x32",
    "unpackInt2x32",
    "unpackUint2x32",
    "+",
    "-",
+   "add_sat",
+   "sub_sat",
+   "abs_sub",
+   "avg",
+   "avg_round",
    "*",
+   "mul_32x16",
    "imul_high_TODO",
    "/",
    "carry_TODO",
@@ -751,7 +767,7 @@ const char* const operator_glsl_strs[] = {
    "interpolate_at_sample_TODO",
    "atan2",
    "fma",
-   "mix",
+   "mix", // lrp ?
    "csel",
    "bitfield_extract_TODO",
    "vector_insert_TODO",
@@ -904,115 +920,6 @@ const char* const operator_glsl_enum_strs[] = {
    "vector",
 };
 
-/*static const char *const operator_glsl_strs[] = {
-	"~",
-	"!",
-	"-",
-	"abs",
-	"sign",
-	"1.0/",
-	"inversesqrt",
-	"sqrt",
-	"normalize",
-	"exp",
-	"log",
-	"exp2",
-	"log2",
-	"int",		// f2i
-	"int",		// f2u
-	"float",	// i2f
-	"bool",		// f2b
-	"float",	// b2f
-	"bool",		// i2b
-	"int",		// b2i
-	"float",	// u2f
-	"int",		// i2u
-	"int",		// u2i
-	"intBitsToFloat",	// bit i2f
-	"floatBitsToInt",		// bit f2i
-	"uintBitsToFloat",	// bit u2f
-	"floatBitsToUint",		// bit f2u
-	"any",
-	"trunc",
-	"ceil",
-	"floor",
-	"fract",
-	"roundEven",
-	"sin",
-	"cos",
-	"sin", // reduced
-	"cos", // reduced
-	"dFdx",
-	"dFdxCoarse",
-	"dFdxFine",
-	"dFdy",
-	"dFdyCoarse",
-	"dFdyFine",
-	"packSnorm2x16",
-	"packSnorm4x8",
-	"packUnorm2x16",
-	"packUnorm4x8",
-	"packHalf2x16",
-	"unpackSnorm2x16",
-	"unpackSnorm4x8",
-	"unpackUnorm2x16",
-	"unpackUnorm4x8",
-	"unpackHalf2x16",
-	"unpackHalf2x16_splitX_TODO",
-	"unpackHalf2x16_splitY_TODO",
-	"bitfieldReverse",
-	"bitCount",
-	"findMSB",
-	"findLSB",
-	"saturate",
-	"noise",
-	"interpolateAtCentroid",
-	"+",
-	"-",
-	"*",
-	"*_imul_high_TODO",
-	"/",
-	"carry_TODO",
-	"borrow_TODO",
-	"mod",
-	"<",
-	">",
-	"<=",
-	">=",
-	"equal",
-	"notEqual",
-	"==",
-	"!=",
-	"<<",
-	">>",
-	"&",
-	"^",
-	"|",
-	"&&",
-	"^^",
-	"||",
-	"dot",
-	"min",
-	"max",
-	"pow",
-	"packHalf2x16_split_TODO",
-	"bfm_TODO",
-	"uboloadTODO",
-	"ldexp_TODO",
-	"vectorExtract_TODO",
-	"interpolateAtOffset",
-	"interpolateAtSample",
-	"fma",
-	"clamp",
-	"mix",
-	"csel_TODO",
-	"bfi_TODO",
-	"bitfield_extract_TODO",
-	"vector_insert_TODO",
-	"bitfield_insert_TODO",
-	"vectorTODO",
-};
-*/
 
 static const char* const operator_vec_glsl_strs[] = {
 	"lessThan",
