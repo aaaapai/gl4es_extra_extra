@@ -379,6 +379,10 @@ IR_TO_GLSL::visit(ir_rvalue*)
 void
 IR_TO_GLSL::visit(ir_variable* ir)
 {
+   // HACK to handle unoptimized shaders
+   if(ir->type->is_void())
+      return;
+
     // TODO restore uniform blocks
     /*
 	if ( ir->is_in_uniform_block()) // only supporting uniform blocks for now, might add SSBOs later
