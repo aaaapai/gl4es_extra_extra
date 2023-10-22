@@ -241,13 +241,6 @@ protected:
 	~GlslConvert(); // Prevent unwanted destruction
 
 public:
-	bool CreateGraph(
-		std::string vShaderSource,
-		ShaderStage vShaderType,
-		ApiTarget vTarget,
-		int vGLSLVersion,
-		std::function<void(struct _mesa_glsl_parse_state*)> vFinishFunc);
-	
 	char * Optimize(
 		const char * vShaderSource,
 		ShaderStage vShaderType,
@@ -265,12 +258,7 @@ public:
 	{
 		return failed;
 	}
-private:
-	void DO_Optimization_Pass(
-		struct exec_list *vIr, 
-		bool linked,
-		gl_shader_compiler_options *vCompilerFlags,
-		OptimizationStruct *vOptimisationStruct);
+
 
 public:
 	static void InitContext(struct gl_context *ctx, ApiTarget api, int vGlslVersion);
@@ -281,4 +269,6 @@ private:
 	void FillCompilerOptions(gl_shader_compiler_options *vCompileOptions, OptimizationStruct *vOptimizationStruct);
 	std::string log;
 	bool failed = false;
+
+    void apply_optimizations(exec_list *vIr, bool linked, gl_shader_compiler_options *vCompilerFlags);
 };

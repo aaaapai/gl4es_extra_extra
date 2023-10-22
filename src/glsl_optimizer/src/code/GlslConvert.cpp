@@ -38,7 +38,7 @@
 
 #include "../compiler/glsl/string_to_uint_map.h"
 #include "../compiler/glsl/linker.h"
-#include "../compiler/glsl/glsl_parser_extras.h"
+#include "init.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -230,11 +230,8 @@ char * GlslConvert::Optimize(
 					}
 
 					// Do optimization post-link
-					DO_Optimization_Pass(
-						ir,
-						linked,
-						&compileOptions,
-						&vOptimizationStruct);
+                    apply_optimizations(ir, linked, &compileOptions);
+
 
 					validate_ir_tree(ir);
 
@@ -315,158 +312,23 @@ char * GlslConvert::Optimize(
 	return optimized_shader;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-void GlslConvert::DO_Optimization_Pass(
-	struct exec_list* vIr,
-	bool linked,
-	gl_shader_compiler_options* vCompilerFlags,
-	OptimizationStruct* vOptimizationStruct)
-{
-#define OPT(FLAG, PASS, ...) do {																	\
-	if ((vOptimizationStruct->optimizationFlags & OptimizationFlags::FLAG))	\
-	progress |= PASS(__VA_ARGS__);																	\
-	} while(false)																					\
-
-#define OPT_BIS(FLAG, PASS, ...) do {																	\
-	if ((vOptimizationStruct->optimizationFlags_Bis & OptimizationFlags_Bis::FLAG))	\
-	progress |= PASS(__VA_ARGS__);																	\
-	} while(false)																					\
-
-	bool progress = false;
-	int passes = 0;
-	do {
-		progress = false;
-		++passes;
-
-		if (vCompilerFlags && vOptimizationStruct)
-		{
-			//OPT(OPT_lower_instructions, lower_instructions,vIr, vOptimizationStruct->instructionToLowerFlags);
-			if (linked)
-			{
-				OPT(OPT_function_inlining, do_function_inlining, vIr);
-				//OPT(OPT_dead_functions, do_dead_functions, vIr, vOptimizationStruct->deadFunctionOptions.entryFunc.c_str());
-				//OPT(OPT_structure_splitting, do_structure_splitting, vIr);
-			}
-			propagate_invariance(vIr);
-			OPT(OPT_if_simplification, do_if_simplification, vIr);
-			OPT(OPT_flatten_nested_if_blocks, opt_flatten_nested_if_blocks, vIr);
-			//OPT(OPT_conditional_discard, opt_conditional_discard, vIr);
-			//OPT(OPT_copy_propagation_elements, do_copy_propagation_elements, vIr);
-			if (vCompilerFlags->OptimizeForAOS && !linked)
-				OPT(OPT_flip_matrices, opt_flip_matrices, vIr);
-			if (linked && vCompilerFlags->OptimizeForAOS)
-			{
-				//OPT(OPT_vectorize, do_vectorize, vIr);
-			}
-			if (linked)
-                printf("do");
-				//OPT(OPT_dead_code, do_dead_code, vIr, !vOptimizationStruct->deadCodeOptions.keep_only_assigned_uniforms);
-			else
-				OPT(OPT_dead_code_unlinked, do_dead_code_unlinked, vIr);
-			OPT(OPT_dead_code_local, do_dead_code_local, vIr);
-			OPT(OPT_tree_grafting, do_tree_grafting, vIr);
-			//OPT(OPT_constant_propagation, do_constant_propagation, vIr);
-			/*
-            if (linked)
-                OPT(OPT_constant_variable, do_constant_variable, vIr);
-			else
-				OPT(OPT_constant_variable_unlinked, do_constant_variable_unlinked, vIr);
-			 */
-			//OPT(OPT_constant_folding, do_constant_folding, vIr);
-			OPT_BIS(OPT_minmax_prune, do_minmax_prune, vIr);
-			OPT_BIS(OPT_rebalance_tree, do_rebalance_tree, vIr);
-			OPT(OPT_algebraic, do_algebraic, vIr,
-				vOptimizationStruct->algebraicOptions.native_integers, vCompilerFlags);
-			/*
-            OPT(OPT_lower_jumps, do_lower_jumps, vIr,
-				vOptimizationStruct->lowerJumpsOptions.pull_out_jumps,
-				vOptimizationStruct->lowerJumpsOptions.lower_sub_return,
-				vOptimizationStruct->lowerJumpsOptions.lower_main_return,
-				vOptimizationStruct->lowerJumpsOptions.lower_continue,
-				vOptimizationStruct->lowerJumpsOptions.lower_break);
-			 */
-			//OPT(OPT_vec_index_to_swizzle, do_vec_index_to_swizzle, vIr);
-			//OPT_BIS(OPT_lower_vector_insert, lower_vector_insert, vIr, vOptimizationStruct->lowerVectorInsertOptions.lower_nonconstant_index);
-			//OPT(OPT_optimize_swizzles, optimize_swizzles, vIr);
-			//OPT_BIS(OPT_optimize_split_arrays, optimize_split_arrays, vIr, linked);
-			//OPT(OPT_optimize_redundant_jumps, optimize_redundant_jumps, vIr);
-            /*
-			if (OPT_BIS_FLAGS(vOptimizationStruct->optimizationFlags_Bis, OPT_set_unroll_Loops))
-			{
-				if (vCompilerFlags->MaxUnrollIterations)
-				{
-					loop_state* ls = analyze_loop_variables(vIr);
-					if (ls->loop_found)
-					{
-						bool loop_progress = unroll_loops(vIr, ls, vCompilerFlags);
-						while (loop_progress)
-						{
-							loop_progress = false;
-							loop_progress |= do_constant_propagation(vIr);
-							loop_progress |= do_if_simplification(vIr);
-
-							/* Some drivers only call do_common_optimization() once rather
-							 * than in a loop. So we must call do_lower_jumps() after
-							 * unrolling a loop because for drivers that use LLVM validation
-							 * will fail if a jump is not the last instruction in the block.
-							 * For example the following will fail LLVM validation:
-							 *
-							 *   (loop (
-							 *      ...
-							 *   break
-							 *   (assign  (x) (var_ref v124)  (expression int + (var_ref v124)
-							 *      (constant int (1)) ) )
-							 *   ))
-							loop_progress |= do_lower_jumps(vIr,
-								true,
-								true,
-								vCompilerFlags->EmitNoMainReturn,
-								vCompilerFlags->EmitNoCont,
-								vCompilerFlags->EmitNoLoops);
-						}
-						progress |= loop_progress;
-					}
-					delete ls;
-				}
-			}*/
-			//OPT(OPT_lower_texture_projection, do_lower_texture_projection, vIr);
-			/*
-            if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_if_to_cond_assign))
-			{
-				gl_shader_stage stage = (gl_shader_stage)vOptimizationStruct->stage;
-				progress |= lower_if_to_cond_assign(stage, vIr,
-					vOptimizationStruct->lowerIfToCondAssignOptions.max_depth,
-					vOptimizationStruct->lowerIfToCondAssignOptions.min_branch_cost);
-			}*/
-			OPT(OPT_mat_op_to_vec, do_mat_op_to_vec, vIr);
-			OPT(OPT_vec_index_to_cond_assign, do_vec_index_to_cond_assign, vIr);
-			OPT(OPT_lower_discard, lower_discard, vIr);
-			//OPT(OPT_lower_noise, lower_noise, vIr);
-			/*
-            if (OPT_FLAGS(vOptimizationStruct->optimizationFlags, OPT_lower_variable_index_to_cond_assign))
-			{
-				gl_shader_stage stage = (gl_shader_stage)vOptimizationStruct->stage;
-				progress |= lower_variable_index_to_cond_assign(
-					stage, vIr,
-					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_input,
-					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_output,
-					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_temp,
-					vOptimizationStruct->lowerVariableIndexToCondAssignOptions.lower_uniform);
-			}*/
-			//OPT(OPT_lower_quadop_vector, lower_quadop_vector, vIr, vOptimizationStruct->lowerQuadopVector.dont_lower_swz);
-
-			validate_ir_tree(vIr);
-		}
-	} while (progress && passes < vOptimizationStruct->maxCountPasses);
-#undef OPT
+void GlslConvert::apply_optimizations(
+        struct  exec_list *vIr,
+        bool linked,
+        gl_shader_compiler_options* vCompilerFlags
+) {
+   unsigned int passes = 0;
+   while (passes < globals4es.vgpu_optimization){
+      passes ++;
+      do_common_optimization(vIr, linked, vCompilerFlags, true);
+      do_mat_op_to_vec(vIr);
+      do_vec_index_to_cond_assign(vIr);
+      lower_discard(vIr);
+      lower_discard_flow(vIr);
+      lower_instructions(vIr, false, false);
+   }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
 static void init_gl_program(struct gl_program* prog, bool is_arb_asm, GLenum target)
 {
