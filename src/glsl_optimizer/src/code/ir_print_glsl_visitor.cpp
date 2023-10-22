@@ -709,8 +709,8 @@ const char* const operator_glsl_strs[] = {
    "bit_count",
    "find_msb",
    "find_lsb",
-   "clamp", // clz ?
-   "saturate", // what does it mean though ?
+   "clz", // clz ?
+   "/* saturate */", // "saturate" clamps between 0.0 and 1.0. However, we won't clamp here for now
    "packDouble2x32",
    "unpackDouble2x32",
    "packSampler2x32",
