@@ -325,7 +325,7 @@ find_matching_signature(const char *name, const exec_list *actual_parameters,
 
    if (f) {
       ir_function_signature *sig =
-         f->matching_signature(NULL, actual_parameters, false);
+         f->matching_signature(NULL, actual_parameters, true);
 
       if (sig && (sig->is_defined || sig->is_intrinsic()))
          return sig;
