@@ -3391,22 +3391,22 @@ KEYWORD(110, 100, 0, 0, USING);
 case 250:
 YY_RULE_SETUP
 #line 706 "../src/compiler/glsl/glsl_lexer.ll"
-KEYWORD(120, 100, 130, 100, LOWP);
+KEYWORD(120, 100, 100, 100, LOWP);
 	YY_BREAK
 case 251:
 YY_RULE_SETUP
 #line 707 "../src/compiler/glsl/glsl_lexer.ll"
-KEYWORD(120, 100, 130, 100, MEDIUMP);
+KEYWORD(120, 100, 100, 100, MEDIUMP);
 	YY_BREAK
 case 252:
 YY_RULE_SETUP
 #line 708 "../src/compiler/glsl/glsl_lexer.ll"
-KEYWORD(120, 100, 130, 100, HIGHP);
+KEYWORD(120, 100, 100, 100, HIGHP);
 	YY_BREAK
 case 253:
 YY_RULE_SETUP
 #line 709 "../src/compiler/glsl/glsl_lexer.ll"
-KEYWORD(120, 100, 130, 100, PRECISION);
+KEYWORD(120, 100, 100, 100, PRECISION);
 	YY_BREAK
 /* Additional reserved words in GLSL 1.30. */
 case 254:
