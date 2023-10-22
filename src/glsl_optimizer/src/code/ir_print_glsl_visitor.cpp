@@ -714,7 +714,7 @@ const char* const operator_glsl_strs[] = {
    "find_msb",
    "find_lsb",
    "clz", // clz ?
-   "/* saturate */", // "saturate" clamps between 0.0 and 1.0. However, we won't clamp here for now
+   "clamp", // "saturate" clamps between 0.0 and 1.0. So we hack the printer to add arguments
    "packDouble2x32",
    "unpackDouble2x32",
    "packSampler2x32",
@@ -968,6 +968,11 @@ IR_TO_GLSL::visit(ir_expression* ir)
 		}
 		if (ir->operands[0])
 			ir->operands[0]->accept(this);
+
+      // Saturate is only accepted by some glsl compilers, so transform it into a clamp 0.0 - 1.0
+      if(ir->operation == ir_unop_saturate)
+         generated_source.append(", 0.0, 1.0");
+
 		generated_source.append(")");
 		if (ir->operation == ir_unop_rcp) {
 			generated_source.append(")");
