@@ -29,6 +29,7 @@
 #include "../../util/hash_table.h"
 #include "linker.h"
 #include "../../mesa/main/shader_types.h"
+#include "builtin_functions.h"
 
 static ir_function_signature *
 find_matching_signature(const char *name, const exec_list *actual_parameters,
@@ -95,6 +96,12 @@ public:
                                        shader_list[i]->symbols);
          if (sig)
             break;
+      }
+
+      if(sig == NULL) {
+          sig = find_matching_signature(name, &ir->actual_parameters, _mesa_glsl_get_builtin_function_shader()->symbols);
+          if(sig)
+              return visit_continue;
       }
 
       if (sig == NULL) {
