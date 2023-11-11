@@ -330,12 +330,12 @@ void GlslConvert::apply_optimizations(
 }
 
 
-static void init_gl_program(struct gl_program* prog, bool is_arb_asm, GLenum target)
+static void init_gl_program(struct gl_program* prog, bool is_arb_asm, gl_shader_stage target)
 {
 	prog->RefCount = 1;
 	prog->Format = GL_PROGRAM_FORMAT_ASCII_ARB;
 	//prog->is_arb_asm = is_arb_asm;
-	prog->info.stage = (gl_shader_stage)_mesa_program_enum_to_shader_stage(target);
+	prog->info.stage = target;
 }
 
 static struct gl_program* new_program(UNUSED struct gl_context* ctx, gl_shader_stage target,
