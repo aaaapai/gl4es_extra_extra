@@ -160,7 +160,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/format/u_format_yuv.c \
     src/glsl_optimizer/src/util/string_buffer.c \
     src/glsl_optimizer/src/util/os_socket.c \
-    src/glsl_optimizer/src/util/memstream.c \
     src/glsl_optimizer/src/util/mesa_cache_db_multipart.c \
     src/glsl_optimizer/src/util/u_cpu_detect.c \
     src/glsl_optimizer/src/util/u_mm.c \

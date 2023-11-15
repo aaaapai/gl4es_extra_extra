@@ -37,42 +37,6 @@
 #include "debug_output.h"
 #include "../../util/log.h"
 
-static void
-output_if_debug(enum mesa_log_level level, const char *outputString)
-{
-    static int debug = -1;
-
-    /* Init the local 'debug' var once.
-     * Note: the _mesa_init_debug() function should have been called
-     * by now so MESA_DEBUG_FLAGS will be initialized.
-     */
-    if (debug == -1) {
-#ifndef NDEBUG
-        /* in debug builds, print messages unless MESA_DEBUG="silent" */
-        if (MESA_DEBUG_FLAGS & DEBUG_SILENT)
-            debug = 0;
-        else
-            debug = 1;
-#else
-        const char *env = getenv("MESA_DEBUG");
-      debug = env && strstr(env, "silent") == NULL;
-#endif
-    }
-
-    mesa_log(level, "Mesa", "%s", outputString);
-}
-
-
-/**
- * Return the file handle to use for debug/logging.  Defaults to stderr
- * unless MESA_LOG_FILE is defined.
- */
-FILE *
-_mesa_get_log_file(void)
-{
-    return mesa_log_get_file();
-}
-
 
 /**
  * When a new type of error is recorded, print a message describing
@@ -94,59 +58,6 @@ flush_delayed_errors( struct gl_context *ctx )
     }
     */
 }
-
-
-/**
- * Report a warning (a recoverable error condition) to stderr if
- * either DEBUG is defined or the MESA_DEBUG env var is set.
- *
- * \param ctx GL context.
- * \param fmtString printf()-like format string.
- */
-void
-_mesa_warning( struct gl_context *ctx, const char *fmtString, ... )
-{
-    char str[MAX_DEBUG_MESSAGE_LENGTH];
-    va_list args;
-    va_start( args, fmtString );
-    (void) vsnprintf( str, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args );
-    va_end( args );
-
-    if (ctx)
-        flush_delayed_errors( ctx );
-
-    output_if_debug(MESA_LOG_WARN, str);
-}
-
-
-/**
- * Report an internal implementation problem.
- * Prints the message to stderr via fprintf().
- *
- * \param ctx GL context.
- * \param fmtString problem description string.
- */
-void
-_mesa_problem( const struct gl_context *ctx, const char *fmtString, ... )
-{
-    va_list args;
-    char str[MAX_DEBUG_MESSAGE_LENGTH];
-    static int numCalls = 0;
-
-    (void) ctx;
-
-    if (numCalls < 50) {
-        numCalls++;
-
-        va_start( args, fmtString );
-        vsnprintf( str, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args );
-        va_end( args );
-        fprintf(stderr, "Mesa "  " implementation error: %s\n",
-                str);
-        fprintf(stderr, "Please report at " "\n");
-    }
-}
-
 
 static GLboolean
 should_output(struct gl_context *ctx, GLenum error, const char *fmtString)
@@ -223,112 +134,6 @@ _mesa_gl_debugf(struct gl_context *ctx,
     va_end(args);
 }
 
-size_t
-_mesa_gl_debug(struct gl_context *ctx,
-               GLuint *id,
-               enum mesa_debug_source source,
-               enum mesa_debug_type type,
-               enum mesa_debug_severity severity,
-               const char *msg)
-{
-    _mesa_debug_get_id(id);
-
-    size_t len = strnlen(msg, MAX_DEBUG_MESSAGE_LENGTH);
-    if (len < MAX_DEBUG_MESSAGE_LENGTH) {
-        _mesa_log_msg(ctx, source, type, *id, severity, len, msg);
-        return len;
-    }
-
-    /* limit the message to fit within KHR_debug buffers */
-    char s[MAX_DEBUG_MESSAGE_LENGTH];
-    strncpy(s, msg, MAX_DEBUG_MESSAGE_LENGTH - 1);
-    s[MAX_DEBUG_MESSAGE_LENGTH - 1] = '\0';
-    len = MAX_DEBUG_MESSAGE_LENGTH - 1;
-    _mesa_log_msg(ctx, source, type, *id, severity, len, s);
-
-    /* report the number of characters that were logged */
-    return len;
-}
-
-
-/**
- * Record an OpenGL state error.  These usually occur when the user
- * passes invalid parameters to a GL function.
- *
- * If debugging is enabled (either at compile-time via the DEBUG macro, or
- * run-time via the MESA_DEBUG environment variable), report the error with
- * _mesa_debug().
- *
- * \param ctx the GL context.
- * \param error the error value.
- * \param fmtString printf() style format string, followed by optional args
- */
-void
-_mesa_error( struct gl_context *ctx, GLenum error, const char *fmtString, ... )
-{
-    GLboolean do_output, do_log;
-    /* Ideally this would be set up by the caller, so that we had proper IDs
-     * per different message.
-     */
-    static GLuint error_msg_id = 0;
-
-    _mesa_debug_get_id(&error_msg_id);
-
-    do_output = should_output(ctx, error, fmtString);
-
-    simple_mtx_lock(&ctx->DebugMutex);
-    if (ctx->Debug) {
-        do_log = _mesa_debug_is_message_enabled(ctx->Debug,
-                                                MESA_DEBUG_SOURCE_API,
-                                                MESA_DEBUG_TYPE_ERROR,
-                                                error_msg_id,
-                                                MESA_DEBUG_SEVERITY_HIGH);
-    }
-    else {
-        do_log = GL_FALSE;
-    }
-    simple_mtx_unlock(&ctx->DebugMutex);
-
-    if (do_output || do_log) {
-        char s[MAX_DEBUG_MESSAGE_LENGTH], s2[MAX_DEBUG_MESSAGE_LENGTH];
-        int len;
-        va_list args;
-
-        va_start(args, fmtString);
-        len = vsnprintf(s, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args);
-        va_end(args);
-
-        if (len >= MAX_DEBUG_MESSAGE_LENGTH) {
-            /* Too long error message. Whoever calls _mesa_error should use
-             * shorter strings.
-             */
-            assert(0);
-            return;
-        }
-
-        len = snprintf(s2, MAX_DEBUG_MESSAGE_LENGTH, "... in %s ", s);
-        if (len >= MAX_DEBUG_MESSAGE_LENGTH) {
-            /* Same as above. */
-            assert(0);
-            return;
-        }
-
-        /* Print the error to stderr if needed. */
-        if (do_output) {
-            output_if_debug(MESA_LOG_ERROR, s2);
-        }
-
-        /* Log the error via ARB_debug_output if needed.*/
-        if (do_log) {
-            _mesa_log_msg(ctx, MESA_DEBUG_SOURCE_API, MESA_DEBUG_TYPE_ERROR,
-                          error_msg_id, MESA_DEBUG_SEVERITY_HIGH, len, s2);
-        }
-    }
-
-    /* Set the GL context error state for glGetError. */
-    if (ctx->ErrorValue == GL_NO_ERROR)
-        ctx->ErrorValue = error;
-}
 
 void
 _mesa_error_no_memory(const char *caller)
@@ -338,43 +143,31 @@ _mesa_error_no_memory(const char *caller)
 }
 
 /**
- * Report debug information.  Print error message to stderr via fprintf().
- * No-op if DEBUG mode not enabled.
+ * Report an internal implementation problem.
+ * Prints the message to stderr via fprintf().
  *
  * \param ctx GL context.
- * \param fmtString printf()-style format string, followed by optional args.
+ * \param fmtString problem description string.
  */
 void
-_mesa_debug( const struct gl_context *ctx, const char *fmtString, ... )
+_mesa_problem( const struct gl_context *ctx, const char *fmtString, ... )
 {
-#ifndef NDEBUG
-    char s[MAX_DEBUG_MESSAGE_LENGTH];
     va_list args;
-    va_start(args, fmtString);
-    vsnprintf(s, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args);
-    va_end(args);
-    output_if_debug(MESA_LOG_DEBUG, s);
-#endif /* DEBUG */
+    char str[MAX_DEBUG_MESSAGE_LENGTH];
+    static int numCalls = 0;
+
     (void) ctx;
-    (void) fmtString;
-}
 
+    if (numCalls < 50) {
+        numCalls++;
 
-void
-_mesa_log(const char *fmtString, ...)
-{
-    char s[MAX_DEBUG_MESSAGE_LENGTH];
-    va_list args;
-    va_start(args, fmtString);
-    vsnprintf(s, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args);
-    va_end(args);
-    output_if_debug(MESA_LOG_INFO, s);
-}
-
-void
-_mesa_log_direct(const char *string)
-{
-    output_if_debug(MESA_LOG_INFO, string);
+        va_start( args, fmtString );
+        vsnprintf( str, MAX_DEBUG_MESSAGE_LENGTH, fmtString, args );
+        va_end( args );
+        fprintf(stderr, "Mesa "  " implementation error: %s\n",
+                str);
+        fprintf(stderr, "Please report at " "\n");
+    }
 }
 
 /**
@@ -402,14 +195,4 @@ _mesa_shader_debug(struct gl_context *ctx, GLenum type, GLuint *id,
         len = MAX_DEBUG_MESSAGE_LENGTH - 1;
 
     _mesa_log_msg(ctx, source, type, *id, severity, len, msg);
-}
-
-/**
- * Set the parameter as the current GL error. Used by glthread.
- */
-void GLAPIENTRY
-_mesa_InternalSetError(GLenum error)
-{
-    //GET_CURRENT_CONTEXT(ctx);
-    //_mesa_error(ctx, error, "glthread");
 }

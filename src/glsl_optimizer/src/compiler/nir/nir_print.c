@@ -28,7 +28,6 @@
 #include "nir.h"
 #include "../shader_enums.h"
 #include "../../util/half_float.h"
-#include "../../util/memstream.h"
 #include "../../util/mesa-sha1.h"
 #include "vulkan/vulkan_core.h"
 #include <stdio.h>
@@ -2123,33 +2122,6 @@ nir_print_shader(nir_shader *shader, FILE *fp)
    fflush(fp);
 }
 
-char *
-nir_shader_as_str_annotated(nir_shader *nir, struct hash_table *annotations, void *mem_ctx)
-{
-   char *stream_data = NULL;
-   size_t stream_size = 0;
-   struct u_memstream mem;
-   if (u_memstream_open(&mem, &stream_data, &stream_size)) {
-      FILE *const stream = u_memstream_get(&mem);
-      nir_print_shader_annotated(nir, stream, annotations);
-      u_memstream_close(&mem);
-   }
-
-   char *str = ralloc_size(mem_ctx, stream_size + 1);
-   memcpy(str, stream_data, stream_size);
-   str[stream_size] = '\0';
-
-   free(stream_data);
-
-   return str;
-}
-
-char *
-nir_shader_as_str(nir_shader *nir, void *mem_ctx)
-{
-   return nir_shader_as_str_annotated(nir, NULL, mem_ctx);
-}
-
 void
 nir_print_instr(const nir_instr *instr, FILE *fp)
 {
@@ -2164,27 +2136,6 @@ nir_print_instr(const nir_instr *instr, FILE *fp)
    print_instr(instr, &state, 0);
 }
 
-char *
-nir_instr_as_str(const nir_instr *instr, void *mem_ctx)
-{
-   char *stream_data = NULL;
-   size_t stream_size = 0;
-   struct u_memstream mem;
-   if (u_memstream_open(&mem, &stream_data, &stream_size)) {
-      FILE *const stream = u_memstream_get(&mem);
-      nir_print_instr(instr, stream);
-      u_memstream_close(&mem);
-   }
-
-   char *str = ralloc_size(mem_ctx, stream_size + 1);
-   memcpy(str, stream_data, stream_size);
-   str[stream_size] = '\0';
-
-   free(stream_data);
-
-   return str;
-}
-
 void
 nir_print_deref(const nir_deref_instr *deref, FILE *fp)
 {
@@ -2192,12 +2143,4 @@ nir_print_deref(const nir_deref_instr *deref, FILE *fp)
       .fp = fp,
    };
    print_deref_link(deref, true, &state);
-}
-
-void nir_log_shader_annotated_tagged(enum mesa_log_level level, const char *tag,
-                                     nir_shader *shader, struct hash_table *annotations)
-{
-   char *str = nir_shader_as_str_annotated(shader, annotations, NULL);
-   _mesa_log_multiline(level, tag, str);
-   ralloc_free(str);
 }

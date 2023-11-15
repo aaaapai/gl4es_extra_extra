@@ -43,8 +43,6 @@ nir_shader *glsl_to_nir(const struct gl_constants *consts,
                         gl_shader_stage stage,
                         const nir_shader_compiler_options *options);
 
-nir_shader *glsl_float64_funcs_to_nir(struct gl_context *ctx,
-                                      const nir_shader_compiler_options *options);
 
 #ifdef __cplusplus
 }
