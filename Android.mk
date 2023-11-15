@@ -127,7 +127,6 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/util/hash_table.c \
     src/glsl_optimizer/src/util/u_atomic.c \
     src/glsl_optimizer/src/util/softfloat.c \
-    src/glsl_optimizer/src/util/rwlock.c \
     src/glsl_optimizer/src/util/crc32.c \
     src/glsl_optimizer/src/util/rand_xor.c \
     src/glsl_optimizer/src/util/os_memory_fd.c \
