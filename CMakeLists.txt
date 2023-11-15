@@ -780,8 +780,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/util/rgtc.c
         src/glsl_optimizer/src/util/rgtc.h
         src/glsl_optimizer/src/util/rounding.h
-        src/glsl_optimizer/src/util/rwlock.c
-        src/glsl_optimizer/src/util/rwlock.h
         src/glsl_optimizer/src/util/set.c
         src/glsl_optimizer/src/util/set.h
         src/glsl_optimizer/src/util/simple_mtx.c
