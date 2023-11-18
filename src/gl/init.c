@@ -660,6 +660,11 @@ void initialize_gl4es() {
         SHUT_LOGD_NOPREFIX("Do not optimize the shaders\n");
     }
 
+    GetEnvVarInt("LIBGL_VGPU_STUBLAND", &globals4es.vgpu_stubland, 0);
+    if (globals4es.vgpu_stubland) {
+        SHUT_LOGD_NOPREFIX("Use descriptive stubs\n");
+    }
+
     env(LIBGL_VGPU_FORCE, globals4es.vgpu_force_conv, "Force VGPU pipeline to convert every shader")
     env(LIBGL_VGPU_BACKPORT, globals4es.vgpu_backport, "Attempt HARD to backport shaders to #version 100")
     env(LIBGL_BUFFER_FORCE_BIND, globals4es.buffer_force_bind, "Will rebind buffers before each use !")

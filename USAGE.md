@@ -365,6 +365,11 @@ The number of optimization passes done by the compiler
 * 1 : Default, perform one pass
 * X : Perform X passes
 
+##### LIBGL_VGPU_STUBLAND
+Whether to use custom descriptive stubs for missing functions, may have a different effect due to ABIs
+* 0 : Default, use the default silent stub
+* 1 : use the descriptive stubs
+
 ##### LIBGL_BUFFER_FORCE_BIND
 Whether buffers are rebound each time they are needed.
 * 0 : Default, only bind the first time. Faster but will cause crashes if the bind is lost.
