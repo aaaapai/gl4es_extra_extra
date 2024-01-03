@@ -196,6 +196,9 @@ typedef struct {
     glbuffer_t *elements;
     glbuffer_t *pack;
     glbuffer_t *unpack;
+    // Temporary buffer state
+    glbuffer_t *copy_read;
+    glbuffer_t *copy_write;
     // locked arrays
     int       locked;
     GLsizei   count;

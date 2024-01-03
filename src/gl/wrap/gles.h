@@ -3669,6 +3669,11 @@ packed_call_t* APIENTRY_GL4ES glCopyPackedCall(const packed_call_t *packed);
 #define glVertexAttribIPointer_INDEXED INDEXED_void_GLuint_GLint_GLenum_GLsizei_const_GLvoid___GENPT__
 #define glVertexAttribIPointer_FORMAT FORMAT_void_GLuint_GLint_GLenum_GLsizei_const_GLvoid___GENPT__
 
+#define glClearBufferiv_ARG_EXPAND GLenum buffer, GLint drawBuffer, const GLint * value
+#define glClearBufferuiv_ARG_EXPAND GLenum buffer, GLint drawBuffer, const GLuint * value
+#define glClearBufferfv_ARG_EXPAND GLenum buffer, GLint drawBuffer, const GLfloat * value
+#define glClearBufferfi_ARG_EXPAND GLenum buffer, GLint drawBuffer, const GLfloat * depth, GLint stencil
+
 void APIENTRY_GL4ES gl4es_glActiveTexture(glActiveTexture_ARG_EXPAND);
 typedef void (APIENTRY_GLES * glActiveTexture_PTR)(glActiveTexture_ARG_EXPAND);
 void APIENTRY_GL4ES gl4es_glAlphaFunc(glAlphaFunc_ARG_EXPAND);
@@ -4154,6 +4159,11 @@ typedef void (APIENTRY_GLES * glViewport_PTR)(glViewport_ARG_EXPAND);
 
 void APIENTRY_GL4ES gl4es_glVertexAttribIPointer(glVertexAttribIPointer_ARG_EXPAND);
 typedef void (APIENTRY_GLES * glVertexAttribIPointer_PTR)(glVertexAttribIPointer_ARG_EXPAND);
+
+typedef void (APIENTRY_GLES * glClearBufferiv_PTR)(glClearBufferiv_ARG_EXPAND);
+typedef void (APIENTRY_GLES * glClearBufferuiv_PTR)(glClearBufferuiv_ARG_EXPAND);
+typedef void (APIENTRY_GLES * glClearBufferfv_PTR)(glClearBufferfv_ARG_EXPAND);
+typedef void (APIENTRY_GLES * glClearBufferfi_PTR)(glClearBufferfi_ARG_EXPAND);
 
 
 

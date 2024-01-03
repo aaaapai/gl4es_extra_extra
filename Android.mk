@@ -456,6 +456,7 @@ LOCAL_SRC_FILES := \
 	src/glx/gbm.c \
 	src/glx/streaming.c \
 	src/gl/vgpu/shaderconv.c \
+	src/gl/vgpu/state.c \
     src/gl/iProtecc/iprotecc_string.c \
 
 
@@ -466,7 +467,8 @@ LOCAL_CPP_FEATURES := exceptions
 LOCAL_CPPFLAGS = -std=gnu++20 -DANDROID -DHAVE_STRUCT_TIMESPEC -DDETECT_OS_ANDROID
 
 LOCAL_CFLAGS += -g -funwind-tables -fvisibility=hidden -include include/android_debug.h
-LOCAL_CFLAGS += -Ofast -ffast-math -mllvm -polly -flto
+#LOCAL_CFLAGS += -DDEBUG
+#LOCAL_CFLAGS += -Ofast -ffast-math -mllvm -polly -flto
 LOCAL_CFLAGS += -DNOX11
 LOCAL_CFLAGS += -DNO_GBM
 #LOCAL_CFLAGS += -DNO_INIT_CONSTRUCTOR

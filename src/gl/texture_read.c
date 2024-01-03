@@ -15,6 +15,7 @@
 #include "matrix.h"
 #include "pixel.h"
 #include "raster.h"
+#include "vgpu/state.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -173,7 +174,7 @@ void APIENTRY_GL4ES gl4es_glCopyTexSubImage2D(GLenum target, GLint level, GLint 
 }
 
 void APIENTRY_GL4ES gl4es_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid * data) {
-    DBG(printf("glReadPixels(%i, %i, %i, %i, %s, %s, 0x%p)\n", x, y, width, height, PrintEnum(format), PrintEnum(type), data);)
+    printf("glReadPixels(%i, %i, %i, %i, %s, %s, 0x%p)\n", x, y, width, height, PrintEnum(format), PrintEnum(type), data);
     FLUSH_BEGINEND;
     if (glstate->list.compiling && glstate->list.active) {
         errorShim(GL_INVALID_OPERATION);
@@ -186,10 +187,33 @@ void APIENTRY_GL4ES gl4es_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei 
         dst = (char*)dst + (uintptr_t)glstate->vao->pack->data;
         
     readfboBegin();
+
+    // Custom stuff here
+    if(format == GL_DEPTH_COMPONENT && type == GL_UNSIGNED_INT) {
+        depthData = data;
+        depthWidth = width;
+        depthHeight = height;
+
+        printf("filling depth\n");
+        // Fill the data with some kind of noise
+        // Probably very low speed but heh
+        for(int i=0; i < (width*height)/2; i++){
+            GLuint  value = /*(GLuint)((float)rand()/(float)(RAND_MAX)) * UINT_MAX*/ ((GLuint )rand()) * 131071u;
+            if(i < 5) {
+                printf("%u \n", value);
+            }
+            ((GLuint*)(data))[i] = value;
+        }
+        readfboEnd();
+        return;
+    }
+
     if ((format == GL_RGBA && type == GL_UNSIGNED_BYTE)     // should not use default GL_RGBA on Pandora as it's very slow...
        || (format == glstate->readf && type == glstate->readt)    // use the IMPLEMENTATION_READ too...
        || (format == GL_DEPTH_COMPONENT && (type == GL_FLOAT || type==GL_HALF_FLOAT)))   // this one will probably fail, as DEPTH is not readable on most GLES hardware 
     {
+
+
         // easy passthru
         gles_glReadPixels(x, y, width, height, format, type, dst);
         readfboEnd();

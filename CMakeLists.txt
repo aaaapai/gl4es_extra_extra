@@ -743,8 +743,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/util/log.c
         src/glsl_optimizer/src/util/log.h
         src/glsl_optimizer/src/util/macros.h
-        src/glsl_optimizer/src/util/memstream.c
-        src/glsl_optimizer/src/util/memstream.h
         src/glsl_optimizer/src/util/mesa-sha1.c
         src/glsl_optimizer/src/util/mesa-sha1.h
         src/glsl_optimizer/src/util/mesa_cache_db.c
@@ -886,4 +884,6 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/mesa/main/errors.c
         src/glsl_optimizer/src/mesa/main/errors.c
         src/glsl_optimizer/src/mesa/main/debug_output.c
+        src/gl/vgpu/state.c
+        src/gl/vgpu/state.h
 )

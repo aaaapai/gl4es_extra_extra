@@ -15,6 +15,7 @@
 #include "matrix.h"
 #include "pixel.h"
 #include "raster.h"
+#include "vgpu/state.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -1555,6 +1556,27 @@ void APIENTRY_GL4ES gl4es_glTexSubImage2D(GLenum target, GLint level, GLint xoff
     DBG(printf("glTexSubImage2D on target=%s with unpack_row_length(%d), size(%d,%d), pos(%d,%d) and skip={%d,%d}, format=%s, type=%s, level=%d(base=%d, max=%d), mipmap={need=%d, auto=%d}, texture=%u, data=%p(vao=%p)\n", PrintEnum(target), glstate->texture.unpack_row_length, width, height, xoffset, yoffset, glstate->texture.unpack_skip_pixels, glstate->texture.unpack_skip_rows, PrintEnum(format), PrintEnum(type), level, glstate->texture.bound[glstate->texture.active][itarget]->base_level, glstate->texture.bound[glstate->texture.active][itarget]->max_level, glstate->texture.bound[glstate->texture.active][itarget]->mipmap_need, glstate->texture.bound[glstate->texture.active][itarget]->mipmap_auto, glstate->texture.bound[glstate->texture.active][itarget]->texture, data, glstate->vao->unpack);)
     if (width==0 || height==0) {
         return;
+    }
+
+    if(format == GL_DEPTH_COMPONENT && type == GL_UNSIGNED_INT) {
+        printf("Depth texture: %p, %u, %u \n", data, width, height);
+        if(data == depthData && depthWidth == width && depthHeight == height){
+            printf("texture comparison successful, dumping shit on the texture\n");
+            GLuint * buffer = malloc(sizeof (GLuint) *width * height);
+            for(int i=0; i<width*height; i++){
+                GLuint  value = /*(GLuint)((float)rand()/(float)(RAND_MAX)) * UINT_MAX*/ ((GLuint )rand()) * 131071u;
+                if(i < 5) {
+                    printf("%u \n", value);
+                }
+                buffer[i] = value;
+            }
+
+            // AT this point the buffer is cleaned
+            errorGL();
+            gles_glTexSubImage2D(rtarget, level, xoffset, yoffset, width, height, format, type, buffer);
+            free(buffer);
+            return;
+        }
     }
     
     gltexture_t *bound = glstate->texture.bound[glstate->texture.active][itarget];

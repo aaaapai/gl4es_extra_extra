@@ -3,6 +3,8 @@
 
 #include "gles.h"
 
+const char* PrintHex(GLenum what);
+
 const char* PrintEnum(GLenum what);
 
 const char* PrintEGLError(int onlyerror);

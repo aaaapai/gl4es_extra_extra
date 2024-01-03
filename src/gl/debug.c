@@ -11,6 +11,12 @@
 #define p(a) \
     case a: return #a
 
+const char* PrintHex(GLenum what) {
+    static char fallback[64];
+    sprintf(fallback, "0x%04X", what);
+    return fallback;
+}
+
 const char* PrintEnum(GLenum what) {
     static char fallback[64];
     switch(what)

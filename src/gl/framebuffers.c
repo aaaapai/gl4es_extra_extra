@@ -8,6 +8,7 @@
 #include "glstate.h"
 #include "init.h"
 #include "loader.h"
+#include "vgpu/state.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -802,7 +803,7 @@ void APIENTRY_GL4ES gl4es_glFramebufferTexture2D(GLenum target, GLenum attachmen
     GLenum realtarget = GL_TEXTURE_2D;
     if(textarget>=GL_TEXTURE_CUBE_MAP_POSITIVE_X && textarget<GL_TEXTURE_CUBE_MAP_POSITIVE_X+6)
         realtarget = textarget;
-    gles_glFramebufferTexture2D(ntarget, attachment, realtarget, texture, 0);
+    gles_glFramebufferTexture2D(ntarget, map_attachment(attachment), realtarget, texture, 0);
     DBG(CheckGLError(1);)
     ReadDraw_Pop(target);
 }
@@ -1511,10 +1512,24 @@ void gl4es_setCurrentFBO() {
 
 // DrawBuffers functions are faked unless GL_EXT_draw_buffers is supported
 void APIENTRY_GL4ES gl4es_glDrawBuffers(GLsizei n, const GLenum *bufs) {
-    DBG(printf("glDrawBuffers(%d, %p) [0]=%s\n", n, bufs, n?PrintEnum(bufs[0]):"nil");)
+    for(int i=0; i<n; ++i){printf("glDrawBuffers(%d, %p) [%i]=%s\n", n, bufs, i,  n?PrintHex(bufs[i]):"nil");}
+
+    GLenum attachment_list[8] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5,GL_COLOR_ATTACHMENT6,GL_COLOR_ATTACHMENT7};
+
+    // Map internally the real buffers used
+    for (int i = 0; i < n; ++i) {
+        DrawBufs[i] = bufs[i];
+    }
+    // Prepare the draw command
+    for (int i = n; i < 8; ++i) {
+        attachment_list[i] = GL_NONE;
+    }
+
+    printf("\n\n");
+    //DBG(printf("glDrawBuffers(%d, %p) [0]=%s\n", n, bufs, n?PrintEnum(bufs[0]):"nil");)
     if(hardext.drawbuffers) {
         LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
-        gles_glDrawBuffers(n, bufs);
+        gles_glDrawBuffers(8, attachment_list);
         errorGL();
     } else {
         if(n<0 || n>hardext.maxdrawbuffers) {
@@ -1549,15 +1564,25 @@ void APIENTRY_GL4ES gl4es_glNamedFramebufferDrawBuffers(GLuint framebuffer, GLsi
 void APIENTRY_GL4ES gl4es_glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint * value) {
     noerrorShim();
     GLenum attch;
+
+
     switch(buffer) {
         case GL_COLOR:
             if(drawbuffer>glstate->fbo.fbo_draw->n_draw)
                 return; // GL_NONE...
             attch = glstate->fbo.fbo_draw->drawbuff[buffer];
+
             if(!(attch>=GL_COLOR_ATTACHMENT0 && attch<GL_COLOR_ATTACHMENT0+hardext.maxdrawbuffers)) {
                 errorShim(GL_INVALID_VALUE);
                 return;
             } else {
+                // TODO Find the draw buffer index associated to the real draw buffer
+                LOAD_GLES2(glClearBufferiv);
+                if(gles_glClearBufferiv){
+                    gles_glClearBufferiv(buffer, drawbuffer, value);
+                    break;
+                }
+
                 GLfloat oldclear[4];
                 LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...
@@ -1603,6 +1628,13 @@ void APIENTRY_GL4ES gl4es_glClearBufferuiv(GLenum buffer, GLint drawbuffer, cons
                 errorShim(GL_INVALID_VALUE);
                 return;
             } else {
+                // TODO Find the draw buffer index associated to the real draw buffer
+                LOAD_GLES2(glClearBufferuiv);
+                if(gles_glClearBufferuiv){
+                    gles_glClearBufferuiv(buffer, drawbuffer, value);
+                    break;
+                }
+
                 GLfloat oldclear[4];
                 LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...
@@ -1636,6 +1668,13 @@ void APIENTRY_GL4ES gl4es_glClearBufferfv(GLenum buffer, GLint drawbuffer, const
                 errorShim(GL_INVALID_VALUE);
                 return;
             } else {
+                // TODO Find the draw buffer index associated to the real draw buffer
+                LOAD_GLES2(glClearBufferfv);
+                if(gles_glClearBufferfv){
+                    gles_glClearBufferfv(buffer, drawbuffer, value);
+                    break;
+                }
+
                 GLfloat oldclear[4];
                 LOAD_GLES_IF_EXT(glDrawBuffers, hardext.drawbuffersext);
                 // select the buffer...

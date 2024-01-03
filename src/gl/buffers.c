@@ -39,6 +39,10 @@ glbuffer_t** BUFF(GLenum target) {
      case GL_PIXEL_UNPACK_BUFFER:
         return &glstate->vao->unpack;
         break;
+     case GL_COPY_READ_BUFFER:
+         return &glstate->vao->copy_read;
+     case GL_COPY_WRITE_BUFFER:
+         return &glstate->vao->copy_write;
      default:
        LOGD("Warning, unknown buffer target 0x%04X\n", target);
  }
@@ -46,6 +50,9 @@ glbuffer_t** BUFF(GLenum target) {
 }
 
 void unbind_buffer(GLenum target) {
+    // skip unbind the temp buffers
+    if(target == GL_COPY_READ_BUFFER || target == GL_COPY_WRITE_BUFFER) return;
+
     glbuffer_t **t = BUFF(target);
     if (t)
 		*t=(glbuffer_t*)NULL;
@@ -674,6 +681,7 @@ void APIENTRY_GL4ES gl4es_glFlushMappedBufferRange(GLenum target, GLintptr offse
 void APIENTRY_GL4ES gl4es_glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size)
 {
     DBG(printf("glCopyBufferSubData(%s, %s, %p, %p, %zd)\n", PrintEnum(readTarget), PrintEnum(writeTarget), (void*)readOffset, (void*)writeOffset, size);)
+
     //TODO: Add GL_COPY_READ_BUFFER and GL_COPY_WRITE_BUFFER (and GL_QUERY_BUFFER?)
 	glbuffer_t *readbuff = getbuffer_buffer(readTarget);
 	glbuffer_t *writebuff = getbuffer_buffer(writeTarget);
@@ -687,6 +695,14 @@ void APIENTRY_GL4ES gl4es_glCopyBufferSubData(GLenum readTarget, GLenum writeTar
     }
     // TODO: check memory overlap and overread/overwrite
     memcpy((char*)writebuff->data+writeOffset, (char*)readbuff->data+readOffset, size);
+
+    if((readTarget == GL_COPY_READ_BUFFER || readTarget == GL_COPY_WRITE_BUFFER) && (writeTarget == GL_COPY_READ_BUFFER || writeTarget == GL_COPY_WRITE_BUFFER)){
+        LOAD_GLES(glBufferSubData);
+        gles_glBufferSubData(writebuff->type, writeOffset, size, (char*)writebuff->data+writeOffset);
+        noerrorShim();
+        return;
+    }
+
     if(writebuff->real_buffer && (writebuff->type==GL_ARRAY_BUFFER || writebuff->type==GL_ELEMENT_ARRAY_BUFFER) && writebuff->mapped && (writebuff->access==GL_WRITE_ONLY || writebuff->access==GL_READ_WRITE)) {
         LOAD_GLES(glBufferSubData);
         bindBuffer(writebuff->type, writebuff->real_buffer);

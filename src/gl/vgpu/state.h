@@ -3,6 +3,7 @@
 //
 
 #include "../gles.h"
+#include "../const.h"
 
 #ifndef GL4ES_STATE_H
 #define GL4ES_STATE_H
@@ -14,9 +15,16 @@ extern GLfloat ClearColorValue[4];
 extern GLfloat ClearDepthValue[4];
 extern GLint ClearStencilValue[4];
 
+extern GLvoid * depthData;
+extern GLuint depthWidth;
+extern GLuint depthHeight;
+
 extern GLenum Attachs[8];
 extern int DrawBufs_Num;
 extern GLenum DrawBufs[8];
+
+
+GLenum map_attachment(GLenum attachment);
 
 
 #endif //GL4ES_STATE_H
