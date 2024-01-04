@@ -886,4 +886,5 @@ add_executable(gl4es_extra
         src/glsl_optimizer/src/mesa/main/debug_output.c
         src/gl/vgpu/state.c
         src/gl/vgpu/state.h
+        src/glsl_optimizer/src/compiler/glsl/opt_swizzle.cpp
 )

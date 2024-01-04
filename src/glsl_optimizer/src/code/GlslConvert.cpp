@@ -323,6 +323,7 @@ void GlslConvert::apply_optimizations(
       do_common_optimization(vIr, linked, vCompilerFlags, true);
       do_mat_op_to_vec(vIr);
       do_vec_index_to_cond_assign(vIr);
+      optimize_swizzles(vIr);
       lower_discard(vIr);
       lower_discard_flow(vIr);
       lower_instructions(vIr, false, false);

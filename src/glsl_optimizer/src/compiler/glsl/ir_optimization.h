@@ -87,4 +87,7 @@ bool lower_64bit_integer_instructions(exec_list *instructions,
 void lower_precision(const struct gl_shader_compiler_options *options,
                      exec_list *instructions);
 
+// RE-ADDED instructions from the old IR code !
+bool optimize_swizzles(exec_list *instructions);
+
 #endif /* GLSL_IR_OPTIMIZATION_H */
