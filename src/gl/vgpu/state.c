@@ -21,7 +21,7 @@ GLfloat ClearColorValue[4] = {0.0, 0.0, 0.0, 0.0};
 GLfloat ClearDepthValue[4] = {0.0, 0.0, 0.0, 0.0};
 GLint ClearStencilValue[4] = {0, 0, 0, 0};
 
-GLvoid * depthData = nullptr;
+GLvoid * depthData = NULL;
 GLuint depthWidth = 0;
 GLuint depthHeight = 0;
 

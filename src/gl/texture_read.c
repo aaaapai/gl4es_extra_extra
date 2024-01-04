@@ -16,6 +16,7 @@
 #include "pixel.h"
 #include "raster.h"
 #include "vgpu/state.h"
+#include "vgpu/buffer_copier.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -193,17 +194,8 @@ void APIENTRY_GL4ES gl4es_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei 
         depthData = data;
         depthWidth = width;
         depthHeight = height;
-
-        printf("filling depth\n");
-        // Fill the data with some kind of noise
-        // Probably very low speed but heh
-        for(int i=0; i < (width*height)/2; i++){
-            GLuint  value = /*(GLuint)((float)rand()/(float)(RAND_MAX)) * UINT_MAX*/ ((GLuint )rand()) * 131071u;
-            if(i < 5) {
-                printf("%u \n", value);
-            }
-            ((GLuint*)(data))[i] = value;
-        }
+        printf("storing depth...\n");
+        buffer_copier_store(x, y, width, height);
         readfboEnd();
         return;
     }

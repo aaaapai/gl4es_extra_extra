@@ -16,6 +16,7 @@
 #include "pixel.h"
 #include "raster.h"
 #include "vgpu/state.h"
+#include "vgpu/buffer_copier.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -1561,20 +1562,8 @@ void APIENTRY_GL4ES gl4es_glTexSubImage2D(GLenum target, GLint level, GLint xoff
     if(format == GL_DEPTH_COMPONENT && type == GL_UNSIGNED_INT) {
         printf("Depth texture: %p, %u, %u \n", data, width, height);
         if(data == depthData && depthWidth == width && depthHeight == height){
-            printf("texture comparison successful, dumping shit on the texture\n");
-            GLuint * buffer = malloc(sizeof (GLuint) *width * height);
-            for(int i=0; i<width*height; i++){
-                GLuint  value = /*(GLuint)((float)rand()/(float)(RAND_MAX)) * UINT_MAX*/ ((GLuint )rand()) * 131071u;
-                if(i < 5) {
-                    printf("%u \n", value);
-                }
-                buffer[i] = value;
-            }
-
-            // AT this point the buffer is cleaned
             errorGL();
-            gles_glTexSubImage2D(rtarget, level, xoffset, yoffset, width, height, format, type, buffer);
-            free(buffer);
+            buffer_copier_release(rtarget, itarget, xoffset, yoffset, width, height);
             return;
         }
     }

@@ -457,6 +457,7 @@ LOCAL_SRC_FILES := \
 	src/glx/streaming.c \
 	src/gl/vgpu/shaderconv.c \
 	src/gl/vgpu/state.c \
+    src/gl/vgpu/buffer_copier.c \
     src/gl/iProtecc/iprotecc_string.c \
 
 
