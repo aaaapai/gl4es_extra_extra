@@ -88,6 +88,16 @@ void lower_precision(const struct gl_shader_compiler_options *options,
                      exec_list *instructions);
 
 // RE-ADDED instructions from the old IR code !
+bool ir_constant_fold(ir_rvalue **rvalue);
 bool optimize_swizzles(exec_list *instructions);
+bool do_constant_variable(exec_list *instructions);
+bool do_constant_variable_unlinked(exec_list *instructions);
+bool do_constant_folding(exec_list *instructions);
+bool do_constant_propagation(exec_list *instructions);
+bool do_copy_propagation_elements(exec_list *instructions);
+bool do_structure_splitting(exec_list *instructions);
+bool do_vectorize(exec_list *instructions);
+bool do_vec_index_to_swizzle(exec_list *instructions);
+
 
 #endif /* GLSL_IR_OPTIMIZATION_H */

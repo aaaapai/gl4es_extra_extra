@@ -100,6 +100,13 @@ LOCAL_SRC_FILES := \
     src/glsl_optimizer/src/compiler/glsl/ir_builder_print_visitor.cpp \
     src/glsl_optimizer/src/compiler/glsl_types.cpp \
     src/glsl_optimizer/src/compiler/glsl/opt_swizzle.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_constant_variable.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_constant_folding.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_constant_propagation.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_copy_propagation.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_structure_splitting.cpp \
+    src/glsl_optimizer/src/compiler/glsl/opt_vectorize.cpp \
+    src/glsl_optimizer/src/compiler/glsl/lower_vec_index_to_swizzle.cpp \
     src/glsl_optimizer/src/util/sha1/sha1.c \
     src/glsl_optimizer/src/util/u_debug_stack.c \
     src/glsl_optimizer/src/util/u_vector.c \

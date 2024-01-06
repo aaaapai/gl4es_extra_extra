@@ -323,10 +323,23 @@ void GlslConvert::apply_optimizations(
       do_common_optimization(vIr, linked, vCompilerFlags, true);
       do_mat_op_to_vec(vIr);
       do_vec_index_to_cond_assign(vIr);
+      do_vec_index_to_swizzle(vIr);
       optimize_swizzles(vIr);
+      do_vectorize(vIr);
+      do_structure_splitting(vIr);
+      if(linked){
+          do_constant_variable(vIr);
+      }else {
+          do_constant_variable_unlinked(vIr);
+      }
+      do_copy_propagation_elements(vIr);
+      do_constant_propagation(vIr);
+      do_constant_folding(vIr);
       lower_discard(vIr);
       lower_discard_flow(vIr);
       lower_instructions(vIr, false, false);
+
+
    }
 }
 

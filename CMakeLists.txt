@@ -887,4 +887,11 @@ add_executable(gl4es_extra
         src/gl/vgpu/state.c
         src/gl/vgpu/state.h
         src/glsl_optimizer/src/compiler/glsl/opt_swizzle.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_constant_variable.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_constant_folding.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_constant_propagation.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_copy_propagation.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_structure_splitting.cpp
+        src/glsl_optimizer/src/compiler/glsl/opt_vectorize.cpp
+        src/glsl_optimizer/src/compiler/glsl/lower_vec_index_to_swizzle.cpp
 )
