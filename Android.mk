@@ -418,6 +418,7 @@ LOCAL_SRC_FILES := \
 	src/gl/gl4es.c \
 	src/gl/glstate.c \
 	src/gl/hint.c \
+    src/gl/host.c \
 	src/gl/init.c \
 	src/gl/light.c \
 	src/gl/line.c \

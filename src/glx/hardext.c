@@ -1,3 +1,4 @@
+#include "../gl/host.h"
 #include "hardext.h"
 
 #include "../gl/debug.h"
@@ -20,40 +21,40 @@ hardext_t hardext = {0};
 
 int testGenericShader(struct shader_s* shader_source) {
     // check the current shader is valid for compilation
-    LOAD_GLES2(glCreateShader);
-    LOAD_GLES2(glShaderSource);
-    LOAD_GLES2(glCompileShader);
-    LOAD_GLES2(glGetShaderiv);
-    LOAD_GLES2(glDeleteShader);
+    
+    
+    
+    
+    
 
-    GLuint shad = gles_glCreateShader(shader_source->type);
-    gles_glShaderSource(shad, 1, (const GLchar *const *)(&shader_source->converted), NULL);
-    gles_glCompileShader(shad);
+    GLuint shad = host_functions.glCreateShader(shader_source->type);
+    host_functions.glShaderSource(shad, 1, (const GLchar *const *)(&shader_source->converted), NULL);
+    host_functions.glCompileShader(shad);
     GLint compiled;
-    gles_glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
+    host_functions.glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
     /*
     if(!compiled) {
-        LOAD_GLES2(glGetShaderInfoLog)
+        
         char buff[500];
-        gles_glGetShaderInfoLog(shad, 500, NULL, buff);
+        host_functions.glGetShaderInfoLog(shad, 500, NULL, buff);
         printf("LIBGL: \"%s\" failed, message:\n%s\n", version, buff);
     }
     */
-    gles_glDeleteShader(shad);
+    host_functions.glDeleteShader(shad);
 
     return compiled;
 }
 
 static int testGLSL(const char* version, int uniformLoc) {
     // check if glsl 120 shaders are supported... by compiling one !
-    LOAD_GLES2(glCreateShader);
-    LOAD_GLES2(glShaderSource);
-    LOAD_GLES2(glCompileShader);
-    LOAD_GLES2(glGetShaderiv);
-    LOAD_GLES2(glDeleteShader);
-    LOAD_GLES(glGetError);
+    
+    
+    
+    
+    
+    
 
-    GLuint shad = gles_glCreateShader(GL_VERTEX_SHADER);
+    GLuint shad = host_functions.glCreateShader(GL_VERTEX_SHADER);
     const char* shadTest[4] = {
         version,
         "\n"
@@ -63,33 +64,33 @@ static int testGLSL(const char* version, int uniformLoc) {
         " gl_Position = matMVP * vecPos;\n"
         "}\n"
     };
-    gles_glShaderSource(shad, 4, shadTest, NULL);
-    gles_glCompileShader(shad);
+    host_functions.glShaderSource(shad, 4, shadTest, NULL);
+    host_functions.glCompileShader(shad);
     GLint compiled;
-    gles_glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
+    host_functions.glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
     /*
     if(!compiled) {
-        LOAD_GLES2(glGetShaderInfoLog)
+        
         char buff[500];
-        gles_glGetShaderInfoLog(shad, 500, NULL, buff);
+        host_functions.glGetShaderInfoLog(shad, 500, NULL, buff);
         printf("LIBGL: \"%s\" failed, message:\n%s\n", version, buff);
     }
     */
-    gles_glDeleteShader(shad);
-    gles_glGetError();	// reset GL Error
+    host_functions.glDeleteShader(shad);
+    host_functions.glGetError();	// reset GL Error
 
     return compiled;
 }
 
 static int testTextureCubeLod() {
-    LOAD_GLES2(glCreateShader);
-    LOAD_GLES2(glShaderSource);
-    LOAD_GLES2(glCompileShader);
-    LOAD_GLES2(glGetShaderiv);
-    LOAD_GLES2(glDeleteShader);
-    LOAD_GLES(glGetError);
+    
+    
+    
+    
+    
+    
 
-    GLuint shad = gles_glCreateShader(GL_FRAGMENT_SHADER);
+    GLuint shad = host_functions.glCreateShader(GL_FRAGMENT_SHADER);
     const char* shadTest[3] = {
         "#version 100",
         "\n"
@@ -100,12 +101,12 @@ static int testTextureCubeLod() {
         " gl_FragColor = textureCubeLod(samCube, coordCube, 0.0);\n"
         "}\n"
     };
-    gles_glShaderSource(shad, 3, shadTest, NULL);
-    gles_glCompileShader(shad);
+    host_functions.glShaderSource(shad, 3, shadTest, NULL);
+    host_functions.glCompileShader(shad);
     GLint compiled;
-    gles_glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
-    gles_glDeleteShader(shad);
-    gles_glGetError(); // reset GL Error
+    host_functions.glGetShaderiv(shad, GL_COMPILE_STATUS, &compiled);
+    host_functions.glDeleteShader(shad);
+    host_functions.glGetError(); // reset GL Error
 
     return compiled;
 }
@@ -273,11 +274,11 @@ void GetHardwareExtensions(int notest)
     egl_eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
 #endif
     tested = 1;
-    LOAD_GLES(glGetString);
-    LOAD_GLES(glGetIntegerv);
-    LOAD_GLES(glGetError);
+    
+    
+    
     // Now get extensions
-    const char *Exts = (const char *) gles_glGetString(GL_EXTENSIONS);
+    const char *Exts = (const char *) host_functions.glGetString(GL_EXTENSIONS);
     // Parse them!
     #define S(A, B, C) if(strstr(Exts, A)) { hardext.B = 1; SHUT_LOGD("Extension %s detected%s",A, C?" and used\n":"\n"); } 
     if(hardext.esversion>1) hardext.npot = 1;
@@ -295,8 +296,8 @@ void GetHardwareExtensions(int notest)
     
     /*if(hardext.blendcolor==0) {
         // try by just loading the function
-        LOAD_GLES_OR_OES(glBlendColor);
-        if(gles_glBlendColor != NULL) {
+        
+        if(host_functions.glBlendColor != NULL) {
             hardext.blendcolor = 1;
 	        SHUT_LOGD("Extension glBlendColor found and used\n");
 	    }
@@ -361,11 +362,11 @@ void GetHardwareExtensions(int notest)
             S("GL_OES_fragment_precision_high ", highp, 1);
             if(!hardext.highp) {
                 // check if highp is supported anyway
-                LOAD_GLES2(glGetShaderPrecisionFormat);
-                if(gles_glGetShaderPrecisionFormat) {
+                
+                if(host_functions.glGetShaderPrecisionFormat) {
                     GLint range[2] = {0};
                     GLint precision=0;
-                    gles_glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER, GL_HIGH_FLOAT, range, &precision);
+                    host_functions.glGetShaderPrecisionFormat(GL_FRAGMENT_SHADER, GL_HIGH_FLOAT, range, &precision);
                     if(!(range[0]==0 && range[1]==0 && precision==0)) {
                         hardext.highp = 2;  // no need to declare #entension here
                         SHUT_LOGD("high precision float in fragment shader available and used\n");
@@ -383,7 +384,7 @@ void GetHardwareExtensions(int notest)
             }
         }
         S("GL_EXT_frag_depth ", fragdepth, 1);
-        gles_glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &hardext.maxvattrib);
+        host_functions.glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &hardext.maxvattrib);
         SHUT_LOGD("Max vertex attrib: %d\n", hardext.maxvattrib);
         S("GL_OES_standard_derivatives ", derivatives, 1);
         S("GL_ARM_shader_framebuffer_fetch", shader_fbfetch, 1);
@@ -392,24 +393,24 @@ void GetHardwareExtensions(int notest)
             S("GL_OES_get_program_binary ", prgbinary, 1);
         }
         if(hardext.prgbinary) {
-            gles_glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS_OES, &hardext.prgbin_n);
+            host_functions.glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS_OES, &hardext.prgbin_n);
             SHUT_LOGD("Number of supported Program Binary Format: %d\n", hardext.prgbin_n);
         }
     }
     // Now get some max stuffs
-    gles_glGetIntegerv(GL_MAX_TEXTURE_SIZE, &hardext.maxsize);
+    host_functions.glGetIntegerv(GL_MAX_TEXTURE_SIZE, &hardext.maxsize);
     SHUT_LOGD("Max texture size: %d\n", hardext.maxsize);
-    gles_glGetIntegerv((hardext.esversion==1)?GL_MAX_TEXTURE_UNITS:GL_MAX_TEXTURE_IMAGE_UNITS, &hardext.maxtex);
+    host_functions.glGetIntegerv((hardext.esversion==1)?GL_MAX_TEXTURE_UNITS:GL_MAX_TEXTURE_IMAGE_UNITS, &hardext.maxtex);
     if (hardext.esversion==1) {
-        gles_glGetIntegerv(GL_MAX_LIGHTS, &hardext.maxlights);
-        gles_glGetIntegerv(GL_MAX_CLIP_PLANES, &hardext.maxplanes);
+        host_functions.glGetIntegerv(GL_MAX_LIGHTS, &hardext.maxlights);
+        host_functions.glGetIntegerv(GL_MAX_CLIP_PLANES, &hardext.maxplanes);
         hardext.maxteximage=hardext.maxtex;
     } else {
         // simulated stuff using the FPE
         hardext.maxlights = 8;
         hardext.maxplanes = 6;
-        gles_glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &hardext.maxteximage);
-        gles_glGetIntegerv(GL_MAX_VARYING_VECTORS, &hardext.maxvarying);
+        host_functions.glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &hardext.maxteximage);
+        host_functions.glGetIntegerv(GL_MAX_VARYING_VECTORS, &hardext.maxvarying);
         SHUT_LOGD("Max Varying Vector: %d\n", hardext.maxvarying);
         if(hardext.maxvattrib<16 && hardext.maxtex>4)
             hardext.maxtex = 4; // with less then 16 vertexattrib, more then 4 textures seems unreasonnable
@@ -422,15 +423,15 @@ void GetHardwareExtensions(int notest)
     SHUT_LOGD("Texture Units: %d/%d (hardware: %d), Max lights: %d, Max planes: %d\n", hardext.maxtex, hardext.maxteximage, hardmaxtex, hardext.maxlights, hardext.maxplanes);
     S("GL_EXT_texture_filter_anisotropic ", aniso, 1);
     if(hardext.aniso) {
-        gles_glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &hardext.aniso);
-        if(gles_glGetError()!=GL_NO_ERROR)
+        host_functions.glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &hardext.aniso);
+        if(host_functions.glGetError()!=GL_NO_ERROR)
             hardext.aniso = 0;
         if(hardext.aniso)
             SHUT_LOGD("Max Anisotropic filtering: %d\n", hardext.aniso);
     }
     
     // get GLES driver signatures...
-    const char *vendor = (const char *) gles_glGetString(GL_VENDOR);
+    const char *vendor = (const char *) host_functions.glGetString(GL_VENDOR);
     SHUT_LOGD("Hardware vendor is %s\n", vendor);
     if(strstr(vendor, "ARM"))
         hardext.vendor = VEND_ARM;
@@ -444,14 +445,14 @@ void GetHardwareExtensions(int notest)
 
         // Test ogl version, only supported on ogl(es) 3+
         GLint major_version = 0;
-        gles_glGetIntegerv(GL_MAJOR_VERSION, &major_version);
-        gles_glGetError(); // Delete the error
+        host_functions.glGetIntegerv(GL_MAJOR_VERSION, &major_version);
+        host_functions.glGetError(); // Delete the error
 
         if(major_version >= 3) {
             hardext.glsl300es = 1;
 
             GLint minor_version = 0;
-            gles_glGetIntegerv(GL_MINOR_VERSION, &minor_version);
+            host_functions.glGetIntegerv(GL_MINOR_VERSION, &minor_version);
 
             if(minor_version >= 1){
                 hardext.glsl310es = 1;
@@ -487,8 +488,8 @@ void GetHardwareExtensions(int notest)
     }
 	
     if(hardext.drawbuffers) {
-        gles_glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&hardext.maxcolorattach);
-        gles_glGetIntegerv(GL_MAX_DRAW_BUFFERS_ARB, &hardext.maxdrawbuffers);
+        host_functions.glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&hardext.maxcolorattach);
+        host_functions.glGetIntegerv(GL_MAX_DRAW_BUFFERS_ARB, &hardext.maxdrawbuffers);
     }
     if(hardext.maxcolorattach<1)
         hardext.maxcolorattach = 1;
