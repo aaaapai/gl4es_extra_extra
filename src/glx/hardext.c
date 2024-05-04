@@ -525,4 +525,7 @@ void GetHardwareExtensions(int notest)
 
     egl_eglTerminate(eglDisplay);
 #endif
+
+// After extensions are gathered, we need to load the extension functions
+init_gl_functions();
 }
