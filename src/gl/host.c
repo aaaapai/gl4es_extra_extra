@@ -1,32 +1,39 @@
 #include "host.h"
 
+//#define DEBUG
+#ifdef DEBUG
+#define DBG(a) a
+#else
+#define DBG(a)
+#endif
+
     #define INIT_EGL(name) \
         host_functions.name = (name##_PTR) proc_address(egl, "eglGetProcAddress"); \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     #define INIT_GLES_FPE(name) \
         host_functions.fpe_##name = (name##_PTR) ((globals4es.es == 1) ? proc_address(gles, #name) : (void*) fpe_##name); \
-        WARN_NULL(host_functions.fpe_##name); \
+        DBG(WARN_NULL(host_functions.fpe_##name);); \
     
     #define INIT_GLES(name) \
         host_functions.name = (name##_PTR) proc_address(gles, #name); \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     #define INIT_GLES_OR_OES(name) \
         if(globals4es.es > 1) { host_functions.name = (name##_PTR) proc_address(gles, #name); } else { host_functions.name = (name##_PTR) host_functions.eglGetProcAddress(#name"OES"); } \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     #define INIT_GLES_EXT(name) \
         host_functions.name = (name##_PTR) host_functions.eglGetProcAddress(#name"EXT"); \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     #define INIT_GLES_IF_EXT(name, hardext_name) \
         if(hardext_name) { host_functions.name =  (name##_PTR) host_functions.eglGetProcAddress(#name"EXT"); } else { host_functions.name =  (name##_PTR) host_functions.eglGetProcAddress(#name); } \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     #define INIT_GLES_OES(name) \
         host_functions.name = (name##_PTR) host_functions.eglGetProcAddress(#name"OES"); \
-        WARN_NULL(host_functions.name); \
+        DBG(WARN_NULL(host_functions.name);); \
     
     gl_functions host_functions = {};
 void init_gl_functions() {
