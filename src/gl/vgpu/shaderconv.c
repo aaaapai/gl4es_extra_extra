@@ -32,19 +32,37 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
 
     // ESSL 1.0 pipeline
     if(!hardext.glsl300es || globals4es.vgpu_backport) {
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100);
+        if (globals4es.vgpu_dump){
+            printf("New VGPU Shader source (backward port):\n%s\n", shader_source->source);
+        }
+        // FIXME this may modify the source shader !
+        // Since the produced code is bigger than the original, it makes a copy of the source. Shouldn't be relied on.
+        // If no modification occurs, the source is returned as is and a copy is made by the "optimize_shader" function
+        size_t init_length = strlen(shader_source->source);
+        shader_source->converted = BackportConstArrays(shader_source->source, &init_length);
+        VerbosePrint(shader_source->converted, "optimize const arrays (backward port)");
+
+        shader_source->converted = optimize_shader(shader_source->converted, is_vertex, shader_version, 100);
+        VerbosePrint(shader_source->converted, "Optimized shader (backward port)");
 
         // Only possibility if to try to backport
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
+        VerbosePrint(shader_source->converted, "Optimized shader (backward port) with gl4es post process");
         size_t newLength = strlen(shader_source->converted);
 
         // Force backport of newer features
         if(shader_version >= 100) {
             shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 1);
+            VerbosePrint(shader_source->converted, "Optimized shader (backward port) with additional backport features");
         }
 
         // Skip testing, we only have one shot anyway
         shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
+        
+        if (globals4es.vgpu_dump){
+            printf("New VGPU Shader output (backward port):\n%s\n", shader_source->source);
+        }
+
         return shader_source->converted;
     }
 
@@ -157,6 +175,9 @@ char * ConvertShaderMinimalBackport(char * input, size_t * length, int is_fragme
     if (destructive) {
         input = ReplaceVariableName(input, length, "gl_VertexID", "0", 0);
         input = BackportAttributes(input, length);
+
+        int insertPoint = FindPositionAfterVersion(input);
+        input = InplaceInsertByIndex(input, length, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
     }
     return input;
 }
@@ -525,6 +546,7 @@ char * BackportConstArrays(char *source, int * sourceLength){
     int variableNameStart, variableNameStop;
     GetNextWord(source, typeStop, &variableNameStart, &variableNameStop); // Catch the var name
     char * variableName = ExtractString(source, variableNameStart, variableNameStop);
+    printf("Variable name: %s\n", variableName);
 
     //Now, verify the data type is actually an array
     char * tokenStart = strstr(source + typeStop, "[");
