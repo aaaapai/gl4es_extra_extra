@@ -1402,7 +1402,7 @@ char * ReplaceVariableName(char * source, int * sourceLength, char * initialName
 
                 // Pre reservation has been done, so there should be no pointer mutation
                 char * new_source = gl4es_inplace_replace_simple(source + offset, sourceLength, toReplace, replacement);
-                if(source != new_source) {
+                if(source + offset != new_source) {
                     printf("REPLACE VARIABLE ERROR: %s, %s", toReplace, replacement);
                     return source;
                 }
