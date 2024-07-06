@@ -309,7 +309,11 @@ IR_TO_GLSL::print_var_name(ir_variable* v)
 			if (v->data.mode == ir_var_temporary)
 				generated_source.append("tmpvar_%d", (int)id);
 			else
-				generated_source.append("%s_%d", v->name, (int)id);
+			{
+				// Avoid printing a number if the variable is the only one with said name
+				if (id > 1) generated_source.append("%s_%d", v->name, (int)id);
+				else generated_source.append("%s", v->name);
+			}
 		}
 		else
 		{
@@ -557,10 +561,9 @@ IR_TO_GLSL::visit(ir_function_signature* ir)
 		return;
 	}
 
-	generated_source.append(")\n");
+	generated_source.append("){\n");
 
 	indent();
-	generated_source.append("{\n");
 	indentation++;
 	previous_skipped = false;
 
@@ -1679,7 +1682,8 @@ IR_TO_GLSL::visit(ir_constant* ir)
 		print_float_checked(generated_source, ir->value.f[0]);
 		return;
 	}
-	else if (type == glsl_type::int_type)
+
+	if (type == glsl_type::int_type)
 	{
 		// Need special handling for INT_MIN
 		if (ir->value.u[0] == 0x80000000)
@@ -1688,7 +1692,8 @@ IR_TO_GLSL::visit(ir_constant* ir)
 			generated_source.append("%d", ir->value.i[0]);
 		return;
 	}
-	else if (type == glsl_type::uint_type)
+
+	if (type == glsl_type::uint_type)
 	{
 		// ES 2.0 doesn't support uints, neither does GLSL < 130
 		if ((state->es_shader && (state->language_version < 300))
@@ -1821,10 +1826,10 @@ IR_TO_GLSL::visit(ir_discard* ir)
         generated_source.append(") {");
     }
 
-	generated_source.append("discard");
+	generated_source.append("discard;");
 
     if (ir->condition != NULL) {
-        generated_source.append(" ;}");
+        generated_source.append(" }");
     }
 }
 
@@ -1840,11 +1845,10 @@ IR_TO_GLSL::visit(ir_if* ir)
 	generated_source.append("if (");
 	ir->condition->accept(this);
 
-	generated_source.append(")\n");
+	generated_source.append("){\n");
 	indent();
 	indentation++; previous_skipped = false;
 
-	generated_source.append("{\n");
 	foreach_in_list(ir_instruction, inst, &ir->then_instructions)
 	{
 		indent();
@@ -2047,7 +2051,7 @@ IR_TO_GLSL::visit(ir_loop* ir)
 	if (emit_canonical_for(ir))
 		return;
 
-	generated_source.append("while (true)\n{\n");
+	generated_source.append("while (true){\n");
 	indentation++; previous_skipped = false;
 	foreach_in_list(ir_instruction, inst, &ir->body_instructions)
 	{
