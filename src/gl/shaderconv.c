@@ -468,7 +468,7 @@ char* ConvertShader(const char* pEntry, int isVertex, shaderconv_need_t *need, i
     // hacks
     char* pHacked = ShaderHacks(pBuffer);
     // preproc first
-    pBuffer = preproc(pHacked, comments, globals4es.shadernogles, &exts, &versionString);
+    //pBuffer = preproc(pHacked, comments, globals4es.shadernogles, &exts, &versionString);
     if(pHacked!=pEntry && pHacked!=pBuffer)
       free(pHacked);
     // now comment all line starting with precision...
