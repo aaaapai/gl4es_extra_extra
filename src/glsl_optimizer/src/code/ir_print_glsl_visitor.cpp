@@ -492,9 +492,9 @@ IR_TO_GLSL::visit(ir_variable* ir)
 	const char* const memory_restrict = (ir->data.memory_restrict) ? "restrict " : "";
 	const char* const mode[3][ir_var_mode_count] =
 	{
-		{ "", "uniform ", "shader_storage", "shader_shared", "in ",        "out ",     " " /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" },
-		{ "", "uniform ", "shader_storage", "shader_shared", "attribute ", "varying ", " " /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" },
-		{ "", "uniform ", "shader_storage", "shader_shared", "varying ",   "out ",     " " /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" }
+		{ "", "uniform ", "shader_storage", "shader_shared", "in ",        "out ",     "" /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" },
+		{ "", "uniform ", "shader_storage", "shader_shared", "attribute ", "varying ", "" /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" },
+		{ "", "uniform ", "shader_storage", "shader_shared", "varying ",   "out ",     "" /*fun input is in by default */, "out ", "inout ", "const_in ", "sys ", "" }
 	};
 	const char* const interp[] = { "", "smooth ", "flat ", "noperspective ", "EXPLICIT ", "COLOR " };
 	STATIC_ASSERT(ARRAY_SIZE(interp) == INTERP_MODE_COUNT);

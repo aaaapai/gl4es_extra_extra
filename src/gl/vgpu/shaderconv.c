@@ -157,6 +157,10 @@ char * ConvertShaderMinimal(char * input, int is_fragment) {
         input = ReplaceVariableName(input, &shaderLength, "attribute", "in", 0);
         input = ReplaceVariableName(input, &shaderLength, "varying", "out", 0);
     }
+
+    // gl4es only supports float attributes from the es 2.0 days
+    input = BackportAttributes(input, &shaderLength, "in");
+
     return input;
 }
 
@@ -174,7 +178,7 @@ char * ConvertShaderMinimalBackport(char * input, size_t * length, int is_fragme
 
     if (destructive) {
         input = ReplaceVariableName(input, length, "gl_VertexID", "0", 0);
-        input = BackportAttributes(input, length);
+        input = BackportAttributes(input, length, "attribute");
 
         int insertPoint = FindPositionAfterVersion(input);
         input = InplaceInsertByIndex(input, length, insertPoint + 1, "#define texelFetch(a, b, c) vec4(1.0,1.0,1.0,1.0) \n");
@@ -676,15 +680,16 @@ char * ReplaceFragmentOut(char * source, int *sourceLength){
  * Backport ivec/bvec attributes to vec
  * @param source The shader as a string
  * @param sourceLength The shader allocated length
+ * @param needle The keyword which declares the attribute: 'in' or 'attribute'
  * @return The shader as a string, maybe in a different memory location
  */
-char * BackportAttributes(char * source, int *sourceLength) {
+char * BackportAttributes(char * source, int *sourceLength, const char * needle) {
     unsigned long offset = 0;
 
     while (1){
         char vec_type;
         char vec_number;
-        int startPosition = strstrPos(source + offset, "attribute");
+        int startPosition = strstrPos(source + offset, needle);
         if(startPosition == 0) return source; // No "attribute" keyword
         int t1, t2;
         GetNextWord(source, startPosition + offset, &t1, &t2); // Catches "attribute"
