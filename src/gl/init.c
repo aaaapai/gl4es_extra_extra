@@ -655,7 +655,7 @@ void initialize_gl4es() {
     if(globals4es.vgpu_dump > 1)
         SHUT_LOGD_NOPREFIX("Dump the shaders at every vgpu stage\n");
 
-    GetEnvVarInt("LIBGL_VGPU_OPT", &globals4es.vgpu_optimization, 1);
+    GetEnvVarInt("LIBGL_VGPU_OPT", &globals4es.vgpu_optimization, 2);
     if (!globals4es.vgpu_optimization) {
         SHUT_LOGD_NOPREFIX("Do not optimize the shaders\n");
     }
