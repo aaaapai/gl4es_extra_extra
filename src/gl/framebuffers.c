@@ -1513,7 +1513,7 @@ void gl4es_setCurrentFBO() {
 
 // DrawBuffers functions are faked unless GL_EXT_draw_buffers is supported
 void APIENTRY_GL4ES gl4es_glDrawBuffers(GLsizei n, const GLenum *bufs) {
-    for(int i=0; i<n; ++i){printf("glDrawBuffers(%d, %p) [%i]=%s\n", n, bufs, i,  n?PrintHex(bufs[i]):"nil");}
+    DBG( for(int i=0; i<n; ++i){printf("glDrawBuffers(%d, %p) [%i]=%s\n", n, bufs, i,  n?PrintHex(bufs[i]):"nil");} )
 
     GLenum attachment_list[8] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5,GL_COLOR_ATTACHMENT6,GL_COLOR_ATTACHMENT7};
 
@@ -1526,7 +1526,7 @@ void APIENTRY_GL4ES gl4es_glDrawBuffers(GLsizei n, const GLenum *bufs) {
         attachment_list[i] = GL_NONE;
     }
 
-    printf("\n\n");
+    DBG(printf("\n\n");)
     //DBG(printf("glDrawBuffers(%d, %p) [0]=%s\n", n, bufs, n?PrintEnum(bufs[0]):"nil");)
     if(hardext.drawbuffers) {
         

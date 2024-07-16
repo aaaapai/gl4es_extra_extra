@@ -195,7 +195,7 @@ void APIENTRY_GL4ES gl4es_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei 
         depthData = data;
         depthWidth = width;
         depthHeight = height;
-        printf("storing depth...\n");
+        DBG(printf("storing depth...\n");)
         buffer_copier_store(x, y, width, height);
         readfboEnd();
         return;

@@ -1561,7 +1561,7 @@ void APIENTRY_GL4ES gl4es_glTexSubImage2D(GLenum target, GLint level, GLint xoff
     }
 
     if(format == GL_DEPTH_COMPONENT && type == GL_UNSIGNED_INT) {
-        printf("Depth texture: %p, %u, %u \n", data, width, height);
+        DBG(printf("Depth texture: %p, %u, %u \n", data, width, height);)
         if(data == depthData && depthWidth == width && depthHeight == height){
             errorGL();
             buffer_copier_release(rtarget, itarget, xoffset, yoffset, width, height);
