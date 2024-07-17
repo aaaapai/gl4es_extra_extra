@@ -42,7 +42,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         shader_source->converted = BackportConstArrays(shader_source->source, &init_length);
         VerbosePrint(shader_source->converted, "optimize const arrays (backward port)");
 
-        shader_source->converted = optimize_shader(shader_source->converted, is_vertex, shader_version, 100);
+        shader_source->converted = optimize_shader(shader_source->converted, is_vertex, shader_version, 100, second_pass);
         VerbosePrint(shader_source->converted, "Optimized shader (backward port)");
 
         // Only possibility if to try to backport
@@ -73,7 +73,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         }
 
         // First, simple backward port
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100, second_pass);
         VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
         VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
@@ -106,7 +106,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
             printf("VGPU Shader source:\n%s\n", shader_source->source);
         }
 
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version, 1);
         VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
         VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");

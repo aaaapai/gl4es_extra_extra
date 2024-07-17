@@ -68,7 +68,8 @@ char * GlslConvert::Optimize(
 	int vGLSLVersion,
     int vTargetGLSLVersion,
     bool isESShader,
-	OptimizationStruct vOptimizationStruct)
+    bool agressiveLinkTimeOptimization,
+	OptimizationStruct& vOptimizationStruct)
 {
 	this->failed = false;
     char * optimized_shader = NULL;
@@ -230,7 +231,7 @@ char * GlslConvert::Optimize(
 					}
 
 					// Do optimization post-link
-                    apply_optimizations(ir, linked, &compileOptions);
+                    apply_optimizations(ir, agressiveLinkTimeOptimization, &compileOptions);
 
 
 					validate_ir_tree(ir);

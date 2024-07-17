@@ -249,7 +249,8 @@ public:
 		int vGLSLVersion,
         int vTargetGLSLVersion,
         bool isESShader,
-		OptimizationStruct vOptimisationStruct);
+        bool agressiveLinkTimeOptimization,
+		OptimizationStruct &vOptimisationStruct);
 	std::string GetLog()noexcept
 	{
 		return std::move(log);

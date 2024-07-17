@@ -13,8 +13,8 @@ extern "C" {
 
 GlslConvert::OptimizationStruct optimizationStruct {}; // Default struct with everything enabled
 
-char *optimize_shader(char *source, int isVertex, int vGLSLVersion, int vTargetGLSLVersion) {
-    GlslConvert& converter = GlslConvert::Instance();
+char *optimize_shader(char *source, int isVertex, int vGLSLVersion, int vTargetGLSLVersion, int second_pass) {
+    GlslConvert & converter = GlslConvert::Instance();
 
     char * optimized_shader = converter.Optimize(
             source,
@@ -24,6 +24,7 @@ char *optimize_shader(char *source, int isVertex, int vGLSLVersion, int vTargetG
             vGLSLVersion,
             vTargetGLSLVersion,
             true,
+            second_pass < 0,
             optimizationStruct
             );
     if(converter.Failed()) {
