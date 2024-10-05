@@ -24,7 +24,7 @@ char *optimize_shader(char *source, int isVertex, int vGLSLVersion, int vTargetG
             vGLSLVersion,
             vTargetGLSLVersion,
             true,
-            second_pass < 0,
+            second_pass < 1,
             optimizationStruct
             );
     if(converter.Failed()) {

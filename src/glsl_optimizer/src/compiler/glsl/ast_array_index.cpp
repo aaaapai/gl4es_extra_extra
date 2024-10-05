@@ -229,10 +229,17 @@ _mesa_ast_array_index_to_hir(void *mem_ctx,
              * "gl_InvocationID"). The array size will be determined
              * by the linker.
              */
+         } else if (array->variable_referenced()->data.mode == ir_var_uniform &&
+                    strstr(array->variable_referenced()->name, "gl_") == array->variable_referenced()->name) {
+            /* Special leniency for builtin variables since we usually know the max value from some other const
+             * in practice, gl4es converts the variable type to a custom one later down the line
+             */
          }
-         else if (array->variable_referenced()->data.mode !=
-                  ir_var_shader_storage) {
-            _mesa_glsl_error(&loc, state, "unsized array index must be constant");
+         else if (array->variable_referenced()->data.mode != ir_var_shader_storage) {
+            _mesa_glsl_error(&loc, state, "unsized array (ref: %s) (whole ref: %s) (data.mode: %u) index access must be constant",
+               array->variable_referenced()->name,
+               array->whole_variable_referenced()->name,
+               array->variable_referenced()->data.mode);
          } else {
             /* Unsized array non-constant indexing on SSBO is allowed only for
              * the last member of the SSBO definition.

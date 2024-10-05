@@ -19,7 +19,7 @@ int ADDITIVE_OPERATOR_VALUE = 5;
 
 /**
  * Makes more and more destructive conversions to make the shader compile
- * @param  The shader as a string
+ * @param shader_source The shader as a string
  * @param second_pass Whether gl4es is attempting to solve a linking issue
  * @return The shader as a string
  */
@@ -106,7 +106,7 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
             printf("VGPU Shader source:\n%s\n", shader_source->source);
         }
 
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version, 1);
+        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version, second_pass);
         VerbosePrint(shader_source->converted, "Optimized shader");
         shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
         VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
