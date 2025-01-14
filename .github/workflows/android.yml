@@ -11,7 +11,7 @@ jobs:
          unzip android-ndk-r26-rc1-linux.zip >> /dev/null
          ./android-ndk-r26-beta2/ndk-build APP_BUILD_SCRIPT=./Android.mk NDK_PROJECT_PATH=.
       - name: Upload GL4ES libs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gl4es-114
           path: libs/*
