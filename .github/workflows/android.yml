@@ -16,7 +16,7 @@ jobs:
           name: gl4es-114
           path: libs/*
       - name: Upload GL4ES debug libs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: gl4es-114
           path: 'obj/**/*.so'
