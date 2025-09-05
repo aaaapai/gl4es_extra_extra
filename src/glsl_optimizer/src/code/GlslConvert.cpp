@@ -591,8 +591,6 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
 	ctx->Driver.NewProgram = new_program;
 	//ctx->Driver.DeleteProgram = 0;
 
-	// Gl4es overrides
-	ctx->Const.MaxTextureCoordUnits = 16;
 
     // Abused override
     ctx->Const.MaxClipPlanes = 8;
@@ -601,7 +599,7 @@ void GlslConvert::InitContext(struct gl_context* ctx, ApiTarget api, int vGlslVe
     ctx->Const.MinProgramTexelOffset = -8;
     ctx->Const.MaxProgramTexelOffset = 7;
     ctx->Const.MaxLights = 0;
-    ctx->Const.MaxTextureCoordUnits = 8;
+    ctx->Const.MaxTextureCoordUnits = 32;
     ctx->Const.MaxTextureUnits = 0;
     ctx->Const.MaxUniformBufferBindings = 84;
     ctx->Const.MaxVertexStreams = 4;

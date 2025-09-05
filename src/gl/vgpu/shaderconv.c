@@ -161,6 +161,10 @@ char * ConvertShaderMinimal(char * input, int is_fragment) {
     // gl4es only supports float attributes from the es 2.0 days
     input = BackportAttributes(input, &shaderLength, "in");
 
+    input = ReplaceFunctionName(input, &shaderLength, "texture2D", "texture");
+    input = ReplaceFunctionName(input, &shaderLength, "texture3D", "texture");
+    input = ReplaceFunctionName(input, &shaderLength, "texture2DLod", "textureLod");
+
     return input;
 }
 

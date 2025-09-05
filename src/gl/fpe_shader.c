@@ -24,7 +24,6 @@ static int comments = 1;
 
 const char* texnoproj[] = {"texture2D", "texture2D", "texture2D", "textureCube", "textureStreamIMG"};    // textureRectange and 3D are emulated with 2D
 
-const char* texvecsize[] = {"vec2", "vec2", "vec2", "vec3", "vec2"};
 const char* texxyzsize[] = {"xy", "xy", "xy", "xyz", "xy"};
 //                          2D          Rectangle    3D             CubeMap      Stream
 const char* texname[] = {"texture2D", "texture2D", "texture2D", "textureCube", "textureStreamIMG"};    // textureRectange and 3D are emulated with 2D
@@ -353,7 +352,7 @@ const char* const* fpe_VertexShader(shaderconv_need_t* need, fpe_state_t *state)
         if(need)
             t = (need->need_texs&(1<<i))?1:0;
         if(t) {
-            sprintf(buff, "varying %s _gl4es_TexCoord_%d;\n", texvecsize[t-1], i);
+            sprintf(buff, "varying vec4 _gl4es_TexCoord_%d;\n", i);
             ShadAppend(buff);
             headers++;
             if(state->texture[i].texmat) {
@@ -693,10 +692,10 @@ const char* const* fpe_VertexShader(shaderconv_need_t* need, fpe_state_t *state)
                 // it would be better to use texture2Dproj in fragment shader, but that will complicate the varying definition...
                 sprintf(buff, "tmp_tex = (_gl4es_TextureMatrix_%d * %s);\n", i, texcoord);
                 ShadAppend(buff);
-                sprintf(buff, "_gl4es_TexCoord_%d = tmp_tex.%s / tmp_tex.q;\n", i, texxyzsize[t-1]);
+                sprintf(buff, "_gl4es_TexCoord_%d.%s = tmp_tex.%s / tmp_tex.q;\n", i, texxyzsize[t-1], texxyzsize[t-1]);
                 //sprintf(buff, "_gl4es_TexCoord_%d = (_gl4es_TextureMatrix_%d * %s).%s;\n", i, i, texcoord, texxyzsize[t-1]);
             } else
-                sprintf(buff, "_gl4es_TexCoord_%d = %s.%s / %s.q;\n", i, texcoord, texxyzsize[t-1], texcoord);
+                sprintf(buff, "_gl4es_TexCoord_%d.%s = %s.%s / %s.q;\n", i, texxyzsize[t-1], texcoord, texxyzsize[t-1], texcoord);
             ShadAppend(buff);
             if(adjust) {
                 need_adjust[i] = 1;
@@ -908,7 +907,7 @@ const char* const* fpe_FragmentShader(shaderconv_need_t* need, fpe_state_t *stat
             if(t && !need->need_texs&(1<<i))
                 t = 0;
         if(t) {
-            sprintf(buff, "varying %s _gl4es_TexCoord_%d;\n", texvecsize[t-1], i);
+            sprintf(buff, "varying vec4 _gl4es_TexCoord_%d;\n", i);
             ShadAppend(buff);
             sprintf(buff, "uniform %s _gl4es_TexSampler_%d;\n", texsampler[t-1], i);
             ShadAppend(buff);
@@ -969,7 +968,7 @@ const char* const* fpe_FragmentShader(shaderconv_need_t* need, fpe_state_t *stat
                     else
                         sprintf(buff, "vec4 texColor%d = %s(_gl4es_TexSampler_%d, gl_PointCoord);\n", i, texnoproj[t-1], i);
                 } else
-                    sprintf(buff, "vec4 texColor%d = %s(_gl4es_TexSampler_%d, _gl4es_TexCoord_%d);\n", i, texname[t-1], i, i);
+                    sprintf(buff, "vec4 texColor%d = %s(_gl4es_TexSampler_%d, _gl4es_TexCoord_%d.%s);\n", i, texname[t-1], i, i, texxyzsize[t-1]);
                 ShadAppend(buff);
             }
         }
