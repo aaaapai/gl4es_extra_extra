@@ -7,9 +7,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build GL4ES
         run: |
-         wget https://dl.google.com/android/repository/android-ndk-r26-rc1-linux.zip
-         unzip android-ndk-r26-rc1-linux.zip >> /dev/null
-         ./android-ndk-r26-beta2/ndk-build APP_BUILD_SCRIPT=./Android.mk NDK_PROJECT_PATH=.
+         wget https://dl.google.com/android/repository/android-ndk-r28c-linux.zip
+         unzip android-ndk-r28c-linux.zip >> /dev/null
+         ./android-ndk-r28c/ndk-build APP_BUILD_SCRIPT=./Android.mk NDK_PROJECT_PATH=.
       - name: Upload GL4ES libs
         uses: actions/upload-artifact@v4
         with:
