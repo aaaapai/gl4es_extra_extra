@@ -66,62 +66,30 @@ char * ConvertShaderConditionally(struct shader_s * shader_source, int second_pa
         return shader_source->converted;
     }
 
-    // ESSL 3.X pipeline
-    if( shader_version < 120 || globals4es.vgpu_force_conv) {
-        if (globals4es.vgpu_dump){
-            printf("New VGPU Shader source:\n%s\n", shader_source->source);
-        }
-
-        // First, simple backward port
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, 100, second_pass);
-        VerbosePrint(shader_source->converted, "Optimized shader");
-        shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 0);
-        VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
-
-        size_t newLength = strlen(shader_source->converted);
-        shader_source->converted = ConvertShaderMinimalBackport(shader_source->converted, &newLength, !is_vertex, 0);
-
-        shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
-
-        if (globals4es.vgpu_dump){
-            printf("New VGPU Shader output:\n%s\n", shader_source->converted);
-        }
-
-        //shader_source->converted = ConvertShaderVgpu(shader_source, second_pass);
-
-        if(!globals4es.vgpu_force_conv && !second_pass)  // Skip the test, consider it uncompiled
-            shaderCompileStatus = testGenericShader(shader_source);
+    // Always upconvert otherwise, to avoid linkage issues
+    if(shader_source->converted != NULL) {
+        free(shader_source->converted);
+        shader_source->converted = NULL;
     }
 
-    // Otherwise forward port the shader
-    if(!shaderCompileStatus) {
-        if(shader_source->converted != NULL) {
-            free(shader_source->converted);
-            shader_source->converted = NULL;
-        }
+    int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
 
-        int target_version = hardext.glsl320es ? 320 : hardext.glsl310es ? 310 : 300;
-
-        if (globals4es.vgpu_dump){
-            printf("VGPU Shader source:\n%s\n", shader_source->source);
-        }
-
-        shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version, second_pass);
-        VerbosePrint(shader_source->converted, "Optimized shader");
-        shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
-        VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
-        shader_source->converted = ConvertShaderMinimal(shader_source->converted, !is_vertex);
-
-        size_t newLength = strlen(shader_source->converted);
-        shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
-
-        if (globals4es.vgpu_dump){
-            printf("New VGPU Shader output:\n%s\n", shader_source->converted);
-        }
+    if (globals4es.vgpu_dump){
+        printf("VGPU Shader source:\n%s\n", shader_source->source);
     }
 
+    shader_source->converted = optimize_shader(shader_source->source, is_vertex, shader_version, target_version, second_pass);
+    VerbosePrint(shader_source->converted, "Optimized shader");
+    shader_source->converted = ConvertShader(shader_source->converted == NULL ? shader_source->source : shader_source->converted, is_vertex, &shader_source->need, 1);
+    VerbosePrint(shader_source->converted, "Optimized shader with gl4es post process");
+    shader_source->converted = ConvertShaderMinimal(shader_source->converted, !is_vertex);
 
+    size_t newLength = strlen(shader_source->converted);
+    shader_source->converted = OverridePrecision(shader_source->converted, &newLength);
 
+    if (globals4es.vgpu_dump){
+        printf("New VGPU Shader output:\n%s\n", shader_source->converted);
+    }
     return shader_source->converted;
 }
 
