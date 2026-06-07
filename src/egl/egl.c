@@ -7,6 +7,7 @@
 #define AliasExport(name)   __attribute__((alias(name))) __attribute__((visibility("default")))
 #endif
 
+
 static EGLint egl_context_attrib_es2[] = {
     EGL_CONTEXT_CLIENT_VERSION, 2,
     EGL_NONE
@@ -28,6 +29,7 @@ EGLDisplay gl4es_eglGetDisplay(EGLNativeDisplayType display_id) {
 
 EGLBoolean gl4es_eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     LOAD_EGL(eglInitialize);
+    gl4es_getMainFBSize = egl_getMainFBSize;
     return egl_eglInitialize(dpy, major, minor);
 }
 
@@ -219,6 +221,14 @@ NativePixmapType gl4es_egl_destroy_pixmap_ID_mapping(int id)
 {
     LOAD_EGL(egl_destroy_pixmap_ID_mapping);
     return egl_egl_destroy_pixmap_ID_mapping(id);
+}
+
+void egl_getMainFBSize(EGLint* width, EGLint* height)
+{
+   EGLDisplay *display = gl4es_eglGetCurrentDisplay();
+   EGLSurface *surface = gl4es_eglGetCurrentSurface(EGL_DRAW);
+   gl4es_eglQuerySurface(display, surface, EGL_WIDTH, width);
+   gl4es_eglQuerySurface(display, surface, EGL_HEIGHT, height); 
 }
 
 AliasExport(EGLint, eglGetError,,(void));
