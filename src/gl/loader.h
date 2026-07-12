@@ -131,7 +131,7 @@ EXPORT extern void *egl;
 #define DEFINE_RAW(lib, name) static name##_PTR lib##_##name = NULL
 #define LOAD_RAW(lib, name, ...) \
     { \
-        static bool first = true; \
+        static thread_local bool first = true; \
         if (first) { \
             first = false; \
             if (lib != NULL) { \
@@ -143,7 +143,7 @@ EXPORT extern void *egl;
 
 #define LOAD_RAW_3(lib, name, fnc1, fnc2, ...) \
     { \
-        static bool first = true; \
+        static thread_local bool first = true; \
         if (first) { \
             first = false; \
             if (lib != NULL) { \
@@ -159,7 +159,7 @@ EXPORT extern void *egl;
 
 #define LOAD_RAW_SILENT(lib, name, ...) \
     { \
-        static bool first = true; \
+        static thread_local bool first = true; \
         if (first) { \
             first = false; \
             if (lib != NULL) { \
@@ -170,7 +170,7 @@ EXPORT extern void *egl;
 
 #define LOAD_RAW_ALT(lib, alt, name, ...) \
     { \
-        static bool first = true; \
+        static thread_local bool first = true; \
         if (first) { \
             first = false; \
             if (lib != NULL) { \
